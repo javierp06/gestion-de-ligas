@@ -15,5 +15,149 @@
     "matches": "Matchs",
     "login": "Connexion",
     "register": "S'inscrire"
+  },
+  "register": {
+    "title": "Créer un compte",
+    "subtitle": "Votre compte sera créé en tant qu'utilisateur. Vous serez promu organisateur lorsque vous créerez votre première ligue.",
+    "name": "Nom complet",
+    "email": "Email",
+    "phone": "Téléphone",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "terms": "J'accepte les conditions générales et la politique de confidentialité",
+    "submit": "CRÉER UN COMPTE",
+    "login_link": "Connexion",
+    "already_account": "Vous avez déjà un compte ?",
+    "join_title": "Rejoindre",
+    "join_subtitle": "Commencez à gérer vos tournois dès aujourd'hui",
+    "password_strength": "Minimum 6 caractères",
+    "password_mismatch": "Les mots de passe ne correspondent pas",
+    "success": "Compte créé avec succès ! Redirection vers la connexion..."
+  },
+  "home": {
+    "my_leagues": "Mes Ligues",
+    "join_league": "Rejoindre une ligue",
+    "sports": "Sports",
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
+    "live": "En direct",
+    "general_table": "Classement Général",
+    "view_all": "Voir tout",
+    "news": "Actualités",
+    "team": "Équipe",
+    "pts": "PTS"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue, {name}",
+    "stats": {
+      "total_users": "Utilisateurs totaux",
+      "active_leagues": "Ligues actives",
+      "active_tournaments": "Tournois actifs",
+      "today_matches": "Matchs du jour",
+      "total_teams": "Équipes",
+      "pending_matches": "Matchs en attente"
+    },
+    "quick_actions": {
+      "title": "Actions rapides",
+      "manage_users": "Gérer les utilisateurs",
+      "manage_users_desc": "Voir et gérer les utilisateurs",
+      "view_leagues": "Voir les ligues",
+      "view_leagues_desc": "Gérer toutes les ligues",
+      "reports": "Rapports",
+      "reports_desc": "Voir les statistiques du système",
+      "create_league": "Créer une ligue",
+      "create_league_desc": "Démarrer une nouvelle ligue",
+      "manage_tournaments": "Gérer les tournois",
+      "manage_tournaments_desc": "Voir et modifier les tournois",
+      "register_result": "Enregistrer un résultat",
+      "register_result_desc": "Mettre à jour les scores"
+    },
+    "recent_activity": {
+      "title": "Activité récente",
+      "user_registered": "Utilisateur inscrit",
+      "time_ago": "Il y a 5 minutes"
+    },
+    "organizer": {
+      "my_leagues": "Mes Ligues",
+      "tournaments": "Tournois",
+      "no_leagues": "Vous n'avez pas encore créé de ligue",
+      "create_first_league": "Créer ma première ligue"
+    },
+    "upcoming_matches": "Prochains matchs",
+    "no_matches": "Aucun match prévu",
+    "user": {
+      "welcome_title": "Commencez votre aventure sportive !",
+      "welcome_subtitle": "Rejoignez des ligues, créez votre équipe ou devenez organisateur",
+      "create_first_league": "Créer ma première ligue",
+      "explore_leagues": "Explorer les ligues",
+      "explore_leagues_desc": "Trouver et rejoindre des ligues actives",
+      "view_tournaments": "Voir les tournois",
+      "view_tournaments_desc": "Découvrir les tournois en cours",
+      "create_team": "Créer une équipe",
+      "create_team_desc": "Former votre propre équipe",
+      "featured_leagues": "Ligues en vedette",
+      "no_leagues_available": "Aucune ligue disponible pour le moment"
+    }
+  },
+  "roles": {
+    "admin": "Administrateur",
+    "organizer": "Organisateur",
+    "user": "Utilisateur"
+  },
+  "unauthorized": {
+    "title": "Accès refusé",
+    "message": "Vous n'avez pas la permission d'accéder à cette page. Si vous pensez qu'il s'agit d'une erreur, contactez l'administrateur.",
+    "go_back": "Retour",
+    "go_home": "Accueil",
+    "organizer_prompt": "Besoin d'être organisateur ?",
+    "organizer_message": "Créez votre première ligue et vous serez automatiquement promu organisateur."
+  },
+  "promo": {
+    "title": "Créez votre propre ligue",
+    "description": "Organisez des tournois, gérez des équipes et prenez le contrôle total de vos statistiques comme un pro.",
+    "cta": "Commencer maintenant"
+  },
+  "table": {
+    "pos": "Pos",
+    "team": "Équipe",
+    "pj": "MJ",
+    "g": "G",
+    "e": "N",
+    "p": "P",
+    "gf": "BP",
+    "gc": "BC",
+    "dg": "DB",
+    "pts": "Pts",
+    "legend": {
+      "qualification": "Zone de qualification",
+      "pj": "Matchs Joués",
+      "gep": "Gagnés/Nuls/Perdus",
+      "dg": "Différence de Buts"
+    }
+  },
+  "components": {
+    "league_card": {
+      "sport_fallback": "Sport"
+    },
+    "match_card": {
+      "home": "Domicile",
+      "away": "Extérieur",
+      "round": "Journée"
+    },
+    "team_card": {
+      "captain": "Capitaine",
+      "founded": "Fondé",
+      "players": "joueurs"
+    },
+    "tournament_card": {
+      "start": "Début",
+      "end": "Fin",
+      "max_teams": "Max {count} équipes",
+      "formats": {
+        "league": "Ligue",
+        "knockout": "Élimination directe",
+        "group_knockout": "Groupes + Élimination"
+      }
+    }
   }
 }

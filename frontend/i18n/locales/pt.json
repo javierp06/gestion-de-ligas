@@ -15,5 +15,149 @@
     "matches": "Jogos",
     "login": "Entrar",
     "register": "Registrar"
+  },
+  "register": {
+    "title": "Criar Conta",
+    "subtitle": "Sua conta será criada como usuário. Você será promovido a organizador ao criar sua primeira liga.",
+    "name": "Nome Completo",
+    "email": "Email",
+    "phone": "Telefone",
+    "password": "Senha",
+    "confirmPassword": "Confirmar Senha",
+    "terms": "Aceito os termos e condições e a política de privacidade",
+    "submit": "CRIAR CONTA",
+    "login_link": "Entrar",
+    "already_account": "Já tem uma conta?",
+    "join_title": "Junte-se",
+    "join_subtitle": "Comece a gerenciar seus torneios hoje",
+    "password_strength": "Mínimo de 6 caracteres",
+    "password_mismatch": "As senhas não coincidem",
+    "success": "Conta criada com sucesso! Redirecionando para o login..."
+  },
+  "home": {
+    "my_leagues": "Minhas Ligas",
+    "join_league": "Entrar na Liga",
+    "sports": "Esportes",
+    "today": "Hoje",
+    "tomorrow": "Amanhã",
+    "live": "Ao Vivo",
+    "general_table": "Tabela Geral",
+    "view_all": "Ver Tudo",
+    "news": "Notícias",
+    "team": "Equipe",
+    "pts": "PTS"
+  },
+  "dashboard": {
+    "welcome": "Bem-vindo, {name}",
+    "stats": {
+      "total_users": "Total de Usuários",
+      "active_leagues": "Ligas Ativas",
+      "active_tournaments": "Torneios Ativos",
+      "today_matches": "Jogos de Hoje",
+      "total_teams": "Equipes",
+      "pending_matches": "Jogos Pendentes"
+    },
+    "quick_actions": {
+      "title": "Ações Rápidas",
+      "manage_users": "Gerenciar Usuários",
+      "manage_users_desc": "Ver e gerenciar usuários",
+      "view_leagues": "Ver Ligas",
+      "view_leagues_desc": "Gerenciar todas as ligas",
+      "reports": "Relatórios",
+      "reports_desc": "Ver estatísticas do sistema",
+      "create_league": "Criar Liga",
+      "create_league_desc": "Iniciar uma nova liga",
+      "manage_tournaments": "Gerenciar Torneios",
+      "manage_tournaments_desc": "Ver e editar torneios",
+      "register_result": "Registrar Resultado",
+      "register_result_desc": "Atualizar placares"
+    },
+    "recent_activity": {
+      "title": "Atividade Recente",
+      "user_registered": "Usuário registrado",
+      "time_ago": "Há 5 minutos"
+    },
+    "organizer": {
+      "my_leagues": "Minhas Ligas",
+      "tournaments": "Torneios",
+      "no_leagues": "Você ainda não criou nenhuma liga",
+      "create_first_league": "Criar Primeira Liga"
+    },
+    "upcoming_matches": "Próximos Jogos",
+    "no_matches": "Nenhum jogo agendado",
+    "user": {
+      "welcome_title": "Comece sua Aventura Esportiva!",
+      "welcome_subtitle": "Junte-se a ligas, crie sua equipe ou torne-se um organizador",
+      "create_first_league": "Criar Minha Primeira Liga",
+      "explore_leagues": "Explorar Ligas",
+      "explore_leagues_desc": "Encontre e participe de ligas ativas",
+      "view_tournaments": "Ver Torneios",
+      "view_tournaments_desc": "Descubra torneios em andamento",
+      "create_team": "Criar Equipe",
+      "create_team_desc": "Forme sua própria equipe",
+      "featured_leagues": "Ligas em Destaque",
+      "no_leagues_available": "Nenhuma liga disponível ainda"
+    }
+  },
+  "roles": {
+    "admin": "Administrador",
+    "organizer": "Organizador",
+    "user": "Usuário"
+  },
+  "unauthorized": {
+    "title": "Acesso Negado",
+    "message": "Você não tem permissão para acessar esta página. Se você acredita que isso é um erro, contate o administrador.",
+    "go_back": "Voltar",
+    "go_home": "Início",
+    "organizer_prompt": "Precisa ser organizador?",
+    "organizer_message": "Crie sua primeira liga e você será promovido automaticamente a organizador."
+  },
+  "promo": {
+    "title": "Crie sua Própria Liga",
+    "description": "Organize torneios, gerencie equipes e tenha controle total de suas estatísticas como um profissional.",
+    "cta": "Começar Agora"
+  },
+  "table": {
+    "pos": "Pos",
+    "team": "Equipe",
+    "pj": "J",
+    "g": "V",
+    "e": "E",
+    "p": "D",
+    "gf": "GP",
+    "gc": "GC",
+    "dg": "SG",
+    "pts": "Pts",
+    "legend": {
+      "qualification": "Zona de Classificação",
+      "pj": "Jogos",
+      "gep": "Vitórias/Empates/Derrotas",
+      "dg": "Saldo de Gols"
+    }
+  },
+  "components": {
+    "league_card": {
+      "sport_fallback": "Esporte"
+    },
+    "match_card": {
+      "home": "Casa",
+      "away": "Fora",
+      "round": "Rodada"
+    },
+    "team_card": {
+      "captain": "Capitão",
+      "founded": "Fundado",
+      "players": "jogadores"
+    },
+    "tournament_card": {
+      "start": "Início",
+      "end": "Fim",
+      "max_teams": "Máx. {count} equipes",
+      "formats": {
+        "league": "Liga",
+        "knockout": "Mata-mata",
+        "group_knockout": "Grupos + Mata-mata"
+      }
+    }
   }
 }
