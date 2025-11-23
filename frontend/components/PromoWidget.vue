@@ -20,17 +20,17 @@
             </div>
 
             <h3 class="text-lg font-display font-bold text-text-primary-light dark:text-white mb-2 leading-tight">
-                Crea tu propia Liga
+                {{ $t('promo.title') }}
             </h3>
 
             <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark mb-6 leading-relaxed">
-                Organiza torneos, gestiona equipos y lleva el control total de tus estadísticas como un profesional.
+                {{ $t('promo.description') }}
             </p>
 
             <NuxtLink to="/leagues/create"
                 class="inline-flex items-center justify-center w-full py-3 px-4 bg-primary-500 text-black font-bold rounded-xl shadow-neon hover:shadow-neon-strong hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 text-sm uppercase tracking-wide">
                 <span class="material-symbols-outlined text-lg mr-2">add_circle</span>
-                Comenzar Ahora
+                {{ $t('promo.cta') }}
             </NuxtLink>
         </div>
     </div>

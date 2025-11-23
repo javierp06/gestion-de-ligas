@@ -1,0 +1,163 @@
+{
+  "welcome": "Bienvenido",
+  "login": {
+    "title": "Iniciar Sesión",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "submit": "Ingresar",
+    "register_link": "¿No tienes cuenta? Regístrate"
+  },
+  "nav": {
+    "home": "Inicio",
+    "leagues": "Ligas",
+    "tournaments": "Torneos",
+    "teams": "Equipos",
+    "matches": "Partidos",
+    "login": "Ingresar",
+    "register": "Registrarse"
+  },
+  "register": {
+    "title": "Crear Cuenta",
+    "subtitle": "Tu cuenta se creará como usuario. Serás promovido a organizador al crear tu primera liga.",
+    "name": "Nombre Completo",
+    "email": "Correo Electrónico",
+    "phone": "Teléfono",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "terms": "Acepto los términos y condiciones y la política de privacidad",
+    "submit": "CREAR CUENTA",
+    "login_link": "Iniciar Sesión",
+    "already_account": "¿Ya tienes cuenta?",
+    "join_title": "Únete a",
+    "join_subtitle": "Comienza a gestionar tus torneos hoy",
+    "password_strength": "Mínimo 6 caracteres",
+    "password_mismatch": "Las contraseñas no coinciden",
+    "success": "¡Cuenta creada exitosamente! Redirigiendo al login..."
+  },
+  "home": {
+    "my_leagues": "Mis Ligas",
+    "join_league": "Unirse a Liga",
+    "sports": "Deportes",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "live": "En Vivo",
+    "general_table": "Tabla General",
+    "view_all": "Ver Todo",
+    "news": "Noticias",
+    "team": "Equipo",
+    "pts": "PTS"
+  },
+  "dashboard": {
+    "welcome": "Bienvenido, {name}",
+    "stats": {
+      "total_users": "Total Usuarios",
+      "active_leagues": "Ligas Activas",
+      "active_tournaments": "Torneos en Curso",
+      "today_matches": "Partidos Hoy",
+      "total_teams": "Equipos",
+      "pending_matches": "Partidos Pendientes"
+    },
+    "quick_actions": {
+      "title": "Acciones Rápidas",
+      "manage_users": "Gestionar Usuarios",
+      "manage_users_desc": "Ver y administrar usuarios",
+      "view_leagues": "Ver Ligas",
+      "view_leagues_desc": "Administrar todas las ligas",
+      "reports": "Reportes",
+      "reports_desc": "Ver estadísticas del sistema",
+      "create_league": "Crear Liga",
+      "create_league_desc": "Inicia una nueva liga",
+      "manage_tournaments": "Gestionar Torneos",
+      "manage_tournaments_desc": "Ver y editar torneos",
+      "register_result": "Registrar Resultado",
+      "register_result_desc": "Actualizar marcadores"
+    },
+    "recent_activity": {
+      "title": "Actividad Reciente",
+      "user_registered": "Usuario registrado",
+      "time_ago": "Hace 5 minutos"
+    },
+    "organizer": {
+      "my_leagues": "Mis Ligas",
+      "tournaments": "Torneos",
+      "no_leagues": "No has creado ninguna liga todavía",
+      "create_first_league": "Crear Primera Liga"
+    },
+    "upcoming_matches": "Próximos Partidos",
+    "no_matches": "No hay partidos programados",
+    "user": {
+      "welcome_title": "¡Empieza tu Aventura Deportiva!",
+      "welcome_subtitle": "Únete a ligas, crea tu equipo o conviértete en organizador",
+      "create_first_league": "Crear Mi Primera Liga",
+      "explore_leagues": "Explorar Ligas",
+      "explore_leagues_desc": "Encuentra y únete a ligas activas",
+      "view_tournaments": "Ver Torneos",
+      "view_tournaments_desc": "Descubre torneos en curso",
+      "create_team": "Crear Equipo",
+      "create_team_desc": "Forma tu propio equipo",
+      "featured_leagues": "Ligas Destacadas",
+      "no_leagues_available": "No hay ligas disponibles todavía"
+    }
+  },
+  "roles": {
+    "admin": "Administrador",
+    "organizer": "Organizador",
+    "user": "Usuario"
+  },
+  "unauthorized": {
+    "title": "Acceso Denegado",
+    "message": "No tienes permisos para acceder a esta página. Si crees que esto es un error, contacta al administrador.",
+    "go_back": "Volver Atrás",
+    "go_home": "Ir al Inicio",
+    "organizer_prompt": "¿Necesitas ser organizador?",
+    "organizer_message": "Crea tu primera liga y serás promovido automáticamente a organizador."
+  },
+  "promo": {
+    "title": "Crea tu propia Liga",
+    "description": "Organiza torneos, gestiona equipos y lleva el control total de tus estadísticas como un profesional.",
+    "cta": "Comenzar Ahora"
+  },
+  "table": {
+    "pos": "Pos",
+    "team": "Equipo",
+    "pj": "PJ",
+    "g": "G",
+    "e": "E",
+    "p": "P",
+    "gf": "GF",
+    "gc": "GC",
+    "dg": "DG",
+    "pts": "Pts",
+    "legend": {
+      "qualification": "Zona de clasificación",
+      "pj": "Partidos Jugados",
+      "gep": "Ganados/Empatados/Perdidos",
+      "dg": "Diferencia de Goles"
+    }
+  },
+  "components": {
+    "league_card": {
+      "sport_fallback": "Deporte"
+    },
+    "match_card": {
+      "home": "Local",
+      "away": "Visitante",
+      "round": "Jornada"
+    },
+    "team_card": {
+      "captain": "Capitán",
+      "founded": "Fundado",
+      "players": "jugadores"
+    },
+    "tournament_card": {
+      "start": "Inicio",
+      "end": "Fin",
+      "max_teams": "Máx. {count} equipos",
+      "formats": {
+        "league": "Liga",
+        "knockout": "Eliminación Directa",
+        "group_knockout": "Grupos + Eliminación"
+      }
+    }
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "welcome": "Welcome",
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login",
+    "register_link": "Don't have an account? Register"
+  },
+  "nav": {
+    "home": "Home",
+    "leagues": "Leagues",
+    "tournaments": "Tournaments",
+    "teams": "Teams",
+    "matches": "Matches",
+    "login": "Login",
+    "register": "Register"
+  },
+  "register": {
+    "title": "Create Account",
+    "subtitle": "Your account will be created as a user. You will be promoted to organizer when you create your first league.",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "terms": "I accept the terms and conditions and the privacy policy",
+    "submit": "CREATE ACCOUNT",
+    "login_link": "Login",
+    "already_account": "Already have an account?",
+    "join_title": "Join",
+    "join_subtitle": "Start managing your tournaments today",
+    "password_strength": "Minimum 6 characters",
+    "password_mismatch": "Passwords do not match",
+    "success": "Account created successfully! Redirecting to login..."
+  },
+  "home": {
+    "my_leagues": "My Leagues",
+    "join_league": "Join League",
+    "sports": "Sports",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "live": "Live",
+    "general_table": "General Table",
+    "view_all": "View All",
+    "news": "News",
+    "team": "Team",
+    "pts": "PTS"
+  },
+  "dashboard": {
+    "welcome": "Welcome, {name}",
+    "stats": {
+      "total_users": "Total Users",
+      "active_leagues": "Active Leagues",
+      "active_tournaments": "Active Tournaments",
+      "today_matches": "Matches Today",
+      "total_teams": "Teams",
+      "pending_matches": "Pending Matches"
+    },
+    "quick_actions": {
+      "title": "Quick Actions",
+      "manage_users": "Manage Users",
+      "manage_users_desc": "View and manage users",
+      "view_leagues": "View Leagues",
+      "view_leagues_desc": "Manage all leagues",
+      "reports": "Reports",
+      "reports_desc": "View system statistics",
+      "create_league": "Create League",
+      "create_league_desc": "Start a new league",
+      "manage_tournaments": "Manage Tournaments",
+      "manage_tournaments_desc": "View and edit tournaments",
+      "register_result": "Register Result",
+      "register_result_desc": "Update scores"
+    },
+    "recent_activity": {
+      "title": "Recent Activity",
+      "user_registered": "User registered",
+      "time_ago": "5 minutes ago"
+    },
+    "organizer": {
+      "my_leagues": "My Leagues",
+      "tournaments": "Tournaments",
+      "no_leagues": "You haven't created any leagues yet",
+      "create_first_league": "Create First League"
+    },
+    "upcoming_matches": "Upcoming Matches",
+    "no_matches": "No matches scheduled",
+    "user": {
+      "welcome_title": "Start Your Sports Adventure!",
+      "welcome_subtitle": "Join leagues, create your team, or become an organizer",
+      "create_first_league": "Create My First League",
+      "explore_leagues": "Explore Leagues",
+      "explore_leagues_desc": "Find and join active leagues",
+      "view_tournaments": "View Tournaments",
+      "view_tournaments_desc": "Discover ongoing tournaments",
+      "create_team": "Create Team",
+      "create_team_desc": "Form your own team",
+      "featured_leagues": "Featured Leagues",
+      "no_leagues_available": "No leagues available yet"
+    }
+  },
+  "roles": {
+    "admin": "Admin",
+    "organizer": "Organizer",
+    "user": "User"
+  },
+  "unauthorized": {
+    "title": "Access Denied",
+    "message": "You do not have permission to access this page. If you believe this is an error, contact the administrator.",
+    "go_back": "Go Back",
+    "go_home": "Go Home",
+    "organizer_prompt": "Need to be an organizer?",
+    "organizer_message": "Create your first league and you will be automatically promoted to organizer."
+  },
+  "promo": {
+    "title": "Create Your Own League",
+    "description": "Organize tournaments, manage teams, and take full control of your stats like a pro.",
+    "cta": "Start Now"
+  },
+  "table": {
+    "pos": "Pos",
+    "team": "Team",
+    "pj": "MP",
+    "g": "W",
+    "e": "D",
+    "p": "L",
+    "gf": "GF",
+    "gc": "GA",
+    "dg": "GD",
+    "pts": "Pts",
+    "legend": {
+      "qualification": "Qualification Zone",
+      "pj": "Matches Played",
+      "gep": "Won/Drawn/Lost",
+      "dg": "Goal Difference"
+    }
+  },
+  "components": {
+    "league_card": {
+      "sport_fallback": "Sport"
+    },
+    "match_card": {
+      "home": "Home",
+      "away": "Away",
+      "round": "Round"
+    },
+    "team_card": {
+      "captain": "Captain",
+      "founded": "Founded",
+      "players": "players"
+    },
+    "tournament_card": {
+      "start": "Start",
+      "end": "End",
+      "max_teams": "Max {count} teams",
+      "formats": {
+        "league": "League",
+        "knockout": "Knockout",
+        "group_knockout": "Group + Knockout"
+      }
+    }
+  }
+}

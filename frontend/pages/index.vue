@@ -21,7 +21,8 @@
             class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
             <div
               class="p-4 border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark-alt">
-              <h3 class="font-bold text-text-primary-light dark:text-white uppercase tracking-wider text-xs">Mis Ligas
+              <h3 class="font-bold text-text-primary-light dark:text-white uppercase tracking-wider text-xs">
+                {{ $t('home.my_leagues') }}
               </h3>
             </div>
             <div class="p-2">
@@ -43,7 +44,7 @@
                   class="w-8 h-8 rounded-full border border-dashed border-primary-500/50 flex items-center justify-center">
                   <span class="material-symbols-outlined text-sm">add</span>
                 </div>
-                <span class="text-sm font-bold">Unirse a Liga</span>
+                <span class="text-sm font-bold">{{ $t('home.join_league') }}</span>
               </button>
             </div>
           </div>
@@ -52,7 +53,8 @@
             class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
             <div
               class="p-4 border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark-alt">
-              <h3 class="font-bold text-text-primary-light dark:text-white uppercase tracking-wider text-xs">Deportes
+              <h3 class="font-bold text-text-primary-light dark:text-white uppercase tracking-wider text-xs">
+                {{ $t('home.sports') }}
               </h3>
             </div>
             <div class="p-2">
@@ -74,11 +76,11 @@
             class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-2 flex items-center justify-between overflow-x-auto">
             <div class="flex items-center gap-2">
               <button class="px-4 py-1.5 rounded-lg bg-primary-500 text-black text-sm font-bold shadow-neon">
-                Hoy
+                {{ $t('home.today') }}
               </button>
               <button
                 class="px-4 py-1.5 rounded-lg text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 text-sm font-medium transition-colors">
-                Mañana
+                {{ $t('home.tomorrow') }}
               </button>
               <button
                 class="px-4 py-1.5 rounded-lg text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5 text-sm font-medium transition-colors">
@@ -94,7 +96,7 @@
               <button
                 class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-colors">
                 <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                <span class="text-xs font-bold uppercase">En Vivo</span>
+                <span class="text-xs font-bold uppercase">{{ $t('home.live') }}</span>
               </button>
             </div>
           </div>
@@ -244,17 +246,18 @@
           <div
             class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
             <div class="p-4 border-b border-border-light dark:border-border-dark flex items-center justify-between">
-              <h3 class="font-bold text-text-primary-light dark:text-white uppercase tracking-wider text-xs">Tabla
-                General</h3>
-              <button class="text-primary-600 dark:text-primary-500 text-xs font-bold hover:underline">Ver Todo</button>
+              <h3 class="font-bold text-text-primary-light dark:text-white uppercase tracking-wider text-xs">
+                {{ $t('home.general_table') }}</h3>
+              <button
+                class="text-primary-600 dark:text-primary-500 text-xs font-bold hover:underline">{{ $t('home.view_all') }}</button>
             </div>
             <div class="p-2">
               <table class="w-full text-sm">
                 <thead>
                   <tr class="text-text-secondary-light dark:text-text-secondary-dark text-xs">
                     <th class="text-left p-2 font-medium">#</th>
-                    <th class="text-left p-2 font-medium">Equipo</th>
-                    <th class="text-center p-2 font-medium">PTS</th>
+                    <th class="text-left p-2 font-medium">{{ $t('home.team') }}</th>
+                    <th class="text-center p-2 font-medium">{{ $t('home.pts') }}</th>
                   </tr>
                 </thead>
                 <tbody class="text-text-primary-light dark:text-white">
@@ -291,7 +294,8 @@
           <div
             class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
             <div class="p-4 border-b border-border-light dark:border-border-dark">
-              <h3 class="font-bold text-text-primary-light dark:text-white uppercase tracking-wider text-xs">Noticias
+              <h3 class="font-bold text-text-primary-light dark:text-white uppercase tracking-wider text-xs">
+                {{ $t('home.news') }}
               </h3>
             </div>
             <div class="divide-y divide-border-light dark:divide-border-dark">

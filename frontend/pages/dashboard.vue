@@ -4,7 +4,7 @@
             <!-- Welcome Header -->
             <div class="mb-8 animate-fade-in">
                 <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-                    Bienvenido, {{ authStore.user?.name || 'Usuario' }}
+                    {{ $t('dashboard.welcome', { name: authStore.user?.name || 'Usuario' }) }}
                 </h1>
                 <p class="text-gray-600 dark:text-gray-400 mt-1">
                     <span :class="getRoleBadgeClass(authStore.user?.role || 'user')"
@@ -21,35 +21,41 @@
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="animate-slide-up stagger-1">
-                        <StatsCard title="Total Usuarios" :value="stats.totalUsers || 0" icon="group" color="blue" />
+                        <StatsCard :title="$t('dashboard.stats.total_users')" :value="stats.totalUsers || 0"
+                            icon="group" color="blue" />
                     </div>
                     <div class="animate-slide-up stagger-2">
-                        <StatsCard title="Ligas Activas" :value="stats.activeLeagues || 0" icon="emoji_events"
-                            color="green" />
+                        <StatsCard :title="$t('dashboard.stats.active_leagues')" :value="stats.activeLeagues || 0"
+                            icon="emoji_events" color="green" />
                     </div>
                     <div class="animate-slide-up stagger-3">
-                        <StatsCard title="Torneos en Curso" :value="stats.activeTournaments || 0" icon="sports"
-                            color="purple" />
+                        <StatsCard :title="$t('dashboard.stats.active_tournaments')"
+                            :value="stats.activeTournaments || 0" icon="sports" color="purple" />
                     </div>
                     <div class="animate-slide-up stagger-4">
-                        <StatsCard title="Partidos Hoy" :value="stats.todayMatches || 0" icon="today" color="orange" />
+                        <StatsCard :title="$t('dashboard.stats.today_matches')" :value="stats.todayMatches || 0"
+                            icon="today" color="orange" />
                     </div>
                 </div>
 
                 <!-- Quick Actions -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 animate-slide-up">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Acciones Rápidas</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                        {{ $t('dashboard.quick_actions.title') }}</h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="animate-scale-in stagger-1">
-                            <QuickAction title="Gestionar Usuarios" description="Ver y administrar usuarios"
-                                icon="manage_accounts" @click="navigateTo('/admin/users')" />
+                            <QuickAction :title="$t('dashboard.quick_actions.manage_users')"
+                                :description="$t('dashboard.quick_actions.manage_users_desc')" icon="manage_accounts"
+                                @click="navigateTo('/admin/users')" />
                         </div>
                         <div class="animate-scale-in stagger-2">
-                            <QuickAction title="Ver Ligas" description="Administrar todas las ligas" icon="emoji_events"
+                            <QuickAction :title="$t('dashboard.quick_actions.view_leagues')"
+                                :description="$t('dashboard.quick_actions.view_leagues_desc')" icon="emoji_events"
                                 @click="navigateTo('/leagues')" />
                         </div>
                         <div class="animate-scale-in stagger-3">
-                            <QuickAction title="Reportes" description="Ver estadísticas del sistema" icon="analytics"
+                            <QuickAction :title="$t('dashboard.quick_actions.reports')"
+                                :description="$t('dashboard.quick_actions.reports_desc')" icon="analytics"
                                 @click="navigateTo('/admin/reports')" />
                         </div>
                     </div>
@@ -57,7 +63,8 @@
 
                 <!-- Recent Activity -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Actividad Reciente</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                        {{ $t('dashboard.recent_activity.title') }}</h2>
                     <div class="space-y-3">
                         <div v-for="i in 5" :key="i"
                             class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors">
@@ -65,8 +72,10 @@
                                 <span class="material-symbols-outlined text-primary">person</span>
                             </div>
                             <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-900 dark:text-white">Usuario registrado</p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400">Hace 5 minutos</p>
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                    {{ $t('dashboard.recent_activity.user_registered') }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $t('dashboard.recent_activity.time_ago') }}</p>
                             </div>
                         </div>
                     </div>
@@ -78,17 +87,20 @@
                 <!-- Stats Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div class="animate-slide-up stagger-1">
-                        <StatsCard title="Mis Ligas" :value="myLeagues?.length || 0" icon="emoji_events" color="blue" />
+                        <StatsCard :title="$t('dashboard.organizer.my_leagues')" :value="myLeagues?.length || 0"
+                            icon="emoji_events" color="blue" />
                     </div>
                     <div class="animate-slide-up stagger-2">
-                        <StatsCard title="Torneos" :value="myTournaments?.length || 0" icon="sports" color="green" />
+                        <StatsCard :title="$t('dashboard.organizer.tournaments')" :value="myTournaments?.length || 0"
+                            icon="sports" color="green" />
                     </div>
                     <div class="animate-slide-up stagger-3">
-                        <StatsCard title="Equipos" :value="stats.totalTeams || 0" icon="group" color="purple" />
+                        <StatsCard :title="$t('dashboard.stats.total_teams')" :value="stats.totalTeams || 0"
+                            icon="group" color="purple" />
                     </div>
                     <div class="animate-slide-up stagger-4">
-                        <StatsCard title="Partidos Pendientes" :value="stats.pendingMatches || 0" icon="schedule"
-                            color="orange" />
+                        <StatsCard :title="$t('dashboard.stats.pending_matches')" :value="stats.pendingMatches || 0"
+                            icon="schedule" color="orange" />
                     </div>
                 </div>
 
@@ -96,43 +108,48 @@
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                         <span class="material-symbols-outlined">bolt</span>
-                        Acciones Rápidas
+                        {{ $t('dashboard.quick_actions.title') }}
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <QuickAction title="Crear Liga" description="Inicia una nueva liga" icon="add_circle"
+                        <QuickAction :title="$t('dashboard.quick_actions.create_league')"
+                            :description="$t('dashboard.quick_actions.create_league_desc')" icon="add_circle"
                             @click="showCreateLeagueModal = true" />
-                        <QuickAction title="Gestionar Torneos" description="Ver y editar torneos" icon="emoji_events"
+                        <QuickAction :title="$t('dashboard.quick_actions.manage_tournaments')"
+                            :description="$t('dashboard.quick_actions.manage_tournaments_desc')" icon="emoji_events"
                             @click="navigateTo('/tournaments')" />
-                        <QuickAction title="Registrar Resultado" description="Actualizar marcadores" icon="edit_square"
+                        <QuickAction :title="$t('dashboard.quick_actions.register_result')"
+                            :description="$t('dashboard.quick_actions.register_result_desc')" icon="edit_square"
                             @click="navigateTo('/matches')" />
                     </div>
                 </div>
 
                 <!-- My Leagues -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Mis Ligas</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                        {{ $t('dashboard.organizer.my_leagues') }}</h2>
                     <div v-if="myLeagues?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <LeagueCard v-for="league in myLeagues" :key="league.id" :league="league"
                             @click="navigateTo(`/leagues/${league.id}`)" />
                     </div>
                     <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
                         <span class="material-symbols-outlined text-5xl mb-2">emoji_events</span>
-                        <p>No has creado ninguna liga todavía</p>
+                        <p>{{ $t('dashboard.organizer.no_leagues') }}</p>
                         <button @click="showCreateLeagueModal = true" class="btn-primary mt-4">
-                            Crear Primera Liga
+                            {{ $t('dashboard.organizer.create_first_league') }}
                         </button>
                     </div>
                 </div>
 
                 <!-- Upcoming Matches -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Próximos Partidos</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                        {{ $t('dashboard.upcoming_matches') }}</h2>
                     <div v-if="upcomingMatches?.length" class="space-y-3">
                         <MatchCard v-for="match in upcomingMatches.slice(0, 5)" :key="match.id" :match="match" />
                     </div>
                     <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
                         <span class="material-symbols-outlined text-5xl mb-2">sports_soccer</span>
-                        <p>No hay partidos programados</p>
+                        <p>{{ $t('dashboard.no_matches') }}</p>
                     </div>
                 </div>
             </div>
@@ -140,14 +157,15 @@
             <!-- USER Dashboard -->
             <div v-else>
                 <!-- Welcome Message -->
-                <div class="bg-gradient-to-r from-primary to-blue-600 text-white rounded-lg shadow-lg p-8 mb-8 animate-scale-in hover-glow">
-                    <h2 class="text-2xl font-bold mb-2">¡Empieza tu Aventura Deportiva!</h2>
+                <div
+                    class="bg-gradient-to-r from-primary to-blue-600 text-white rounded-lg shadow-lg p-8 mb-8 animate-scale-in hover-glow">
+                    <h2 class="text-2xl font-bold mb-2">{{ $t('dashboard.user.welcome_title') }}</h2>
                     <p class="text-blue-100 mb-4">
-                        Únete a ligas, crea tu equipo o conviértete en organizador
+                        {{ $t('dashboard.user.welcome_subtitle') }}
                     </p>
                     <button @click="showCreateLeagueModal = true"
                         class="bg-white text-primary px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                        Crear Mi Primera Liga
+                        {{ $t('dashboard.user.create_first_league') }}
                     </button>
                 </div>
 
@@ -159,8 +177,10 @@
                             class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
                             <span class="material-symbols-outlined text-primary text-2xl">emoji_events</span>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Explorar Ligas</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Encuentra y únete a ligas activas</p>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            {{ $t('dashboard.user.explore_leagues') }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ $t('dashboard.user.explore_leagues_desc') }}</p>
                     </div>
 
                     <div @click="navigateTo('/tournaments')"
@@ -169,8 +189,10 @@
                             class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4">
                             <span class="material-symbols-outlined text-green-600 text-2xl">trophy</span>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Ver Torneos</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Descubre torneos en curso</p>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            {{ $t('dashboard.user.view_tournaments') }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">
+                            {{ $t('dashboard.user.view_tournaments_desc') }}</p>
                     </div>
 
                     <div @click="showCreateTeamModal = true"
@@ -179,21 +201,24 @@
                             class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mb-4">
                             <span class="material-symbols-outlined text-purple-600 text-2xl">group_add</span>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">Crear Equipo</h3>
-                        <p class="text-sm text-gray-600 dark:text-gray-400">Forma tu propio equipo</p>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                            {{ $t('dashboard.user.create_team') }}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">{{ $t('dashboard.user.create_team_desc') }}
+                        </p>
                     </div>
                 </div>
 
                 <!-- Recent Leagues -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Ligas Destacadas</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                        {{ $t('dashboard.user.featured_leagues') }}</h2>
                     <div v-if="recentLeagues?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <LeagueCard v-for="league in recentLeagues.slice(0, 6)" :key="league.id" :league="league"
                             @click="navigateTo(`/leagues/${league.id}`)" />
                     </div>
                     <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
                         <span class="material-symbols-outlined text-5xl mb-2">sentiment_dissatisfied</span>
-                        <p>No hay ligas disponibles todavía</p>
+                        <p>{{ $t('dashboard.user.no_leagues_available') }}</p>
                     </div>
                 </div>
             </div>
@@ -246,6 +271,8 @@ const stats = computed(() => ({
     pendingMatches: upcomingMatches.value?.length || 0
 }))
 
+const { t } = useI18n()
+
 const getRoleBadgeClass = (role: string) => {
     const classes: Record<string, string> = {
         'admin': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
@@ -265,12 +292,7 @@ const getRoleIcon = (role: string) => {
 }
 
 const getRoleText = (role: string) => {
-    const texts: Record<string, string> = {
-        'admin': 'Administrador',
-        'organizer': 'Organizador',
-        'user': 'Usuario'
-    }
-    return texts[role] || 'Usuario'
+    return t(`roles.${role}`) || t('roles.user')
 }
 
 const handleLeagueCreated = () => {

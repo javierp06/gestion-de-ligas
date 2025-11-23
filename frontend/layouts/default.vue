@@ -109,11 +109,11 @@
             <template v-else>
               <NuxtLink to="/login"
                 class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white transition-colors">
-                INICIAR SESIÓN
+                {{ $t('nav.login').toUpperCase() }}
               </NuxtLink>
               <NuxtLink to="/register"
                 class="btn-primary px-6 py-2 rounded-lg text-sm font-bold tracking-wide shadow-neon hover:scale-105 transition-transform">
-                REGISTRARSE
+                {{ $t('nav.register').toUpperCase() }}
               </NuxtLink>
             </template>
           </div>

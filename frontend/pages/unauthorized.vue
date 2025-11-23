@@ -7,21 +7,21 @@
       </div>
 
 
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Acceso Denegado</h1>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">{{ $t('unauthorized.title') }}</h1>
       <p class="text-gray-600 dark:text-gray-400 mb-8">
-        No tienes permisos para acceder a esta página. Si crees que esto es un error, contacta al administrador.
+        {{ $t('unauthorized.message') }}
       </p>
 
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <button @click="goBack" class="btn-primary flex items-center justify-center gap-2">
           <span class="material-symbols-outlined">arrow_back</span>
-          Volver Atrás
+          {{ $t('unauthorized.go_back') }}
         </button>
         <button @click="goHome"
           class="px-6 py-3 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
           <span class="material-symbols-outlined">home</span>
-          Ir al Inicio
+          {{ $t('unauthorized.go_home') }}
         </button>
       </div>
 
@@ -30,9 +30,9 @@
         <div class="flex items-start gap-3">
           <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
           <div class="text-left">
-            <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">¿Necesitas ser organizador?</p>
+            <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">{{ $t('unauthorized.organizer_prompt') }}</p>
             <p class="text-sm text-blue-700 dark:text-blue-400">
-              Crea tu primera liga y serás promovido automáticamente a organizador.
+              {{ $t('unauthorized.organizer_message') }}
             </p>
           </div>
         </div>

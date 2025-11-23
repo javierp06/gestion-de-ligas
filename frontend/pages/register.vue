@@ -15,10 +15,10 @@
           <span class="material-symbols-outlined text-4xl">group_add</span>
         </NuxtLink>
         <h1 class="text-3xl font-display font-black text-text-primary-light dark:text-white mb-2 tracking-tight">
-          Únete a <span class="text-primary-500">PROLEAGUE</span>
+          {{ $t('register.join_title') }} <span class="text-primary-500">PROLEAGUE</span>
         </h1>
         <p class="text-text-secondary-light dark:text-text-secondary-dark font-medium">
-          Comienza a gestionar tus torneos hoy
+          {{ $t('register.join_subtitle') }}
         </p>
       </div>
 
@@ -26,11 +26,10 @@
       <div
         class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark shadow-2xl rounded-3xl p-8 backdrop-blur-xl">
         <h2 class="text-2xl font-bold text-text-primary-light dark:text-white mb-2 text-center uppercase tracking-wide">
-          Crear Cuenta
+          {{ $t('register.title') }}
         </h2>
         <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark text-center mb-6 font-medium">
-          Tu cuenta se creará como <strong class="text-primary-500">usuario</strong>. Serás promovido a <strong
-            class="text-primary-500">organizador</strong> al crear tu primera liga.
+          {{ $t('register.subtitle') }}
         </p>
 
         <form @submit.prevent="handleRegister" class="space-y-4">
@@ -45,14 +44,14 @@
           <div v-if="success"
             class="bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 px-4 py-3 rounded-xl flex items-center gap-3 text-sm font-bold">
             <span class="material-symbols-outlined text-lg">check_circle</span>
-            <span>¡Registro exitoso! Redirigiendo...</span>
+            <span>{{ $t('register.success') }}</span>
           </div>
 
 
           <div>
             <label for="name"
               class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-              Nombre Completo *
+              {{ $t('register.name') }} *
             </label>
             <div class="relative group">
               <span
@@ -67,7 +66,7 @@
           <div>
             <label for="email"
               class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-              Correo Electrónico *
+              {{ $t('register.email') }} *
             </label>
             <div class="relative group">
               <span
@@ -82,7 +81,7 @@
           <div>
             <label for="phone"
               class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-              Teléfono
+              {{ $t('register.phone') }}
             </label>
             <div class="relative group">
               <span
@@ -97,7 +96,7 @@
           <div>
             <label for="password"
               class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-              Contraseña *
+              {{ $t('register.password') }} *
             </label>
             <div class="relative group">
               <span
@@ -122,14 +121,15 @@
                 :class="passwordStrength >= 3 ? 'bg-primary-500' : 'bg-border-light dark:bg-border-dark'"></div>
             </div>
             <p class="text-[10px] text-text-secondary-light dark:text-text-secondary-dark mt-1 font-medium text-right">
-              Mínimo 6 caracteres</p>
+              {{ $t('register.password_strength') }}
+            </p>
           </div>
 
 
           <div>
             <label for="confirmPassword"
               class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-              Confirmar Contraseña *
+              {{ $t('register.confirmPassword') }} *
             </label>
             <div class="relative group">
               <span
@@ -150,8 +150,7 @@
                 class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black opacity-0 peer-checked:opacity-100 pointer-events-none material-symbols-outlined text-sm font-bold">check</span>
             </div>
             <label class="text-xs text-text-secondary-light dark:text-text-secondary-dark font-medium leading-relaxed">
-              Acepto los <a href="#" class="text-primary-500 hover:underline">términos y condiciones</a> y la <a
-                href="#" class="text-primary-500 hover:underline">política de privacidad</a>
+              {{ $t('register.terms') }}
             </label>
           </div>
 
@@ -159,7 +158,7 @@
           <button type="submit" :disabled="loading || !acceptTerms"
             class="w-full bg-primary-500 text-black font-black py-4 rounded-xl shadow-neon hover:shadow-neon-strong hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-300 uppercase tracking-wide flex items-center justify-center gap-2">
             <span v-if="loading" class="material-symbols-outlined animate-spin">progress_activity</span>
-            <span>{{ loading ? 'Registrando...' : 'CREAR CUENTA' }}</span>
+            <span>{{ loading ? 'Registrando...' : $t('register.submit') }}</span>
           </button>
 
 
@@ -169,15 +168,14 @@
             </div>
             <div class="relative flex justify-center text-xs uppercase tracking-widest font-bold">
               <span
-                class="px-4 bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark">¿Ya
-                tienes cuenta?</span>
+                class="px-4 bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark">{{ $t('register.already_account') }}</span>
             </div>
           </div>
 
 
           <NuxtLink to="/login"
             class="block w-full py-3 text-center rounded-xl border-2 border-border-light dark:border-border-dark text-text-primary-light dark:text-white font-bold hover:border-primary-500 hover:text-primary-500 dark:hover:border-primary-500 dark:hover:text-primary-500 transition-all duration-300 uppercase tracking-wide">
-            Iniciar Sesión
+            {{ $t('register.login_link') }}
           </NuxtLink>
         </form>
       </div>

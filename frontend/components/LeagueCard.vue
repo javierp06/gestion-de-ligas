@@ -26,7 +26,7 @@
             <!-- Sport -->
             <p class="text-sm text-primary font-medium mb-2 flex items-center gap-1">
                 <span class="material-symbols-outlined text-sm">sports</span>
-                {{ league.sport_name || league.sport?.name || 'Deporte' }}
+                {{ league.sport_name || league.sport?.name || $t('components.league_card.sport_fallback') }}
             </p>
 
             <!-- Description -->

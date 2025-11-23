@@ -27,7 +27,7 @@
       <div
         class="bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark shadow-2xl rounded-3xl p-8 backdrop-blur-xl">
         <h2 class="text-2xl font-bold text-text-primary-light dark:text-white mb-6 text-center uppercase tracking-wide">
-          Iniciar Sesión
+          {{ $t('login.title') }}
         </h2>
 
         <form @submit.prevent="handleLogin" class="space-y-5">
@@ -42,7 +42,7 @@
           <div>
             <label for="email"
               class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-              Correo Electrónico
+              {{ $t('login.email') }}
             </label>
             <div class="relative group">
               <span
@@ -57,7 +57,7 @@
           <div>
             <label for="password"
               class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-              Contraseña
+              {{ $t('login.password') }}
             </label>
             <div class="relative group">
               <span
@@ -90,7 +90,7 @@
           <button type="submit" :disabled="loading"
             class="w-full bg-primary-500 text-black font-black py-4 rounded-xl shadow-neon hover:shadow-neon-strong hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-300 uppercase tracking-wide flex items-center justify-center gap-2">
             <span v-if="loading" class="material-symbols-outlined animate-spin">progress_activity</span>
-            <span>{{ loading ? 'Iniciando...' : 'INGRESAR' }}</span>
+            <span>{{ loading ? 'Iniciando...' : $t('login.submit').toUpperCase() }}</span>
           </button>
 
 
@@ -111,7 +111,7 @@
             </p>
             <NuxtLink to="/register"
               class="block w-full py-3 rounded-xl border-2 border-border-light dark:border-border-dark text-text-primary-light dark:text-white font-bold hover:border-primary-500 hover:text-primary-500 dark:hover:border-primary-500 dark:hover:text-primary-500 transition-all duration-300 uppercase tracking-wide">
-              Crear Cuenta Gratis
+              {{ $t('login.register_link') }}
             </NuxtLink>
           </div>
         </form>
