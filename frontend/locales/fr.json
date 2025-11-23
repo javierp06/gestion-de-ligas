@@ -1,0 +1,18 @@
+{
+  "welcome": "Bienvenue",
+  "login": {
+    "title": "Connexion",
+    "email": "Email",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "register_link": "Pas de compte ? S'inscrire"
+  },
+  "nav": {
+    "home": "Accueil",
+    "leagues": "Ligues",
+    "tournaments": "Tournois",
+    "teams": "Équipes",
+    "login": "Connexion",
+    "register": "S'inscrire"
+  }
+}

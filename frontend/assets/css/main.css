@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply font-sans bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark antialiased;
+  background-image: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.05) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.dark body {
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+}
+
+/* ============================================
+   BUTTONS - High Voltage Style
+   ============================================ */
+.btn-primary {
+  @apply relative bg-primary-500 text-black font-bold py-3 px-6 rounded-lg transition-all duration-300 shadow-neon transform hover:-translate-y-0.5 hover:shadow-neon-strong active:translate-y-0 overflow-hidden uppercase tracking-wide text-sm border border-transparent;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(255, 255, 255, 0.4), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btn-primary:hover::after {
+  opacity: 1;
+}
+
+.btn-secondary {
+  @apply bg-surface-light dark:bg-surface-dark-alt text-text-primary-light dark:text-text-primary-dark font-bold py-3 px-6 rounded-lg border border-border-light dark:border-border-dark transition-all duration-300 hover:border-primary-500 dark:hover:border-primary-500 transform hover:-translate-y-0.5 active:translate-y-0 uppercase tracking-wide text-sm;
+}
+
+.btn-ghost {
+  @apply bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark font-medium py-2 px-4 rounded-lg transition-all duration-200;
+}
+
+/* ============================================
+   CARDS - Bento Grid Style
+   ============================================ */
+.card {
+  @apply bg-surface-light dark:bg-surface-dark rounded-2xl p-6 transition-all duration-300 border border-border-light dark:border-border-dark;
+}
+
+.card-hover {
+  @apply card hover:border-primary-500/50 dark:hover:border-primary-500/50 hover:shadow-lg;
+}
+
+/* ============================================
+   INPUTS - Sharp & Clean
+   ============================================ */
+.input-field {
+  @apply w-full px-4 py-3 border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark-alt text-text-primary-light dark:text-text-primary-dark rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all duration-200 placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark;
+}
+
+/* ============================================
+   BADGES - High Contrast
+   ============================================ */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold uppercase tracking-wider;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800;
+}
+
+.badge-warning {
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800;
+}
+
+.badge-primary {
+  @apply bg-primary-500/10 text-primary-600 dark:text-primary-500 border border-primary-500/20;
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400;
+}
+
+.glass {
+  @apply bg-white/80 dark:bg-surface-dark/80 backdrop-blur-md border-b border-border-light dark:border-border-dark;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-700 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-500;
+}
+
+::selection {
+  @apply bg-primary-500 text-black;
+}

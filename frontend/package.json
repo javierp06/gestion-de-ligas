@@ -1,0 +1,26 @@
+{
+  "name": "deportes-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para Red de Eventos Deportivos Locales",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
+    "axios": "^1.7.9",
+    "nuxt": "^3.10.0",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.15"
+  },
+  "devDependencies": {
+    "@nuxtjs/i18n": "^10.2.1",
+    "@nuxtjs/tailwindcss": "^6.11.1",
+    "@types/node": "^20.11.0",
+    "sass": "^1.70.0"
+  }
+}

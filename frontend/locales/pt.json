@@ -1,0 +1,18 @@
+{
+  "welcome": "Bem-vindo",
+  "login": {
+    "title": "Entrar",
+    "email": "Email",
+    "password": "Senha",
+    "submit": "Entrar",
+    "register_link": "Não tem conta? Registre-se"
+  },
+  "nav": {
+    "home": "Início",
+    "leagues": "Ligas",
+    "tournaments": "Torneios",
+    "teams": "Equipes",
+    "login": "Entrar",
+    "register": "Registrar"
+  }
+}
