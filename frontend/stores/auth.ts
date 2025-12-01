@@ -53,6 +53,35 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    async googleLogin(credential: string) {
+      const { $api } = useNuxtApp();
+      
+      try {
+        const response = await $api.post('/auth/google', { credential });
+        
+        if (response.data.success) {
+          this.user = response.data.data.user;
+          this.accessToken = response.data.data.accessToken;
+          this.refreshToken = response.data.data.refreshToken;
+          this.isAuthenticated = true;
+
+          // Guardar en localStorage
+          if (process.client) {
+            localStorage.setItem('accessToken', this.accessToken);
+            localStorage.setItem('refreshToken', this.refreshToken);
+            localStorage.setItem('user', JSON.stringify(this.user));
+          }
+
+          return { success: true, user: this.user };
+        }
+      } catch (error: any) {
+        return {
+          success: false,
+          message: error.response?.data?.message || 'Error al iniciar sesión con Google'
+        };
+      }
+    },
+
     async register(userData: { email: string; password: string; name: string; phone?: string }) {
       const { $api } = useNuxtApp();
       

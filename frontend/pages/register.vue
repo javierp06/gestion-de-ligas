@@ -168,6 +168,23 @@
             </div>
             <div class="relative flex justify-center text-xs uppercase tracking-widest font-bold">
               <span
+                class="px-4 bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark">O
+                regístrate con</span>
+            </div>
+          </div>
+
+          <div class="flex justify-center mb-6">
+            <ClientOnly>
+              <GoogleLogin :callback="handleGoogleLogin" />
+            </ClientOnly>
+          </div>
+
+          <div class="relative my-8">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-border-light dark:border-border-dark"></div>
+            </div>
+            <div class="relative flex justify-center text-xs uppercase tracking-widest font-bold">
+              <span
                 class="px-4 bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark">{{ $t('register.already_account') }}</span>
             </div>
           </div>
@@ -193,6 +210,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
+import { GoogleLogin } from 'vue3-google-login'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -252,6 +270,27 @@ const handleRegister = async () => {
   }
 
   loading.value = false
+}
+
+const handleGoogleLogin = async (response: any) => {
+  loading.value = true
+  error.value = ''
+
+  try {
+    const result = await authStore.googleLogin(response.credential)
+    if (result?.success) {
+      toastStore.success(`¡Bienvenido, ${result.user?.name}! 👋`)
+      router.push('/dashboard')
+    } else {
+      error.value = result?.message || 'Error al registrarse con Google'
+      toastStore.error(error.value)
+    }
+  } catch (e) {
+    error.value = 'Error inesperado'
+    toastStore.error(error.value)
+  } finally {
+    loading.value = false
+  }
 }
 
 definePageMeta({

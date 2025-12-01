@@ -105,6 +105,11 @@
             </div>
           </div>
 
+          <div class="flex justify-center mb-6">
+            <ClientOnly>
+              <GoogleLogin :callback="handleGoogleLogin" />
+            </ClientOnly>
+          </div>
 
           <div class="text-center">
             <p class="text-text-secondary-light dark:text-text-secondary-dark font-medium mb-3">¿Aún no tienes cuenta?
@@ -130,6 +135,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
+import { GoogleLogin } from 'vue3-google-login'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -160,6 +166,27 @@ const handleLogin = async () => {
   }
 
   loading.value = false
+}
+
+const handleGoogleLogin = async (response: any) => {
+  loading.value = true
+  error.value = ''
+
+  try {
+    const result = await authStore.googleLogin(response.credential)
+    if (result?.success) {
+      toastStore.success(`¡Bienvenido, ${result.user?.name}! 👋`)
+      router.push('/dashboard')
+    } else {
+      error.value = result?.message || 'Error al iniciar sesión con Google'
+      toastStore.error(error.value)
+    }
+  } catch (e) {
+    error.value = 'Error inesperado'
+    toastStore.error(error.value)
+  } finally {
+    loading.value = false
+  }
 }
 
 definePageMeta({

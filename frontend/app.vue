@@ -7,6 +7,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
 const authStore = useAuthStore();
 const route = useRoute();
 
@@ -35,12 +39,7 @@ const pageTransition = computed(() => {
 onMounted(() => {
   authStore.initializeAuth();
   
-  // Prefetch common routes for instant navigation
-  const router = useRouter()
-  setTimeout(() => {
-    router.prefetch('/dashboard')
-    router.prefetch('/leagues')
-  }, 1000)
+  // Prefetching is handled automatically by NuxtLink
 });
 </script>
 

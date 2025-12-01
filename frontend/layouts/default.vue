@@ -5,7 +5,7 @@
       <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <!-- Logo -->
-          <NuxtLink to="/" class="flex items-center gap-3 group">
+          <NuxtLink :to="localePath('/')" class="flex items-center gap-3 group">
             <div
               class="w-8 h-8 bg-primary-500 text-black flex items-center justify-center rounded font-bold text-xl transform group-hover:rotate-12 transition-transform">
               P
@@ -22,8 +22,9 @@
               { key: 'nav.leagues', path: '/leagues' },
               { key: 'nav.tournaments', path: '/tournaments' },
               { key: 'nav.teams', path: '/teams' },
-              { key: 'nav.matches', path: '/matches' } // Note: 'matches' key needs to be added to locales if not present, or use a generic one
-            ]" :key="item.key" :to="item.path"
+              { key: 'nav.matches', path: '/matches' },
+              { key: 'nav.stats', path: '/stats' }
+            ]" :key="item.key" :to="localePath(item.path)"
               class="text-sm font-bold uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-primary-500 transition-colors">
               {{ $t(item.key) }}
             </NuxtLink>
@@ -73,7 +74,7 @@
                 </button>
 
                 <!-- Dropdown Menu -->
-                <div v-if="showDropdown" @click="showDropdown = false"
+                <div v-if="showDropdown"
                   class="absolute right-0 mt-2 w-56 bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-border-light dark:border-border-dark py-2 z-50 overflow-hidden">
                   <div class="px-4 py-3 border-b border-border-light dark:border-border-dark mb-2">
                     <p
@@ -83,18 +84,17 @@
                       {{ authStore.user?.email }}
                     </p>
                   </div>
-
-                  <NuxtLink to="/dashboard"
-                    class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                  <button @click="navigateAndClose('/dashboard')"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
                     <span class="material-symbols-outlined text-xl">dashboard</span>
                     <span>Dashboard</span>
-                  </NuxtLink>
+                  </button>
 
-                  <NuxtLink to="/profile"
-                    class="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                  <button @click="navigateAndClose('/profile')"
+                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
                     <span class="material-symbols-outlined text-xl">person</span>
                     <span>Perfil</span>
-                  </NuxtLink>
+                  </button>
 
                   <div class="border-t border-border-light dark:border-border-dark my-2"></div>
 
@@ -107,11 +107,11 @@
               </div>
             </template>
             <template v-else>
-              <NuxtLink to="/login"
+              <NuxtLink :to="localePath('/login')"
                 class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white transition-colors">
                 {{ $t('nav.login').toUpperCase() }}
               </NuxtLink>
-              <NuxtLink to="/register"
+              <NuxtLink :to="localePath('/register')"
                 class="btn-primary px-6 py-2 rounded-lg text-sm font-bold tracking-wide shadow-neon hover:scale-105 transition-transform">
                 {{ $t('nav.register').toUpperCase() }}
               </NuxtLink>
@@ -158,10 +158,16 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '~/stores/auth';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { useLocalePath } from '#imports';
+import { navigateTo } from '#app';
+import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();
 const router = useRouter();
+const localePath = useLocalePath();
 const { locale, locales, setLocale } = useI18n();
 const showDropdown = ref(false);
 const showLangDropdown = ref(false);
@@ -171,10 +177,18 @@ const availableLocales = computed(() => {
   return (locales.value as any[]).filter(i => i.code !== locale.value)
 });
 
-// Check initial dark mode state
 onMounted(() => {
   if (typeof window !== 'undefined') {
-    isDark.value = document.documentElement.classList.contains('dark');
+    const storedTheme = localStorage.getItem('darkMode');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (storedTheme === 'true' || (!storedTheme && systemDark)) {
+      document.documentElement.classList.add('dark');
+      isDark.value = true;
+    } else {
+      document.documentElement.classList.remove('dark');
+      isDark.value = false;
+    }
   }
 });
 
@@ -189,10 +203,21 @@ const toggleDarkMode = () => {
 const handleLogout = async () => {
   showDropdown.value = false;
   await authStore.logout();
-  router.push('/');
+  router.push(localePath('/'));
 };
 
-// Close dropdown when clicking outside
+const navigateAndClose = (path: string) => {
+  showDropdown.value = false;
+  navigateTo(localePath(path));
+};
+
+const route = useRoute();
+
+watch(() => route.fullPath, () => {
+  showDropdown.value = false;
+  showLangDropdown.value = false;
+});
+
 onMounted(() => {
   if (typeof window !== 'undefined') {
     document.addEventListener('click', (e: MouseEvent) => {

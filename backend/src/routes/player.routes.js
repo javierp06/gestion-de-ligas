@@ -1,12 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const {
+  getPlayers,
+  getPlayerById,
+  createPlayer,
+  updatePlayer,
+  deletePlayer
+} = require('../controllers/player.controller');
+const { authenticateToken } = require('../middlewares/auth.middleware');
 
-router.get('/', (req, res) => {
-  res.json({ success: true, message: 'Players endpoint', data: [] });
-});
+// Rutas públicas
+router.get('/', getPlayers);
+router.get('/:id', getPlayerById);
 
-router.get('/:id', (req, res) => {
-  res.json({ success: true, message: 'Player detail' });
-});
+// Rutas protegidas
+router.post('/', authenticateToken, createPlayer);
+router.put('/:id', authenticateToken, updatePlayer);
+router.delete('/:id', authenticateToken, deletePlayer);
 
 module.exports = router;

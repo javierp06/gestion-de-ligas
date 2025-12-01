@@ -2,6 +2,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { getPool } = require('../config/mysql');
 const { logActivity } = require('../utils/activityLogger');
+const { OAuth2Client } = require('google-auth-library');
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Registrar nuevo usuario
 const register = async (req, res) => {
@@ -258,6 +261,122 @@ const logout = async (req, res) => {
   }
 };
 
+// Google Login
+const googleLogin = async (req, res) => {
+  try {
+    const { credential } = req.body;
+    const pool = getPool();
+
+    // Verificar token de Google
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+    const payload = ticket.getPayload();
+    const { email, name, picture, sub: googleId } = payload;
+
+    // Buscar usuario por google_id o email
+    const [users] = await pool.query(
+      'SELECT * FROM users WHERE google_id = ? OR email = ?',
+      [googleId, email]
+    );
+
+    let user;
+
+    if (users.length === 0) {
+      // Crear nuevo usuario
+      const [result] = await pool.query(
+        'INSERT INTO users (name, email, google_id, avatar, role, password) VALUES (?, ?, ?, ?, ?, ?)',
+        [name, email, googleId, picture, 'user', 'GOOGLE_AUTH_NO_PASSWORD']
+      );
+
+      user = {
+        id: result.insertId,
+        name,
+        email,
+        role: 'user',
+        avatar: picture
+      };
+
+      await logActivity({
+        userId: user.id,
+        userName: user.name,
+        action: 'register',
+        resource: 'user',
+        resourceId: user.id,
+        details: { method: 'google' },
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent')
+      });
+    } else {
+      user = users[0];
+
+      // Actualizar google_id y avatar si faltan
+      if (!user.google_id || !user.avatar) {
+        await pool.query(
+          'UPDATE users SET google_id = ?, avatar = ? WHERE id = ?',
+          [googleId, picture, user.id]
+        );
+        user.avatar = picture;
+      }
+    }
+
+    // Generar tokens (igual que login normal)
+    const accessToken = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
+    );
+
+    const refreshToken = jwt.sign(
+      { id: user.id },
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d' }
+    );
+
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await pool.query(
+      'INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES (?, ?, ?)',
+      [user.id, refreshToken, expiresAt]
+    );
+
+    await logActivity({
+      userId: user.id,
+      userName: user.name,
+      action: 'login',
+      resource: 'user',
+      details: { method: 'google' },
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent')
+    });
+
+    res.json({
+      success: true,
+      message: 'Login con Google exitoso',
+      data: {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          avatar: user.avatar
+        },
+        accessToken,
+        refreshToken
+      }
+    });
+
+  } catch (error) {
+    console.error('Error en Google login:', error);
+    res.status(401).json({
+      success: false,
+      message: 'Token de Google inválido'
+    });
+  }
+};
+
 // Obtener perfil del usuario actual
 const getProfile = async (req, res) => {
   try {
@@ -290,6 +409,7 @@ const getProfile = async (req, res) => {
 module.exports = {
   register,
   login,
+  googleLogin,
   refreshToken,
   logout,
   getProfile

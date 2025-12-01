@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || "http://localhost:3001/api",
       apiBase: process.env.NUXT_PUBLIC_API_BASE || "http://localhost:3001/api",
+      googleClientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID || "985663130308-2sh4s4au3ugvlgui9u95okkb41irks55.apps.googleusercontent.com",
     },
   },
 

@@ -1,11 +1,14 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+  <div
+    class="bg-surface-light dark:bg-surface-dark rounded-2xl shadow-md p-6 hover:shadow-neon transition-all duration-300 border border-border-light dark:border-border-dark">
     <div class="flex items-start justify-between">
       <div class="flex-1">
-        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{{ title }}</p>
-        <p class="text-3xl font-bold" :class="getColorClass(color)">{{ value }}</p>
+        <p
+          class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark mb-1 uppercase tracking-wider">
+          {{ title }}</p>
+        <p class="text-3xl font-black" :class="getColorClass(color)">{{ value }}</p>
       </div>
-      <div :class="`w-12 h-12 rounded-lg flex items-center justify-center ${getBgClass(color)}`">
+      <div :class="`w-12 h-12 rounded-xl flex items-center justify-center ${getBgClass(color)}`">
         <span class="material-symbols-outlined text-2xl" :class="getColorClass(color)">{{ icon }}</span>
       </div>
     </div>

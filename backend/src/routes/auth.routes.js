@@ -78,6 +78,29 @@ router.post('/login', [
 
 /**
  * @swagger
+ * /api/auth/google:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Iniciar sesión con Google
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - credential
+ *             properties:
+ *               credential:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login exitoso
+ */
+router.post('/google', authController.googleLogin);
+
+/**
+ * @swagger
  * /api/auth/refresh:
  *   post:
  *     tags: [Auth]
