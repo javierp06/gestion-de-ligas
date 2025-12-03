@@ -32,8 +32,9 @@
         <div v-for="team in teams" :key="team.id"
           class="group bg-surface-light dark:bg-surface-dark rounded-2xl p-6 border border-border-light dark:border-border-dark hover:border-primary-500/50 transition-all duration-300 hover:shadow-neon cursor-pointer flex flex-col items-center text-center">
           <div
-            class="w-24 h-24 rounded-full bg-surface-light dark:bg-surface-dark-alt mb-4 flex items-center justify-center relative group-hover:scale-110 transition-transform duration-300">
-            <span class="text-4xl">{{ team.emoji }}</span>
+            class="w-24 h-24 rounded-full bg-surface-light dark:bg-surface-dark-alt mb-4 flex items-center justify-center relative group-hover:scale-110 transition-transform duration-300 overflow-hidden">
+            <img v-if="team.logo" :src="team.logo" :alt="team.name" class="w-full h-full object-cover" />
+            <span v-else class="material-symbols-outlined text-4xl">groups</span>
             <div
               class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-green-500 border-2 border-surface-light dark:border-surface-dark"
               title="Verificado"></div>
@@ -72,64 +73,26 @@
 </template>
 
 <script setup lang="ts">
-const teams = [
-  {
-    id: 1,
-    name: 'Olimpia',
-    sport: 'Fútbol',
-    emoji: '🦁',
-    stats: { played: 14, won: 10, points: 32 }
-  },
-  {
-    id: 2,
-    name: 'Motagua',
-    sport: 'Fútbol',
-    emoji: '🦅',
-    stats: { played: 14, won: 9, points: 29 }
-  },
-  {
-    id: 3,
-    name: 'Real España',
-    sport: 'Fútbol',
-    emoji: '🚂',
-    stats: { played: 14, won: 7, points: 24 }
-  },
-  {
-    id: 4,
-    name: 'Marathón',
-    sport: 'Fútbol',
-    emoji: '🦖',
-    stats: { played: 14, won: 7, points: 25 }
-  },
-  {
-    id: 5,
-    name: 'Trozos FC',
-    sport: 'Fútbol 7',
-    emoji: '🪵',
-    stats: { played: 8, won: 2, points: 6 }
-  },
-  {
-    id: 6,
-    name: 'Lakers',
-    sport: 'Baloncesto',
-    emoji: '🏀',
-    stats: { played: 12, won: 8, points: 24 }
-  },
-  {
-    id: 7,
-    name: 'Bulls',
-    sport: 'Baloncesto',
-    emoji: '🐂',
-    stats: { played: 12, won: 6, points: 18 }
-  },
-  {
-    id: 8,
-    name: 'Lobos UPN',
-    sport: 'Fútbol',
-    emoji: '🐺',
-    stats: { played: 14, won: 4, points: 15 }
-  }
-];
+import { onMounted, computed } from 'vue';
+import { useTeamStore } from '@/stores/team';
+
+const teamStore = useTeamStore();
+
+onMounted(() => {
+  teamStore.fetchTeams();
+});
+
+const teams = computed(() => {
+  return teamStore.teams.map(team => ({
+    ...team,
+    sport: team.sport_name,
+    stats: {
+      played: team.total_played || 0,
+      won: team.total_won || 0,
+      points: team.total_points || 0
+    }
+  }));
+});
 
 definePageMeta({
   layout: 'default'

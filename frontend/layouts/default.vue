@@ -25,7 +25,8 @@
               { key: 'nav.matches', path: '/matches' },
               { key: 'nav.stats', path: '/stats' }
             ]" :key="item.key" :to="localePath(item.path)"
-              class="text-sm font-bold uppercase tracking-wide text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-primary-500 transition-colors">
+              class="text-sm font-bold uppercase tracking-wide transition-colors" active-class="text-primary-500"
+              :class="route.path === localePath(item.path) ? 'text-primary-500' : 'text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-primary-500'">
               {{ $t(item.key) }}
             </NuxtLink>
           </nav>

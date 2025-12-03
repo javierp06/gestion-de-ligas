@@ -11,11 +11,11 @@ const dbConfig = {
 
 async function migrateRoles() {
   let connection;
-  
+
   try {
     console.log('🔌 Conectando a la base de datos...');
     connection = await mysql.createConnection(dbConfig);
-    console.log('✅ Conexión establecida\n');
+    console.log('Conexión establecida\n');
 
     // Iniciar transacción
     await connection.beginTransaction();
@@ -36,12 +36,12 @@ async function migrateRoles() {
     );
 
     if (invalidUsers.length === 0) {
-      console.log('✅ No se encontraron roles inválidos. Todo está correcto.');
+      console.log('No se encontraron roles inválidos. Todo está correcto.');
       await connection.rollback();
       return;
     }
 
-    console.log(`⚠️  Se encontraron ${invalidUsers.length} usuarios con roles inválidos:`);
+    console.log(`Se encontraron ${invalidUsers.length} usuarios con roles inválidos:`);
     invalidUsers.forEach(user => {
       console.log(`   - ${user.email} (${user.role})`);
     });
@@ -54,11 +54,11 @@ async function migrateRoles() {
        WHERE role NOT IN ('user', 'organizer', 'admin')`
     );
 
-    console.log(`✅ ${result.affectedRows} usuarios actualizados a role='user'`);
+    console.log(`${result.affectedRows} usuarios actualizados a role='user'`);
 
     // Confirmar transacción
     await connection.commit();
-    console.log('✅ Transacción completada exitosamente\n');
+    console.log('Transacción completada exitosamente\n');
 
     // Verificar resultado final
     const [finalRoles] = await connection.execute(
@@ -70,7 +70,7 @@ async function migrateRoles() {
     });
 
   } catch (error) {
-    console.error('❌ Error durante la migración:', error.message);
+    console.error('Error durante la migración:', error.message);
     if (connection) {
       await connection.rollback();
       console.log('🔄 Transacción revertida');

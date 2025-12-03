@@ -13,7 +13,7 @@
           </p>
         </div>
 
-        <NuxtLink v-if="authStore.isOrganizer" to="/admin/leagues/create"
+        <NuxtLink v-if="authStore.isOrganizer" to="/leagues/create"
           class="btn-primary self-start md:self-auto flex items-center gap-2">
           <span class="material-symbols-outlined">add</span>
           Crear Liga
@@ -39,7 +39,6 @@
             @click="filters.sport_id = filters.sport_id === sport.id ? '' : sport.id"
             class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-light dark:border-border-dark hover:border-primary-500 transition-colors whitespace-nowrap"
             :class="filters.sport_id === sport.id ? 'bg-primary-500/10 border-primary-500 text-primary-600 dark:text-primary-500' : 'bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark'">
-            <span>{{ sport.emoji }}</span>
             <span class="text-sm font-bold">{{ sport.name }}</span>
           </button>
         </div>
@@ -82,9 +81,8 @@
             <div
               class="absolute inset-0 bg-gradient-to-b from-transparent to-surface-light dark:to-surface-dark opacity-50">
             </div>
-            <div
-              class="text-5xl transform group-hover:scale-110 transition-transform duration-500 filter grayscale group-hover:grayscale-0">
-              {{ getSportEmoji(league.sport_name) }}
+            <div class="text-5xl transform group-hover:scale-110 transition-transform duration-500 text-primary-500">
+              <span class="material-symbols-outlined" style="font-size: 48px">emoji_events</span>
             </div>
           </div>
 
@@ -137,8 +135,7 @@
         <p class="text-text-secondary-light dark:text-text-secondary-dark mb-8 max-w-md mx-auto">
           Intenta ajustar los filtros o crea una nueva liga para comenzar.
         </p>
-        <NuxtLink v-if="authStore.isOrganizer" to="/admin/leagues/create"
-          class="btn-primary inline-flex items-center gap-2">
+        <NuxtLink v-if="authStore.isOrganizer" to="/leagues/create" class="btn-primary inline-flex items-center gap-2">
           <span class="material-symbols-outlined">add</span>
           Crear Liga
         </NuxtLink>
@@ -155,21 +152,16 @@ const router = useRouter();
 
 const filters = ref({
   status: '',
-  sport_id: ''
+  sport_id: '' as string | number
 });
 
 const sports = [
-  { id: 1, name: 'Fútbol', emoji: '⚽' },
-  { id: 2, name: 'Baloncesto', emoji: '🏀' },
-  { id: 3, name: 'Tenis', emoji: '🎾' },
-  { id: 4, name: 'Voleibol', emoji: '🏐' },
-  { id: 5, name: 'Béisbol', emoji: '⚾' }
+  { id: 1, name: 'Fútbol' },
+  { id: 2, name: 'Baloncesto' },
+  { id: 3, name: 'Tenis' },
+  { id: 4, name: 'Voleibol' },
+  { id: 5, name: 'Béisbol' }
 ];
-
-const getSportEmoji = (sportName: string): string => {
-  const sport = sports.find(s => s.name.toLowerCase() === sportName?.toLowerCase());
-  return sport?.emoji || '🏆';
-};
 
 const fetchLeagues = () => {
   const params: any = {};

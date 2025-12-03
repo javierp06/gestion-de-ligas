@@ -36,11 +36,11 @@ const demoUsers = [
 
 async function seedDemoUsers() {
   let connection;
-  
+
   try {
     console.log('🔌 Conectando a la base de datos...');
     connection = await mysql.createConnection(dbConfig);
-    console.log('✅ Conexión establecida\n');
+    console.log('Conexión establecida\n');
 
     await connection.beginTransaction();
     console.log('📦 Transacción iniciada\n');
@@ -55,7 +55,7 @@ async function seedDemoUsers() {
       );
 
       if (existing.length > 0) {
-        console.log(`⏭️  ${user.email} ya existe (ID: ${existing[0].id})`);
+        console.log(`${user.email} ya existe (ID: ${existing[0].id})`);
         continue;
       }
 
@@ -69,18 +69,18 @@ async function seedDemoUsers() {
         [user.email, hashedPassword, user.name, user.role, user.phone]
       );
 
-      console.log(`✅ ${user.email} creado (ID: ${result.insertId}, role: ${user.role})`);
+      console.log(`${user.email} creado (ID: ${result.insertId}, role: ${user.role})`);
       console.log(`   Contraseña: ${user.password}`);
     }
 
     await connection.commit();
-    console.log('\n✅ Transacción completada exitosamente\n');
+    console.log('\nTransacción completada exitosamente\n');
 
     // Mostrar resumen
     const [users] = await connection.execute(
       'SELECT id, email, name, role FROM users ORDER BY role DESC, id ASC'
     );
-    
+
     console.log('📊 Usuarios en la base de datos:');
     users.forEach(user => {
       console.log(`   - [${user.role.toUpperCase()}] ${user.email} (${user.name})`);
@@ -92,7 +92,7 @@ async function seedDemoUsers() {
     });
 
   } catch (error) {
-    console.error('❌ Error durante el seeding:', error.message);
+    console.error('Error durante el seeding:', error.message);
     if (connection) {
       await connection.rollback();
       console.log('🔄 Transacción revertida');

@@ -103,7 +103,7 @@ const createTournament = async (req, res) => {
 
     // Verificar que la liga exista
     const [leagues] = await pool.query('SELECT id, organizer_id FROM leagues WHERE id = ?', [league_id]);
-    
+
     if (leagues.length === 0) {
       return res.status(400).json({
         success: false,
@@ -135,8 +135,8 @@ const createTournament = async (req, res) => {
       action: 'create',
       resource: 'tournament',
       resourceId: result.insertId,
-      details: { 
-        name, 
+      details: {
+        name,
         league_id,
         format,
         promoted_to_organizer: wasPromoted,
@@ -148,8 +148,8 @@ const createTournament = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: wasPromoted 
-        ? '🎉 ¡Felicidades! Creaste tu primer torneo y ahora eres un Organizador. Para actualizar tu sesión, por favor vuelve a iniciar sesión.'
+      message: wasPromoted
+        ? '¡Felicidades! Creaste tu primer torneo y ahora eres un Organizador. Para actualizar tu sesión, por favor vuelve a iniciar sesión.'
         : 'Torneo creado exitosamente',
       data: {
         id: result.insertId,
@@ -166,7 +166,7 @@ const createTournament = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creando torneo:', error);
-    
+
     if (error.code === 'ER_NO_REFERENCED_ROW_2') {
       return res.status(400).json({
         success: false,
@@ -174,7 +174,7 @@ const createTournament = async (req, res) => {
         error: 'LEAGUE_NOT_FOUND'
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: 'Error al crear torneo'

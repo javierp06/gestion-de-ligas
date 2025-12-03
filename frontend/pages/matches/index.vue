@@ -28,9 +28,9 @@
       </div>
 
 
-      <div
+      <div v-if="viewMode === 'list'"
         class="flex items-center justify-between bg-surface-light dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark p-4 mb-8">
-        <button
+        <button @click="handlePrevDate"
           class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark">
           <span class="material-symbols-outlined">chevron_left</span>
         </button>
@@ -51,21 +51,21 @@
           </div>
         </div>
 
-        <button
+        <button @click="handleNextDate"
           class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark">
           <span class="material-symbols-outlined">chevron_right</span>
         </button>
       </div>
 
 
-      <div class="space-y-6">
+      <div v-if="viewMode === 'list'" class="space-y-6">
 
         <div v-for="league in filteredLeagues" :key="league.name"
           class="bg-surface-light dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark overflow-hidden">
           <div
             class="px-6 py-4 bg-surface-light dark:bg-surface-dark-alt border-b border-border-light dark:border-border-dark flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <span class="text-2xl">{{ league.emoji }}</span>
+              <span class="material-symbols-outlined text-2xl">emoji_events</span>
               <h3 class="font-bold text-text-primary-light dark:text-white">{{ league.name }}</h3>
             </div>
             <NuxtLink :to="`/leagues/${league.id}`"
@@ -133,95 +133,279 @@
         </div>
       </div>
 
+      <!-- Calendar View -->
+      <div v-else
+        class="bg-surface-light dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark overflow-hidden">
+        <!-- Calendar Header -->
+        <div class="p-4 flex items-center justify-between border-b border-border-light dark:border-border-dark">
+          <button @click="changeMonth(-1)"
+            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark">
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          <h3 class="text-lg font-bold text-text-primary-light dark:text-white capitalize">
+            {{ currentMonthName }} {{ currentYear }}
+          </h3>
+          <button @click="changeMonth(1)"
+            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark">
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div
+          class="grid grid-cols-7 text-center border-b border-border-light dark:border-border-dark bg-gray-50 dark:bg-white/5">
+          <div v-for="day in weekDays" :key="day"
+            class="py-2 text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase">
+            {{ day }}
+          </div>
+        </div>
+
+        <div class="grid grid-cols-7 auto-rows-fr">
+          <div v-for="(day, index) in calendarDays" :key="index"
+            class="min-h-[100px] p-2 border-b border-r border-border-light dark:border-border-dark relative hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer"
+            :class="{ 'bg-gray-50/50 dark:bg-white/5': !day.isCurrentMonth }" @click="selectDateFromCalendar(day.date)">
+
+            <span class="text-sm font-bold" :class="{
+              'text-primary-500': isToday(day.date),
+              'text-text-secondary-light dark:text-text-secondary-dark': !day.isCurrentMonth,
+              'text-text-primary-light dark:text-white': day.isCurrentMonth && !isToday(day.date)
+            }">
+              {{ day.dayNumber }}
+            </span>
+
+            <!-- Matches Dots/List -->
+            <div class="mt-1 space-y-1">
+              <div v-for="match in day.matches.slice(0, 3)" :key="match.id"
+                class="text-[10px] truncate px-1.5 py-0.5 rounded bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20">
+                {{ match.home_team_name }} vs {{ match.away_team_name }}
+              </div>
+              <div v-if="day.matches.length > 3"
+                class="text-[10px] text-text-secondary-light dark:text-text-secondary-dark pl-1">
+                +{{ day.matches.length - 3 }} más
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, watch } from 'vue';
+import { useMatchStore } from '@/stores/match';
+
+const matchStore = useMatchStore();
 const viewMode = ref('list'); // 'list' | 'calendar'
-const selectedDate = ref('HOY');
 
-const dates = [
-  { label: 'HOY', value: 'HOY', day: '23', active: true },
-  { label: 'MAÑ', value: 'MAÑ', day: '24', active: false },
-  { label: 'DOM', value: 'DOM', day: '25', active: false },
-  { label: 'LUN', value: 'LUN', day: '26', active: false },
-  { label: 'MAR', value: 'MAR', day: '27', active: false }
-];
+// Calendar State
+const currentMonth = ref(new Date());
+const weekDays = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
 
-const matchesByLeague = [
-  {
-    id: 1,
-    name: 'Torneo Apertura 2024',
-    emoji: '⚽',
-    matches: [
-      {
-        id: 101,
-        date: 'HOY',
-        time: '78',
-        status: 'live',
-        home_team: 'Olimpia',
-        home_score: 2,
-        away_team: 'Motagua',
-        away_score: 1
-      },
-      {
-        id: 102,
-        date: 'HOY',
-        time: '19:00',
-        status: 'scheduled',
-        home_team: 'Real España',
-        home_score: '-',
-        away_team: 'Marathón',
-        away_score: '-'
-      },
-      {
-        id: 103,
-        date: 'MAÑ',
-        time: '15:00',
-        status: 'scheduled',
-        home_team: 'Vida',
-        home_score: '-',
-        away_team: 'Victoria',
-        away_score: '-'
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Liga Bancaria',
-    emoji: '🏀',
-    matches: [
-      {
-        id: 201,
-        date: 'HOY',
-        time: 'FT',
-        status: 'finished',
-        home_team: 'BAC Credomatic',
-        home_score: 86,
-        away_team: 'Ficohsa',
-        away_score: 82
-      },
-      {
-        id: 202,
-        date: 'DOM',
-        time: '10:00',
-        status: 'scheduled',
-        home_team: 'Davivienda',
-        home_score: '-',
-        away_team: 'Banpais',
-        away_score: '-'
-      }
-    ]
+const currentMonthName = computed(() => {
+  return currentMonth.value.toLocaleDateString('es-HN', { month: 'long' });
+});
+
+const currentYear = computed(() => {
+  return currentMonth.value.getFullYear();
+});
+
+const calendarDays = computed(() => {
+  const year = currentMonth.value.getFullYear();
+  const month = currentMonth.value.getMonth();
+
+  const firstDayOfMonth = new Date(year, month, 1);
+  const lastDayOfMonth = new Date(year, month + 1, 0);
+
+  const startDayOfWeek = firstDayOfMonth.getDay(); // 0 (Sun) to 6 (Sat)
+  const daysInMonth = lastDayOfMonth.getDate();
+
+  const days = [];
+
+  // Previous month days
+  const prevMonthLastDay = new Date(year, month, 0).getDate();
+  for (let i = startDayOfWeek - 1; i >= 0; i--) {
+    const date = new Date(year, month - 1, prevMonthLastDay - i);
+    days.push({
+      date: date,
+      dayNumber: date.getDate(),
+      isCurrentMonth: false,
+      matches: getMatchesForDate(date)
+    });
   }
-];
 
-// Filter matches based on selected date
+  // Current month days
+  for (let i = 1; i <= daysInMonth; i++) {
+    const date = new Date(year, month, i);
+    days.push({
+      date: date,
+      dayNumber: i,
+      isCurrentMonth: true,
+      matches: getMatchesForDate(date)
+    });
+  }
+
+  // Next month days
+  const remainingCells = 42 - days.length; // 6 rows * 7 cols
+  for (let i = 1; i <= remainingCells; i++) {
+    const date = new Date(year, month + 1, i);
+    days.push({
+      date: date,
+      dayNumber: i,
+      isCurrentMonth: false,
+      matches: getMatchesForDate(date)
+    });
+  }
+
+  return days;
+});
+
+const getMatchesForDate = (date: Date) => {
+  const dateString = date.toISOString().split('T')[0];
+  return matchStore.matches.filter(match => {
+    const matchDate = new Date(match.match_date).toISOString().split('T')[0];
+    return matchDate === dateString;
+  });
+};
+
+const isToday = (date: Date) => {
+  const today = new Date();
+  return date.getDate() === today.getDate() &&
+    date.getMonth() === today.getMonth() &&
+    date.getFullYear() === today.getFullYear();
+};
+
+const changeMonth = (delta: number) => {
+  const newDate = new Date(currentMonth.value);
+  newDate.setMonth(newDate.getMonth() + delta);
+  currentMonth.value = newDate;
+};
+
+const selectDateFromCalendar = (date: Date) => {
+  selectedDate.value = date.toISOString().split('T')[0];
+  viewMode.value = 'list';
+};
+
+// List View State
+// Initialize with local date to avoid timezone issues
+const getLocalDateString = () => {
+  const now = new Date();
+  const offset = now.getTimezoneOffset() * 60000;
+  return new Date(now.getTime() - offset).toISOString().split('T')[0];
+};
+
+const selectedDate = ref(getLocalDateString());
+
+const dates = computed(() => {
+  const daysArr = [];
+  // Parse the selected date string (YYYY-MM-DD) as a local date
+  // Appending T00:00:00 ensures it's treated as local time, not UTC
+  const current = new Date(selectedDate.value + 'T00:00:00');
+
+  // Generate 3 days before and 3 days after (total 7)
+  for (let i = -3; i <= 3; i++) {
+    const date = new Date(current);
+    date.setDate(current.getDate() + i);
+
+    // We need to format it back to YYYY-MM-DD
+    // Since 'date' is local, we need to be careful with toISOString() which converts to UTC
+    // So we manually construct the ISO string from local parts or adjust offset
+    const offset = date.getTimezoneOffset() * 60000;
+    const localDate = new Date(date.getTime() - offset);
+    const value = localDate.toISOString().split('T')[0];
+
+    const day = date.getDate().toString();
+    const label = getDayLabel(date);
+
+    daysArr.push({ label, value, day });
+  }
+  return daysArr;
+});
+
+const fetchMatches = async () => {
+  if (viewMode.value === 'calendar') {
+    // Fetch all matches for calendar view
+    await matchStore.fetchMatches({});
+  } else {
+    // Fetch specific date for list view
+    await matchStore.fetchMatches({ date: selectedDate.value });
+  }
+};
+
+const handlePrevDate = () => {
+  const date = new Date(selectedDate.value + 'T00:00:00');
+  date.setDate(date.getDate() - 1);
+  const offset = date.getTimezoneOffset() * 60000;
+  selectedDate.value = new Date(date.getTime() - offset).toISOString().split('T')[0];
+};
+
+const handleNextDate = () => {
+  const date = new Date(selectedDate.value + 'T00:00:00');
+  date.setDate(date.getDate() + 1);
+  const offset = date.getTimezoneOffset() * 60000;
+  selectedDate.value = new Date(date.getTime() - offset).toISOString().split('T')[0];
+};
+
+const getDayLabel = (date: Date) => {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  if (date.toDateString() === today.toDateString()) return 'HOY';
+  if (date.toDateString() === tomorrow.toDateString()) return 'MAÑ';
+
+  const days = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
+  return days[date.getDay()];
+};
+
+watch(selectedDate, () => {
+  if (viewMode.value === 'list') {
+    fetchMatches();
+  }
+});
+
+watch(viewMode, (newMode) => {
+  fetchMatches();
+});
+
+onMounted(() => {
+  fetchMatches();
+});
+
+// Group matches by tournament
 const filteredLeagues = computed(() => {
-  return matchesByLeague.map(league => ({
-    ...league,
-    matches: league.matches.filter(m => m.date === selectedDate.value)
-  })).filter(league => league.matches.length > 0);
+  if (!matchStore.matches.length) return [];
+
+  const groups: Record<string, any> = {};
+
+  matchStore.matches.forEach(match => {
+    const tournamentName = match.tournament_name || 'Torneo Desconocido';
+
+    if (!groups[tournamentName]) {
+      groups[tournamentName] = {
+        id: match.tournament_id,
+        name: tournamentName,
+        matches: []
+      };
+    }
+
+    // Format time and status
+    const matchDate = new Date(match.match_date);
+    const time = matchDate.toLocaleTimeString('es-HN', { hour: '2-digit', minute: '2-digit' });
+
+    groups[tournamentName].matches.push({
+      ...match,
+      time: match.status === 'live' ? 'LIVE' : (match.status === 'finished' ? 'FT' : time),
+      date: match.status === 'live' ? 'En Vivo' : (match.status === 'finished' ? 'Finalizado' : 'Programado'),
+      home_team: match.home_team_name,
+      away_team: match.away_team_name,
+      home_score: match.home_score !== null ? match.home_score : '-',
+      away_score: match.away_score !== null ? match.away_score : '-'
+    });
+  });
+
+  return Object.values(groups);
 });
 
 definePageMeta({

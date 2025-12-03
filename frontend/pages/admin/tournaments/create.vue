@@ -49,7 +49,7 @@
                     <div class="space-y-4">
                         <h2
                             class="text-xl font-bold text-text-primary-light dark:text-white flex items-center gap-2 border-b border-border-light dark:border-border-dark pb-2">
-                            <span class="material-symbols-outlined text-primary-500">emoji_events</span>
+                            <span class="material-symbols-outlined text-primary-500">settings</span>
                             Configuración de Liga
                         </h2>
 

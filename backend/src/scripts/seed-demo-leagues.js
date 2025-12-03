@@ -11,11 +11,11 @@ const dbConfig = {
 
 async function seedDemoLeagues() {
   let connection;
-  
+
   try {
     console.log('🔌 Conectando a la base de datos...');
     connection = await mysql.createConnection(dbConfig);
-    console.log('✅ Conexión establecida\n');
+    console.log('Conexión establecida\n');
 
     // Buscar el organizador demo
     const [organizers] = await connection.execute(
@@ -23,7 +23,7 @@ async function seedDemoLeagues() {
     );
 
     if (organizers.length === 0) {
-      console.error('❌ Error: No existe el usuario org@proleague.com');
+      console.error('Error: No existe el usuario org@proleague.com');
       console.log('💡 Ejecuta primero: node src/scripts/seed-demo-users.js');
       process.exit(1);
     }
@@ -37,7 +37,7 @@ async function seedDemoLeagues() {
     );
 
     if (sports.length === 0) {
-      console.error('❌ Error: No hay deportes en la base de datos');
+      console.error('Error: No hay deportes en la base de datos');
       console.log('💡 Ejecuta: POST http://localhost:3001/api/sports/seed');
       process.exit(1);
     }
@@ -81,7 +81,7 @@ async function seedDemoLeagues() {
       );
 
       if (existing.length > 0) {
-        console.log(`⏭️  "${league.name}" ya existe (ID: ${existing[0].id})`);
+        console.log(`"${league.name}" ya existe (ID: ${existing[0].id})`);
         continue;
       }
 
@@ -92,11 +92,11 @@ async function seedDemoLeagues() {
         [league.name, league.sport_id, league.description, organizerId, 'Honduras']
       );
 
-      console.log(`✅ "${league.name}" creada (ID: ${result.insertId})`);
+      console.log(`"${league.name}" creada (ID: ${result.insertId})`);
     }
 
     await connection.commit();
-    console.log('\n✅ Transacción completada exitosamente\n');
+    console.log('\nTransacción completada exitosamente\n');
 
     // Mostrar resumen final
     const [leagues] = await connection.execute(
@@ -112,7 +112,7 @@ async function seedDemoLeagues() {
     });
 
   } catch (error) {
-    console.error('❌ Error durante el seeding:', error.message);
+    console.error('Error durante el seeding:', error.message);
     if (connection) {
       await connection.rollback();
       console.log('🔄 Transacción revertida');

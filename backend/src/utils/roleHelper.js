@@ -14,7 +14,7 @@ async function upgradeUserToOrganizerIfNeeded(user) {
   }
 
   const pool = getPool();
-  
+
   // Actualizar rol en la base de datos
   await pool.query(
     'UPDATE users SET role = ? WHERE id = ?',
@@ -24,7 +24,7 @@ async function upgradeUserToOrganizerIfNeeded(user) {
   // Actualizar objeto en memoria (importante para el request actual)
   user.role = 'organizer';
 
-  console.log(`✅ Usuario ${user.email} (ID: ${user.id}) promovido a ORGANIZER al crear su primera liga`);
+  console.log(`Usuario ${user.email} (ID: ${user.id}) promovido a ORGANIZER al crear su primera liga`);
 
   return true;
 }

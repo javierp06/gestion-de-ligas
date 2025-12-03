@@ -3,40 +3,40 @@ const mysql = require('mysql2/promise');
 let pool = null;
 
 const connectMySQL = async () => {
-    try {
-        pool = mysql.createPool({
-            host: process.env
-            .MYSQL_HOST || 'localhost',
-            port: process.env.MYSQL_PORT || 3306,
-            user: process.env.MYSQL_USER || 'root',
-            password: process.env.MYSQL_PASSWORD || '1234',
-            database: process.env.MYSQL_DATABASE || 'deportes_db',
-            waitForConnections: true,
-            connectionLimit: 10,
-            queueLimit: 0,
-            enableKeepAlive: true,
-            keepAliveInitialDelay: 0
-        });
+  try {
+    pool = mysql.createPool({
+      host: process.env
+        .MYSQL_HOST || 'localhost',
+      port: process.env.MYSQL_PORT || 3306,
+      user: process.env.MYSQL_USER || 'root',
+      password: process.env.MYSQL_PASSWORD || '1234',
+      database: process.env.MYSQL_DATABASE || 'deportes_db',
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      enableKeepAlive: true,
+      keepAliveInitialDelay: 0
+    });
 
-        // Probar la conexión
-        const connection = await pool.getConnection();
-        console.log('✅ MySQL conectado correctamente');
-        connection.release();
+    // Probar la conexión
+    const connection = await pool.getConnection();
+    console.log('MySQL conectado correctamente');
+    connection.release();
 
-        // Crear tablas si no existen
-        await createTables();
-    } catch (error) {
-        console.error('❌ Error conectando a MySQL:', error.message);
-        process.exit(1);
-    }
+    // Crear tablas si no existen
+    await createTables();
+  } catch (error) {
+    console.error('Error conectando a MySQL:', error.message);
+    process.exit(1);
+  }
 };
 
 const createTables = async () => {
-    try {
-        const connection = await pool.getConnection();
+  try {
+    const connection = await pool.getConnection();
 
-        // Tabla de Usuarios
-        await connection.query(`
+    // Tabla de Usuarios
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -52,8 +52,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Deportes
-        await connection.query(`
+    // Tabla de Deportes
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS sports (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(100) NOT NULL,
@@ -65,8 +65,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Ligas
-        await connection.query(`
+    // Tabla de Ligas
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS leagues (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -85,8 +85,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Torneos
-        await connection.query(`
+    // Tabla de Torneos
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS tournaments (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -105,8 +105,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Equipos
-        await connection.query(`
+    // Tabla de Equipos
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS teams (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -125,8 +125,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Jugadores
-        await connection.query(`
+    // Tabla de Jugadores
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS players (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -145,8 +145,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Partidos
-        await connection.query(`
+    // Tabla de Partidos
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS matches (
         id INT AUTO_INCREMENT PRIMARY KEY,
         tournament_id INT NOT NULL,
@@ -170,8 +170,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Estadísticas de Jugadores por Partido
-        await connection.query(`
+    // Tabla de Estadísticas de Jugadores por Partido
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS player_match_stats (
         id INT AUTO_INCREMENT PRIMARY KEY,
         match_id INT NOT NULL,
@@ -194,8 +194,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Clasificación/Standings
-        await connection.query(`
+    // Tabla de Clasificación/Standings
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS standings (
         id INT AUTO_INCREMENT PRIMARY KEY,
         tournament_id INT NOT NULL,
@@ -219,8 +219,8 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        // Tabla de Refresh Tokens
-        await connection.query(`
+    // Tabla de Refresh Tokens
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS refresh_tokens (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
@@ -233,19 +233,19 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
-        console.log('✅ Tablas MySQL creadas/verificadas correctamente');
-        connection.release();
-    } catch (error) {
-        console.error('❌ Error creando tablas MySQL:', error.message);
-        throw error;
-    }
+    console.log('Tablas MySQL creadas/verificadas correctamente');
+    connection.release();
+  } catch (error) {
+    console.error('Error creando tablas MySQL:', error.message);
+    throw error;
+  }
 };
 
 const getPool = () => {
-    if (!pool) {
-        throw new Error('MySQL pool no inicializado. Llama a connectMySQL() primero.');
-    }
-    return pool;
+  if (!pool) {
+    throw new Error('MySQL pool no inicializado. Llama a connectMySQL() primero.');
+  }
+  return pool;
 };
 
 module.exports = { connectMySQL, getPool };

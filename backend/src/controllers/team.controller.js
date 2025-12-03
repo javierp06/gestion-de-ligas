@@ -14,11 +14,15 @@ const getTeams = async (req, res) => {
              l.organizer_id as league_organizer_id,
              s.name as sport_name,
              u.name as captain_name,
-             u.email as captain_email
+             u.email as captain_email,
+             COALESCE(SUM(st.matches_played), 0) as total_played,
+             COALESCE(SUM(st.wins), 0) as total_won,
+             COALESCE(SUM(st.points), 0) as total_points
       FROM teams t
       LEFT JOIN leagues l ON t.league_id = l.id
       LEFT JOIN sports s ON l.sport_id = s.id
       LEFT JOIN users u ON t.captain_id = u.id
+      LEFT JOIN standings st ON t.id = st.team_id
       WHERE 1=1
     `;
     const params = [];
@@ -28,7 +32,7 @@ const getTeams = async (req, res) => {
       params.push(league_id);
     }
 
-    query += ' ORDER BY t.created_at DESC';
+    query += ' GROUP BY t.id ORDER BY t.created_at DESC';
 
     const [teams] = await pool.query(query, params);
 
@@ -107,7 +111,7 @@ const createTeam = async (req, res) => {
 
     // Verificar que la liga exista
     const [leagues] = await pool.query('SELECT id, organizer_id FROM leagues WHERE id = ?', [league_id]);
-    
+
     if (leagues.length === 0) {
       return res.status(400).json({
         success: false,
@@ -118,7 +122,7 @@ const createTeam = async (req, res) => {
     // Verificar que el capitán exista si se proporciona
     if (captain_id) {
       const [users] = await pool.query('SELECT id FROM users WHERE id = ?', [captain_id]);
-      
+
       if (users.length === 0) {
         return res.status(400).json({
           success: false,
@@ -143,8 +147,8 @@ const createTeam = async (req, res) => {
       action: 'create',
       resource: 'team',
       resourceId: result.insertId,
-      details: { 
-        name, 
+      details: {
+        name,
         league_id,
         captain_id,
         promoted_to_organizer: wasPromoted,
@@ -156,8 +160,8 @@ const createTeam = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: wasPromoted 
-        ? '🎉 ¡Felicidades! Creaste tu primer equipo y ahora eres un Organizador. Para actualizar tu sesión, por favor vuelve a iniciar sesión.'
+      message: wasPromoted
+        ? '¡Felicidades! Creaste tu primer equipo y ahora eres un Organizador. Para actualizar tu sesión, por favor vuelve a iniciar sesión.'
         : 'Equipo creado exitosamente',
       data: {
         id: result.insertId,
@@ -174,7 +178,7 @@ const createTeam = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creando equipo:', error);
-    
+
     if (error.code === 'ER_NO_REFERENCED_ROW_2') {
       return res.status(400).json({
         success: false,
@@ -182,7 +186,7 @@ const createTeam = async (req, res) => {
         error: 'REFERENCE_NOT_FOUND'
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: 'Error al crear equipo'
@@ -218,7 +222,7 @@ const updateTeam = async (req, res) => {
     // Verificar que el nuevo capitán exista si se proporciona
     if (captain_id && captain_id !== teams[0].captain_id) {
       const [users] = await pool.query('SELECT id FROM users WHERE id = ?', [captain_id]);
-      
+
       if (users.length === 0) {
         return res.status(400).json({
           success: false,

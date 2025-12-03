@@ -47,9 +47,7 @@
           <div class="h-40 bg-surface-light dark:bg-surface-dark-alt relative overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
 
-            <div class="absolute inset-0 opacity-20"
-              :style="`background-image: radial-gradient(${getSportColor(tournament.sport_name)} 2px, transparent 2px); background-size: 20px 20px;`">
-            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
 
             <div class="absolute bottom-4 left-4 z-20">
               <span
@@ -142,17 +140,6 @@ const filteredTournaments = computed(() => {
 
   return tournaments.value
 })
-
-const getSportColor = (sport: string) => {
-  const colors: Record<string, string> = {
-    'Fútbol': '#10b981',
-    'Fútbol 7': '#ef4444',
-    'Baloncesto': '#f59e0b',
-    'Voleibol': '#3b82f6',
-    'Tenis': '#8b5cf6'
-  }
-  return colors[sport] || '#6b7280'
-}
 
 const formatDate = (dateString: string) => {
   if (!dateString) return 'Por definir'

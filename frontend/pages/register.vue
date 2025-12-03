@@ -261,8 +261,8 @@ const handleRegister = async () => {
   if (result?.success) {
     success.value = true
     toastStore.success('¡Cuenta creada exitosamente! Redirigiendo al login... 🎉')
-    setTimeout(() => {
-      router.push('/login')
+    setTimeout(async () => {
+      await navigateTo('/login')
     }, 2000)
   } else {
     error.value = result?.message || 'Error al registrar usuario'
@@ -280,7 +280,7 @@ const handleGoogleLogin = async (response: any) => {
     const result = await authStore.googleLogin(response.credential)
     if (result?.success) {
       toastStore.success(`¡Bienvenido, ${result.user?.name}! 👋`)
-      router.push('/dashboard')
+      await navigateTo('/dashboard')
     } else {
       error.value = result?.message || 'Error al registrarse con Google'
       toastStore.error(error.value)

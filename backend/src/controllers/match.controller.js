@@ -19,7 +19,7 @@ const createMatch = async (req, res) => {
 
     // Verificar que el torneo existe
     const [tournaments] = await pool.query('SELECT id, league_id FROM tournaments WHERE id = ?', [tournament_id]);
-    
+
     if (tournaments.length === 0) {
       return res.status(404).json({
         success: false,
@@ -79,10 +79,10 @@ const createMatch = async (req, res) => {
       action: 'create',
       resource: 'match',
       resourceId: result.insertId,
-      details: { 
-        tournament_id, 
-        home_team_id, 
-        away_team_id, 
+      details: {
+        tournament_id,
+        home_team_id,
+        away_team_id,
         match_date,
         promoted_to_organizer: wasPromoted
       },
@@ -92,8 +92,8 @@ const createMatch = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: wasPromoted 
-        ? '🎉 ¡Felicidades! Creaste tu primer partido y ahora eres un Organizador. Para actualizar tu sesión, por favor vuelve a iniciar sesión.'
+      message: wasPromoted
+        ? '¡Felicidades! Creaste tu primer partido y ahora eres un Organizador. Para actualizar tu sesión, por favor vuelve a iniciar sesión.'
         : 'Partido creado exitosamente',
       data: {
         id: result.insertId,
@@ -130,9 +130,12 @@ const getMatches = async (req, res) => {
         ht.name as home_team_name,
         ht.logo as home_team_logo,
         at.name as away_team_name,
-        at.logo as away_team_logo
+        at.logo as away_team_logo,
+        s.name as sport_name
       FROM matches m
       INNER JOIN tournaments t ON m.tournament_id = t.id
+      INNER JOIN leagues l ON t.league_id = l.id
+      INNER JOIN sports s ON l.sport_id = s.id
       INNER JOIN teams ht ON m.home_team_id = ht.id
       INNER JOIN teams at ON m.away_team_id = at.id
       WHERE 1=1

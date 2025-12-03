@@ -159,7 +159,7 @@ const handleLogin = async () => {
 
   if (result?.success) {
     toastStore.success(`¡Bienvenido, ${result.user?.name}! 👋`)
-    router.push('/dashboard')
+    await navigateTo('/dashboard')
   } else {
     error.value = result?.message || 'Error al iniciar sesión'
     toastStore.error(error.value)
@@ -176,7 +176,7 @@ const handleGoogleLogin = async (response: any) => {
     const result = await authStore.googleLogin(response.credential)
     if (result?.success) {
       toastStore.success(`¡Bienvenido, ${result.user?.name}! 👋`)
-      router.push('/dashboard')
+      await navigateTo('/dashboard')
     } else {
       error.value = result?.message || 'Error al iniciar sesión con Google'
       toastStore.error(error.value)

@@ -7,19 +7,19 @@ const connectMongoDB = async () => {
         // Configuración sin opciones deprecadas
         await mongoose.connect(uri);
 
-        console.log('✅ MongoDB conectado correctamente');
+        console.log('MongoDB conectado correctamente');
 
         mongoose.connection.on('error', (err) => {
-            console.error('❌ Error en MongoDB:', err);
+            console.error('Error en MongoDB:', err);
         });
 
         mongoose.connection.on('disconnected', () => {
-            console.log('⚠️ MongoDB desconectado');
+            console.log('MongoDB desconectado');
         });
 
     } catch (error) {
-        console.error('❌ Error conectando a MongoDB:', error.message);
-        console.log('⚠️ La aplicación continuará sin MongoDB (logs y comentarios deshabilitados)');
+        console.error('Error conectando a MongoDB:', error.message);
+        console.log('La aplicación continuará sin MongoDB (logs y comentarios deshabilitados)');
         // No hacemos exit para que la app funcione sin MongoDB
     }
 };

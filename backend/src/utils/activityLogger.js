@@ -10,7 +10,7 @@ const logActivity = async (logData) => {
   try {
     // Verificar si MongoDB está conectado
     if (mongoose.connection.readyState !== 1) {
-      console.log('⚠️ MongoDB no disponible, log no registrado:', logData.action);
+      console.log('MongoDB no disponible, log no registrado:', logData.action);
       return;
     }
 
@@ -24,7 +24,7 @@ const logActivity = async (logData) => {
     await Promise.race([createPromise, timeoutPromise]);
   } catch (error) {
     // No lanzar error, solo registrar en consola
-    console.log('⚠️ No se pudo registrar actividad en MongoDB:', error.message);
+    console.log('No se pudo registrar actividad en MongoDB:', error.message);
   }
 };
 

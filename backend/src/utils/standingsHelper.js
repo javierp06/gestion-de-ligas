@@ -140,7 +140,7 @@ async function calculateStandings(tournamentId) {
       );
     }
 
-    console.log(`✅ Tabla de posiciones actualizada para torneo ${tournamentId}`);
+    console.log(`Tabla de posiciones actualizada para torneo ${tournamentId}`);
   } catch (error) {
     console.error('Error calculando standings:', error);
     throw error;

@@ -49,7 +49,7 @@
                                 class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium appearance-none cursor-pointer">
                                 <option value="" disabled>Selecciona un deporte</option>
                                 <option v-for="sport in sports" :key="sport.id" :value="sport.id">
-                                    {{ sport.icon }} {{ sport.name }}
+                                    {{ sport.name }}
                                 </option>
                             </select>
                             <div
@@ -117,7 +117,7 @@ const { $api } = useNuxtApp()
 const toastStore = useToastStore()
 
 const loading = ref(false)
-const sports = ref([])
+const sports = ref<{ id: number; name: string }[]>([])
 
 const formData = ref({
     name: '',

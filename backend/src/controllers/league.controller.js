@@ -87,7 +87,7 @@ const createLeague = async (req, res) => {
 
     // Verificar que el deporte exista
     const [sports] = await pool.query('SELECT id FROM sports WHERE id = ?', [sport_id]);
-    
+
     if (sports.length === 0) {
       return res.status(400).json({
         success: false,
@@ -109,8 +109,8 @@ const createLeague = async (req, res) => {
       action: 'create',
       resource: 'league',
       resourceId: result.insertId,
-      details: { 
-        name, 
+      details: {
+        name,
         sport_id,
         promoted_to_organizer: wasPromoted,
         is_first_league: wasPromoted
@@ -121,8 +121,8 @@ const createLeague = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: wasPromoted 
-        ? '🎉 ¡Felicidades! Creaste tu primera liga y ahora eres un Organizador. Para actualizar tu sesión, por favor vuelve a iniciar sesión.'
+      message: wasPromoted
+        ? '¡Felicidades! Creaste tu primera liga y ahora eres un Organizador. Para actualizar tu sesión, por favor vuelve a iniciar sesión.'
         : 'Liga creada exitosamente',
       data: {
         id: result.insertId,
@@ -137,7 +137,7 @@ const createLeague = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creando liga:', error);
-    
+
     // Mensaje específico para foreign key constraint
     if (error.code === 'ER_NO_REFERENCED_ROW_2') {
       return res.status(400).json({
@@ -146,7 +146,7 @@ const createLeague = async (req, res) => {
         error: 'SPORT_NOT_FOUND'
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: 'Error al crear liga'
