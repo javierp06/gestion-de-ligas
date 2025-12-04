@@ -159,4 +159,62 @@ router.post('/logout', authenticateToken, authController.logout);
  */
 router.get('/profile', authenticateToken, authController.getProfile);
 
+/**
+ * @swagger
+ * /api/auth/profile:
+ *   put:
+ *     tags: [Auth]
+ *     summary: Actualizar perfil del usuario
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               avatar:
+ *                 type: string
+ *               bio:
+ *                 type: string
+ *               location:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *                 description: Contraseña actual (requerida para cambiar contraseña)
+ *               newPassword:
+ *                 type: string
+ *                 description: Nueva contraseña
+ *     responses:
+ *       200:
+ *         description: Perfil actualizado exitosamente
+ */
+router.put('/profile', authenticateToken, [
+  body('name').optional().notEmpty().withMessage('El nombre no puede estar vacío'),
+  body('newPassword').optional().isLength({ min: 6 }).withMessage('La nueva contraseña debe tener al menos 6 caracteres'),
+  body('avatar').optional().isString(),
+  body('bio').optional().isString(),
+  body('location').optional().isString(),
+  validateRequest
+], authController.updateProfile);
+
+/**
+ * @swagger
+ * /api/auth/activity:
+ *   get:
+ *     tags: [Auth]
+ *     summary: Obtener historial de actividad del usuario
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de actividades
+ */
+router.get('/activity', authenticateToken, authController.getActivityLogs);
+
 module.exports = router;

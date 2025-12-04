@@ -31,6 +31,14 @@
             </NuxtLink>
           </nav>
 
+          <!-- Search Bar -->
+          <div class="hidden lg:flex items-center relative mx-4">
+            <span
+              class="material-symbols-outlined absolute left-3 text-text-secondary-light dark:text-text-secondary-dark">search</span>
+            <input type="text" placeholder="Buscar..."
+              class="bg-surface-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all w-48 focus:w-64 text-text-primary-light dark:text-white" />
+          </div>
+
           <!-- Right Side Actions -->
           <div class="flex items-center gap-4">
             <!-- Language Switcher -->

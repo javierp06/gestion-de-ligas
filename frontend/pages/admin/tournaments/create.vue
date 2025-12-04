@@ -153,7 +153,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useNuxtApp, navigateTo, definePageMeta } from '#app'
+import { useNuxtApp, navigateTo } from '#app'
 import { useAuthStore } from '@/stores/auth'
 
 const { $api } = useNuxtApp()

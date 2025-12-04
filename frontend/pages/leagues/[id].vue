@@ -1,173 +1,240 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="min-h-screen bg-background-light dark:bg-background-dark pb-12">
     <!-- Loading State -->
-    <div v-if="pending" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="animate-pulse">
-        <div class="h-48 bg-gray-200 dark:bg-gray-800 rounded-lg mb-6"></div>
-        <div class="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mb-4"></div>
-        <div class="h-64 bg-gray-200 dark:bg-gray-800 rounded"></div>
+    <div v-if="pending" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="animate-pulse space-y-8">
+        <div class="h-64 bg-surface-light dark:bg-surface-dark rounded-3xl"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-2 h-96 bg-surface-light dark:bg-surface-dark rounded-3xl"></div>
+          <div class="h-96 bg-surface-light dark:bg-surface-dark rounded-3xl"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Content -->
-    <div v-else-if="league">
-      <!-- Hero Section -->
-      <div class="bg-gradient-to-r from-primary to-blue-600 text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex items-start justify-between">
-            <div>
-              <div class="flex items-center gap-3 mb-3">
-                <span class="text-5xl">{{ getSportEmoji(league.sport?.name || '') }}</span>
-                <div>
-                  <h1 class="text-4xl font-bold">{{ league.name }}</h1>
-                  <p class="text-blue-100 mt-1">{{ league.sport?.name }}</p>
-                </div>
-              </div>
-              
-              <div class="flex items-center gap-4 mt-4 text-sm">
-                <span :class="getStatusColor(league.status)" class="px-3 py-1 rounded-full font-medium">
+    <div v-else-if="league" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Header Card -->
+      <div
+        class="relative bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden mb-8 animate-fade-in">
+        <!-- Cover Image / Pattern -->
+        <div class="h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 relative">
+          <!-- Abstract Pattern -->
+          <div class="absolute inset-0 opacity-10 dark:opacity-20"
+            style="background-image: radial-gradient(#6366f1 1px, transparent 1px); background-size: 20px 20px;">
+          </div>
+
+          <!-- Edit/Delete Actions (Top Right) -->
+          <div v-if="canManage" class="absolute top-4 right-4 flex gap-2">
+            <button @click="editLeague"
+              class="p-2 bg-white/80 dark:bg-black/50 backdrop-blur-md rounded-xl hover:bg-white dark:hover:bg-black/70 transition-colors text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-500">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+            <button @click="deleteLeague"
+              class="p-2 bg-white/80 dark:bg-black/50 backdrop-blur-md rounded-xl hover:bg-white dark:hover:bg-black/70 transition-colors text-red-500 hover:text-red-600">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Profile Info -->
+        <div class="px-8 pb-8">
+          <div class="relative flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
+            <!-- Logo -->
+            <div class="w-32 h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl">
+              <img :src="league.logo || `https://ui-avatars.com/api/?name=${league.name}&background=random`"
+                class="w-full h-full object-cover rounded-xl bg-gray-50 dark:bg-white/5" alt="League Logo" />
+            </div>
+
+            <!-- Info -->
+            <div class="flex-1 pt-2 md:pt-0">
+              <div class="flex flex-wrap items-center gap-3 mb-2">
+                <h1 class="text-3xl font-display font-black text-text-primary-light dark:text-white">
+                  {{ league.name }}
+                </h1>
+                <span :class="getStatusColor(league.status)"
+                  class="px-3 py-1 rounded-full text-xs font-bold border border-current/20">
                   {{ getStatusText(league.status) }}
                 </span>
-                <span v-if="league.location" class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-sm">location_on</span>
+              </div>
+
+              <div
+                class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
+                <span class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary-500">sports_soccer</span>
+                  {{ league.sport?.name }}
+                </span>
+                <span v-if="league.location" class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary-500">location_on</span>
                   {{ league.location }}
                 </span>
-                <span v-if="league.organizer_name" class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-sm">person</span>
+                <span v-if="league.organizer_name" class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-primary-500">person</span>
                   {{ league.organizer_name }}
                 </span>
               </div>
             </div>
 
-            <!-- Actions -->
-            <div v-if="canManage" class="flex gap-2">
-              <button @click="editLeague" class="btn-primary bg-white text-primary hover:bg-gray-100">
-                <span class="material-symbols-outlined">edit</span>
-              </button>
-              <button @click="deleteLeague" class="btn-primary bg-red-600 hover:bg-red-700">
-                <span class="material-symbols-outlined">delete</span>
-              </button>
+            <!-- Quick Stats (Optional) -->
+            <div
+              class="hidden md:flex gap-8 px-6 py-3 bg-background-light dark:bg-surface-dark-alt rounded-2xl border border-border-light dark:border-border-dark">
+              <div class="text-center">
+                <div class="text-2xl font-black text-text-primary-light dark:text-white">{{ tournaments?.length || 0 }}
+                </div>
+                <div
+                  class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
+                  Torneos</div>
+              </div>
+              <div class="w-px bg-border-light dark:border-border-dark"></div>
+              <div class="text-center">
+                <div class="text-2xl font-black text-text-primary-light dark:text-white">{{ teams?.length || 0 }}</div>
+                <div
+                  class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
+                  Equipos</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Tabs -->
-      <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex gap-8">
-            <button 
-              v-for="tab in tabs" 
-              :key="tab.value"
-              @click="activeTab = tab.value"
-              class="py-4 px-2 border-b-2 font-medium transition-colors"
-              :class="activeTab === tab.value 
-                ? 'border-primary text-primary' 
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'"
-            >
+      <!-- Main Content Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column: Navigation/Tabs -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Custom Tabs -->
+          <div
+            class="flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-fit">
+            <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
+              class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300"
+              :class="activeTab === tab.value
+                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
+                : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'">
               {{ tab.label }}
             </button>
           </div>
-        </div>
-      </div>
 
-      <!-- Tab Content -->
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Tournaments Tab -->
-        <div v-if="activeTab === 'tournaments'">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold dark:text-white">Torneos</h2>
-            <button 
-              v-if="canManage"
-              @click="showCreateTournamentModal = true"
-              class="btn-primary flex items-center gap-2"
-            >
-              <span class="material-symbols-outlined">add_circle</span>
-              Crear Torneo
-            </button>
-          </div>
+          <!-- Tab Content -->
+          <div class="animate-slide-up">
+            <!-- Tournaments -->
+            <div v-if="activeTab === 'tournaments'" class="space-y-6">
+              <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Torneos Activos</h3>
+                <button v-if="canManage" @click="showCreateTournamentModal = true"
+                  class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">add</span>
+                  Nuevo Torneo
+                </button>
+              </div>
 
-          <div v-if="tournaments?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <TournamentCard 
-              v-for="tournament in tournaments" 
-              :key="tournament.id" 
-              :tournament="tournament"
-              @click="navigateTo(`/tournaments/${tournament.id}`)"
-            />
-          </div>
-          <div v-else class="text-center py-16">
-            <span class="material-symbols-outlined text-gray-300 dark:text-gray-600" style="font-size: 80px">emoji_events</span>
-            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mt-4">No hay torneos todavía</h3>
-            <p class="text-gray-500 dark:text-gray-400 mt-2">Crea el primer torneo de esta liga</p>
-          </div>
-        </div>
-
-        <!-- Teams Tab -->
-        <div v-if="activeTab === 'teams'">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold dark:text-white">Equipos</h2>
-            <button 
-              v-if="authStore.isAuthenticated"
-              @click="showCreateTeamModal = true"
-              class="btn-primary flex items-center gap-2"
-            >
-              <span class="material-symbols-outlined">add_circle</span>
-              Crear Equipo
-            </button>
-          </div>
-
-          <div v-if="teams?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <TeamCard 
-              v-for="team in teams" 
-              :key="team.id" 
-              :team="team"
-            />
-          </div>
-          <div v-else class="text-center py-16">
-            <span class="material-symbols-outlined text-gray-300 dark:text-gray-600" style="font-size: 80px">group</span>
-            <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mt-4">No hay equipos todavía</h3>
-            <p class="text-gray-500 dark:text-gray-400 mt-2">Sé el primero en crear un equipo</p>
-          </div>
-        </div>
-
-        <!-- Info Tab -->
-        <div v-if="activeTab === 'info'">
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h2 class="text-2xl font-bold mb-4 dark:text-white">Información</h2>
-            <div v-if="league.description" class="prose dark:prose-invert max-w-none mb-6">
-              <p>{{ league.description }}</p>
+              <div v-if="tournaments?.length" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <TournamentCard v-for="tournament in tournaments" :key="tournament.id" :tournament="tournament"
+                  @click="navigateTo(`/tournaments/${tournament.id}`)" />
+              </div>
+              <div v-else
+                class="bg-surface-light dark:bg-surface-dark rounded-3xl p-12 text-center border border-border-light dark:border-border-dark border-dashed">
+                <div
+                  class="w-16 h-16 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span
+                    class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">emoji_events</span>
+                </div>
+                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Torneos</h3>
+                <p class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
+                  No hay torneos creados en esta liga aún.
+                </p>
+                <button v-if="canManage" @click="showCreateTournamentModal = true"
+                  class="text-primary-500 font-bold hover:underline">
+                  Crear el primer torneo
+                </button>
+              </div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div v-if="league.organizer_name" class="flex items-start gap-3">
-                <span class="material-symbols-outlined text-primary">person</span>
+
+            <!-- Teams -->
+            <div v-if="activeTab === 'teams'" class="space-y-6">
+              <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Equipos Registrados</h3>
+                <button v-if="authStore.isAuthenticated" @click="showCreateTeamModal = true"
+                  class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">group_add</span>
+                  Registrar Equipo
+                </button>
+              </div>
+
+              <div v-if="teams?.length" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <TeamCard v-for="team in teams" :key="team.id" :team="team" />
+              </div>
+              <div v-else
+                class="bg-surface-light dark:bg-surface-dark rounded-3xl p-12 text-center border border-border-light dark:border-border-dark border-dashed">
+                <div
+                  class="w-16 h-16 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span
+                    class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">groups</span>
+                </div>
+                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Equipos</h3>
+                <p class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
+                  Aún no hay equipos registrados en esta liga.
+                </p>
+                <button v-if="authStore.isAuthenticated" @click="showCreateTeamModal = true"
+                  class="text-primary-500 font-bold hover:underline">
+                  Registrar un equipo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Info/Sidebar -->
+        <div class="space-y-6">
+          <!-- About Card -->
+          <div
+            class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6">
+            <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary-500">info</span>
+              Sobre la Liga
+            </h3>
+            <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm leading-relaxed mb-6">
+              {{ league.description || 'Sin descripción disponible.' }}
+            </p>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-text-secondary-light dark:text-text-secondary-dark">Creada</span>
+                <span
+                  class="font-bold text-text-primary-light dark:text-white">{{ formatDate(league.created_at) }}</span>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-text-secondary-light dark:text-text-secondary-dark">Organizador</span>
+                <span class="font-bold text-text-primary-light dark:text-white">{{ league.organizer_name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rules/Settings Card (If available) -->
+          <div v-if="league.settings"
+            class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6">
+            <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary-500">gavel</span>
+              Reglas
+            </h3>
+            <div class="space-y-3">
+              <div v-if="league.settings.match_duration" class="flex items-center gap-3 text-sm">
+                <div
+                  class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                  <span class="material-symbols-outlined text-lg">timer</span>
+                </div>
                 <div>
-                  <p class="font-semibold dark:text-white">Organizador</p>
-                  <p class="text-gray-600 dark:text-gray-400">{{ league.organizer_name }}</p>
+                  <div class="font-bold text-text-primary-light dark:text-white">{{ league.settings.match_duration }}
+                    min</div>
+                  <div class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Duración Partido</div>
                 </div>
               </div>
-              
-              <div v-if="league.sport" class="flex items-start gap-3">
-                <span class="material-symbols-outlined text-primary">sports</span>
-                <div>
-                  <p class="font-semibold dark:text-white">Deporte</p>
-                  <p class="text-gray-600 dark:text-gray-400">{{ league.sport.name }}</p>
+              <div v-if="league.settings.players_per_team" class="flex items-center gap-3 text-sm">
+                <div
+                  class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center text-green-600 dark:text-green-400">
+                  <span class="material-symbols-outlined text-lg">group</span>
                 </div>
-              </div>
-              
-              <div v-if="league.location" class="flex items-start gap-3">
-                <span class="material-symbols-outlined text-primary">location_on</span>
                 <div>
-                  <p class="font-semibold dark:text-white">Ubicación</p>
-                  <p class="text-gray-600 dark:text-gray-400">{{ league.location }}</p>
-                </div>
-              </div>
-              
-              <div class="flex items-start gap-3">
-                <span class="material-symbols-outlined text-primary">calendar_today</span>
-                <div>
-                  <p class="font-semibold dark:text-white">Fecha de creación</p>
-                  <p class="text-gray-600 dark:text-gray-400">{{ formatDate(league.created_at) }}</p>
+                  <div class="font-bold text-text-primary-light dark:text-white">{{ league.settings.players_per_team }}
+                  </div>
+                  <div class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Jugadores por Equipo
+                  </div>
                 </div>
               </div>
             </div>
@@ -177,28 +244,17 @@
     </div>
 
     <!-- Modals -->
-    <CreateTournamentModal 
-      v-if="showCreateTournamentModal" 
-      :leagueId="parseInt(route.params.id as string)"
-      @close="showCreateTournamentModal = false" 
-      @created="handleTournamentCreated" 
-    />
-    <CreateTeamModal 
-      v-if="showCreateTeamModal" 
-      :leagueId="parseInt(route.params.id as string)"
-      @close="showCreateTeamModal = false" 
-      @created="handleTeamCreated" 
-    />
-
-    <!-- Floating Action Button (para organizadores) -->
-    <FloatingActionButton 
-      v-if="canManage && fabActions.length > 0"
-      :actions="fabActions"
-    />
+    <CreateTournamentModal v-if="showCreateTournamentModal" :leagueId="parseInt(route.params.id as string)"
+      @close="showCreateTournamentModal = false" @created="handleTournamentCreated" />
+    <CreateTeamModal v-if="showCreateTeamModal" :leagueId="parseInt(route.params.id as string)"
+      @close="showCreateTeamModal = false" @created="handleTeamCreated" />
   </div>
 </template>
 
 <script setup lang="ts">
+import CreateTournamentModal from '@/components/modals/CreateTournamentModal.vue'
+import CreateTeamModal from '@/components/modals/CreateTeamModal.vue'
+
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
@@ -211,34 +267,26 @@ const showCreateTeamModal = ref(false)
 
 const tabs = [
   { value: 'tournaments', label: 'Torneos' },
-  { value: 'teams', label: 'Equipos' },
-  { value: 'info', label: 'Información' }
+  { value: 'teams', label: 'Equipos' }
 ]
 
-// FAB Actions for organizers
-const fabActions = computed(() => {
-  if (!canManage.value) return []
-  return [
-    {
-      icon: 'emoji_events',
-      label: 'Crear Torneo',
-      color: 'bg-blue-600 text-white',
-      onClick: () => showCreateTournamentModal.value = true
-    },
-    {
-      icon: 'group_add',
-      label: 'Crear Equipo',
-      color: 'bg-green-600 text-white',
-      onClick: () => showCreateTeamModal.value = true
-    },
-    {
-      icon: 'edit',
-      label: 'Editar Liga',
-      color: 'bg-orange-600 text-white',
-      onClick: editLeague
-    }
-  ]
-})
+const getStatusColor = (status: string) => {
+  const colors: Record<string, string> = {
+    'active': 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20',
+    'inactive': 'bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-500/20',
+    'finished': 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
+  }
+  return colors[status] || 'bg-gray-500/10 text-gray-600'
+}
+
+const getStatusText = (status: string) => {
+  const texts: Record<string, string> = {
+    'active': 'Activa',
+    'inactive': 'Inactiva',
+    'finished': 'Finalizada'
+  }
+  return texts[status] || status
+}
 
 // Fetch league
 const { data: league, pending } = await useAsyncData(`league-${route.params.id}`, async () => {
@@ -287,7 +335,7 @@ const editLeague = () => {
 
 const deleteLeague = async () => {
   if (!confirm('¿Estás seguro de eliminar esta liga? Esta acción no se puede deshacer.')) return
-  
+
   try {
     const response = await $api.delete(`/leagues/${route.params.id}`)
     if (response.data.success) {

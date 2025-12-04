@@ -75,7 +75,7 @@
           </div>
 
           <div class="divide-y divide-border-light dark:divide-border-dark">
-            <div v-for="match in league.matches" :key="match.id"
+            <div v-for="match in league.matches" :key="match.id" @click="navigateTo(`/matches/${match.id}`)"
               class="p-4 md:p-6 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group">
               <div class="flex flex-col md:flex-row items-center gap-6">
 
@@ -93,7 +93,10 @@
                   <div class="flex items-center justify-end gap-4 text-right">
                     <span
                       class="font-bold text-text-primary-light dark:text-white md:text-lg">{{ match.home_team }}</span>
-                    <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0"></div>
+                    <div
+                      class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                      <img v-if="match.home_team_logo" :src="match.home_team_logo" class="w-full h-full object-cover">
+                    </div>
                   </div>
 
                   <div class="flex items-center justify-center gap-3">
@@ -105,7 +108,10 @@
                   </div>
 
                   <div class="flex items-center justify-start gap-4 text-left">
-                    <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0"></div>
+                    <div
+                      class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                      <img v-if="match.away_team_logo" :src="match.away_team_logo" class="w-full h-full object-cover">
+                    </div>
                     <span
                       class="font-bold text-text-primary-light dark:text-white md:text-lg">{{ match.away_team }}</span>
                   </div>

@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useNuxtApp, useAsyncData, navigateTo, definePageMeta } from '#app'
+import { useNuxtApp, useAsyncData, navigateTo } from '#app'
 
 const { $api } = useNuxtApp()
 

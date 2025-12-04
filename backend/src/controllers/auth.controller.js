@@ -382,7 +382,7 @@ const getProfile = async (req, res) => {
   try {
     const pool = getPool();
     const [users] = await pool.query(
-      'SELECT id, email, name, role, phone, avatar, created_at FROM users WHERE id = ?',
+      'SELECT id, email, name, role, phone, avatar, bio, location, created_at FROM users WHERE id = ?',
       [req.user.id]
     );
 
@@ -406,11 +406,167 @@ const getProfile = async (req, res) => {
   }
 };
 
+// Actualizar perfil del usuario actual
+const updateProfile = async (req, res) => {
+  try {
+    const { name, phone, password, newPassword, avatar, bio, location } = req.body;
+    const pool = getPool();
+    const userId = req.user.id;
+
+    // Obtener usuario actual
+    const [users] = await pool.query(
+      'SELECT * FROM users WHERE id = ?',
+      [userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      });
+    }
+
+    const user = users[0];
+    const updates = [];
+    const values = [];
+
+    // Actualizar nombre y teléfono
+    if (name) {
+      updates.push('name = ?');
+      values.push(name);
+    }
+    if (phone !== undefined) {
+      updates.push('phone = ?');
+      values.push(phone);
+    }
+    if (avatar !== undefined) {
+      updates.push('avatar = ?');
+      values.push(avatar);
+    }
+    if (bio !== undefined) {
+      updates.push('bio = ?');
+      values.push(bio);
+    }
+    if (location !== undefined) {
+      updates.push('location = ?');
+      values.push(location);
+    }
+
+    // Actualizar contraseña si se proporciona
+    if (newPassword) {
+      // Si el usuario tiene contraseña (no es solo Google), verificar la actual
+      if (user.password !== 'GOOGLE_AUTH_NO_PASSWORD') {
+        if (!password) {
+          return res.status(400).json({
+            success: false,
+            message: 'Se requiere la contraseña actual para establecer una nueva'
+          });
+        }
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+          return res.status(401).json({
+            success: false,
+            message: 'La contraseña actual es incorrecta'
+          });
+        }
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      updates.push('password = ?');
+      values.push(hashedPassword);
+    }
+
+    if (updates.length === 0) {
+      return res.json({
+        success: true,
+        message: 'No hay cambios para actualizar',
+        data: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          phone: user.phone,
+          avatar: user.avatar
+        }
+      });
+    }
+
+    values.push(userId);
+    await pool.query(
+      `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
+      values
+    );
+
+    // Obtener usuario actualizado
+    const [updatedUsers] = await pool.query(
+      'SELECT id, email, name, role, phone, avatar, bio, location FROM users WHERE id = ?',
+      [userId]
+    );
+
+    await logActivity({
+      userId: userId,
+      userName: updatedUsers[0].name,
+      action: 'update_profile',
+      resource: 'user',
+      resourceId: userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent')
+    });
+
+    res.json({
+      success: true,
+      message: 'Perfil actualizado exitosamente',
+      data: updatedUsers[0]
+    });
+
+  } catch (error) {
+    console.error('Error actualizando perfil:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al actualizar perfil'
+    });
+  }
+};
+
+// Obtener logs de actividad del usuario
+const getActivityLogs = async (req, res) => {
+  try {
+    const ActivityLog = require('../models/ActivityLog');
+    const mongoose = require('mongoose');
+
+    // Verificar si MongoDB está conectado
+    if (mongoose.connection.readyState !== 1) {
+      return res.json({
+        success: true,
+        data: [],
+        message: 'MongoDB no disponible'
+      });
+    }
+
+    const logs = await ActivityLog.find({ userId: req.user.id })
+      .sort({ timestamp: -1 })
+      .limit(20);
+
+    res.json({
+      success: true,
+      data: logs
+    });
+  } catch (error) {
+    console.error('Error obteniendo logs de actividad:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener actividad'
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   googleLogin,
   refreshToken,
   logout,
-  getProfile
+  getProfile,
+  updateProfile,
+  getActivityLogs
 };

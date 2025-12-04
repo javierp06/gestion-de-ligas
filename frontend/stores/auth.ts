@@ -6,6 +6,10 @@ interface User {
   name: string;
   role: string;
   avatar?: string;
+  phone?: string;
+  created_at?: string;
+  bio?: string;
+  location?: string;
 }
 
 interface AuthState {
@@ -38,9 +42,9 @@ export const useAuthStore = defineStore('auth', {
 
           // Guardar en localStorage
           if (process.client) {
-            localStorage.setItem('accessToken', this.accessToken);
-            localStorage.setItem('refreshToken', this.refreshToken);
-            localStorage.setItem('user', JSON.stringify(this.user));
+            if (this.accessToken) localStorage.setItem('accessToken', this.accessToken);
+            if (this.refreshToken) localStorage.setItem('refreshToken', this.refreshToken);
+            if (this.user) localStorage.setItem('user', JSON.stringify(this.user));
           }
 
           return { success: true, user: this.user };
@@ -67,9 +71,9 @@ export const useAuthStore = defineStore('auth', {
 
           // Guardar en localStorage
           if (process.client) {
-            localStorage.setItem('accessToken', this.accessToken);
-            localStorage.setItem('refreshToken', this.refreshToken);
-            localStorage.setItem('user', JSON.stringify(this.user));
+            if (this.accessToken) localStorage.setItem('accessToken', this.accessToken);
+            if (this.refreshToken) localStorage.setItem('refreshToken', this.refreshToken);
+            if (this.user) localStorage.setItem('user', JSON.stringify(this.user));
           }
 
           return { success: true, user: this.user };
@@ -111,7 +115,7 @@ export const useAuthStore = defineStore('auth', {
         if (response.data.success) {
           this.accessToken = response.data.data.accessToken;
           
-          if (process.client) {
+          if (process.client && this.accessToken) {
             localStorage.setItem('accessToken', this.accessToken);
           }
         }
@@ -157,6 +161,27 @@ export const useAuthStore = defineStore('auth', {
         }
       } catch (error) {
         console.error('Error fetching profile:', error);
+      }
+    },
+
+    async updateProfile(data: { name?: string; phone?: string; avatar?: string; bio?: string; location?: string; password?: string; newPassword?: string }) {
+      const { $api } = useNuxtApp();
+      
+      try {
+        const response = await $api.put('/auth/profile', data);
+        
+        if (response.data.success) {
+          this.user = { ...this.user, ...response.data.data };
+          if (process.client) {
+            localStorage.setItem('user', JSON.stringify(this.user));
+          }
+          return { success: true, message: response.data.message };
+        }
+      } catch (error: any) {
+        return {
+          success: false,
+          message: error.response?.data?.message || 'Error al actualizar perfil'
+        };
       }
     },
 

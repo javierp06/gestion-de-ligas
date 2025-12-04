@@ -56,6 +56,21 @@ export default defineNuxtConfig({
           href: "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200",
         },
       ],
+      script: [
+        {
+          children: `(function() {
+            try {
+              var storedTheme = localStorage.getItem('darkMode');
+              var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              if (storedTheme === 'true' || (!storedTheme && systemDark)) {
+                document.documentElement.classList.add('dark');
+              } else {
+                document.documentElement.classList.remove('dark');
+              }
+            } catch (e) {}
+          })()`
+        }
+      ],
     },
   },
 

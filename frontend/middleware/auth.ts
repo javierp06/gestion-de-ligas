@@ -6,8 +6,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
     authStore.initializeAuth()
   }
   
-  // Check if user is authenticated
-  if (!authStore.isAuthenticated) {
+  // Check if user is authenticated (only on client side for localStorage auth)
+  if (process.client && !authStore.isAuthenticated) {
     return navigateTo('/login')
   }
 })
