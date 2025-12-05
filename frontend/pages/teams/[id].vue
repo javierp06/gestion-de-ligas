@@ -16,10 +16,15 @@
             <div
                 class="relative bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden mb-8 animate-fade-in">
                 <!-- Cover Image / Pattern -->
-                <div class="h-48 bg-gradient-to-br from-green-600 to-teal-700 relative">
-                    <div class="absolute inset-0 opacity-20"
+                <div class="h-64 relative overflow-hidden" :style="headerStyle">
+                    <div v-if="!team.cover_photo" class="absolute inset-0 opacity-20"
                         style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;">
                     </div>
+                    <img v-if="team.cover_photo" :src="team.cover_photo" class="w-full h-full object-cover" />
+
+                    <!-- Gradient Overlay for text readability if cover photo exists -->
+                    <div v-if="team.cover_photo"
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
 
                     <!-- Back Button -->
                     <div class="absolute top-4 left-4 z-10">
@@ -29,6 +34,15 @@
                             <span class="text-sm font-bold">Volver a Equipos</span>
                         </button>
                     </div>
+
+                    <!-- Edit Button -->
+                    <div v-if="canManage" class="absolute top-4 right-4 z-10">
+                        <button @click="showEditModal = true"
+                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
+                            <span class="material-symbols-outlined">edit</span>
+                            <span class="text-sm font-bold">Editar Equipo</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Profile Info -->
@@ -36,29 +50,38 @@
                     <div class="relative flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
                         <!-- Logo -->
                         <div
-                            class="w-32 h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center">
+                            class="w-32 h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center relative z-10">
                             <img v-if="team.logo" :src="team.logo" :alt="team.name"
                                 class="w-full h-full object-contain rounded-xl bg-white" />
                             <div v-else
-                                class="w-full h-full rounded-xl bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center text-4xl font-bold text-gray-500 dark:text-gray-400">
+                                class="w-full h-full rounded-xl flex items-center justify-center text-4xl font-bold text-white"
+                                :style="{ backgroundColor: team.primary_color || '#10b981' }">
                                 {{ team.name.charAt(0) }}
                             </div>
                         </div>
 
                         <!-- Info -->
-                        <div class="flex-1 pt-2 md:pt-0">
-                            <h1 class="text-3xl font-display font-black text-text-primary-light dark:text-white mb-2">
+                        <div class="flex-1 pt-2 md:pt-0 relative z-10">
+                            <h1 class="text-3xl font-display font-black text-text-primary-light dark:text-white mb-2 drop-shadow-md md:drop-shadow-none"
+                                :class="{ 'text-white': team.cover_photo }">
                                 {{ team.name }}
                             </h1>
-                            <div
-                                class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
+                            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium"
+                                :class="team.cover_photo ? 'text-gray-200' : 'text-text-secondary-light dark:text-text-secondary-dark'">
                                 <span v-if="team.league_name" class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-primary-500">stadium</span>
+                                    <span class="material-symbols-outlined"
+                                        :style="{ color: team.primary_color || '#10b981' }">emoji_events</span>
                                     {{ team.league_name }}
                                 </span>
                                 <span v-if="team.founded_year" class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-primary-500">calendar_month</span>
+                                    <span class="material-symbols-outlined"
+                                        :style="{ color: team.primary_color || '#10b981' }">calendar_month</span>
                                     Fundado en {{ team.founded_year }}
+                                </span>
+                                <span v-if="team.stadium" class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined"
+                                        :style="{ color: team.primary_color || '#10b981' }">stadium</span>
+                                    {{ team.stadium }}
                                 </span>
                             </div>
                         </div>
@@ -75,7 +98,8 @@
                         class="flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-fit overflow-x-auto max-w-full">
                         <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
                             class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap flex items-center gap-2"
-                            :class="activeTab === tab.value ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'">
+                            :class="activeTab === tab.value ? 'text-white shadow-lg' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'"
+                            :style="activeTab === tab.value ? { backgroundColor: team.primary_color || '#10b981', boxShadow: `0 4px 14px 0 ${team.primary_color}40` } : {}">
                             <span class="material-symbols-outlined text-lg">{{ tab.icon }}</span>
                             {{ tab.label }}
                         </button>
@@ -88,7 +112,8 @@
                             <div class="flex justify-between items-center">
                                 <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Plantilla</h3>
                                 <button v-if="canManage" @click="showAddPlayerModal = true"
-                                    class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                                    class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 text-white transition-transform hover:scale-105"
+                                    :style="{ backgroundColor: team.primary_color || '#10b981' }">
                                     <span class="material-symbols-outlined">person_add</span>
                                     Agregar Jugador
                                 </button>
@@ -101,7 +126,7 @@
                                         <img v-if="player.photo" :src="player.photo"
                                             class="w-full h-full object-cover" />
                                         <div v-else
-                                            class="w-full h-full flex items-center justify-center text-gray-500 font-bold">
+                                            class="w-full h-full flex items-center justify-center text-gray-500 font-bold bg-gray-100 dark:bg-gray-800">
                                             {{ player.name.charAt(0) }}
                                         </div>
                                     </div>
@@ -118,8 +143,18 @@
                                 </div>
                             </div>
                             <div v-else
-                                class="text-center py-12 text-text-secondary-light dark:text-text-secondary-dark italic">
-                                No hay jugadores registrados.
+                                class="bg-surface-light dark:bg-surface-dark rounded-3xl p-12 text-center border border-border-light dark:border-border-dark border-dashed">
+                                <div
+                                    class="w-16 h-16 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span
+                                        class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">groups</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Jugadores
+                                </h3>
+                                <p
+                                    class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
+                                    No hay jugadores registrados en este equipo aún.
+                                </p>
                             </div>
                         </div>
 
@@ -130,8 +165,18 @@
                                 <MatchCard v-for="match in matches" :key="match.id" :match="match" />
                             </div>
                             <div v-else
-                                class="text-center py-12 text-text-secondary-light dark:text-text-secondary-dark italic">
-                                No hay partidos registrados.
+                                class="bg-surface-light dark:bg-surface-dark rounded-3xl p-12 text-center border border-border-light dark:border-border-dark border-dashed">
+                                <div
+                                    class="w-16 h-16 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span
+                                        class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">sports_soccer</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Partidos
+                                </h3>
+                                <p
+                                    class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
+                                    No hay partidos programados para este equipo.
+                                </p>
                             </div>
                         </div>
 
@@ -157,7 +202,8 @@
                         class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6">
                         <h3
                             class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-primary-500">info</span>
+                            <span class="material-symbols-outlined"
+                                :style="{ color: team.primary_color || '#10b981' }">info</span>
                             Detalles
                         </h3>
                         <div class="space-y-4">
@@ -171,11 +217,26 @@
                                 <span
                                     class="font-bold text-text-primary-light dark:text-white">{{ team.stadium || 'No asignado' }}</span>
                             </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Colores</span>
+                                <div class="flex items-center gap-2">
+                                    <div v-if="team.primary_color"
+                                        class="w-4 h-4 rounded-full border border-gray-200 dark:border-gray-600"
+                                        :style="{ backgroundColor: team.primary_color }"></div>
+                                    <div v-if="team.secondary_color"
+                                        class="w-4 h-4 rounded-full border border-gray-200 dark:border-gray-600"
+                                        :style="{ backgroundColor: team.secondary_color }"></div>
+                                    <span
+                                        class="font-bold text-text-primary-light dark:text-white">{{ team.colors || 'No asignado' }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <EditTeamModal v-if="showEditModal" :team="team" @close="showEditModal = false" @updated="refresh" />
     </div>
 </template>
 
@@ -185,6 +246,7 @@ import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import MatchCard from '@/components/MatchCard.vue'
 import StatsTable from '@/components/StatsTable.vue'
+import EditTeamModal from '@/components/modals/EditTeamModal.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -192,6 +254,7 @@ const { $api } = useNuxtApp()
 
 const activeTab = ref('squad')
 const showAddPlayerModal = ref(false)
+const showEditModal = ref(false)
 
 const tabs = [
     { value: 'squad', label: 'Plantilla', icon: 'groups' },
@@ -201,7 +264,7 @@ const tabs = [
 ]
 
 // Fetch Team Details
-const { data: team, pending } = await useAsyncData(`team-${route.params.id}`, async () => {
+const { data: team, pending, refresh } = await useAsyncData(`team-${route.params.id}`, async () => {
     const response = await $api.get(`/teams/${route.params.id}`)
     return response.data.success ? response.data.data : null
 })
@@ -233,7 +296,16 @@ const { data: stats } = await useAsyncData(`team-stats-${route.params.id}`, asyn
 const canManage = computed(() => {
     if (!authStore.user || !team.value) return false
     // Logic to check if user manages this team (e.g. is captain or league organizer)
-    return authStore.isAdmin // Simplified for now
+    return authStore.isAdmin || authStore.user.id === team.value.captain_id
+})
+
+const headerStyle = computed(() => {
+    if (team.value?.cover_photo) {
+        return {} // Let the img tag handle it
+    }
+    return {
+        backgroundColor: team.value?.primary_color || '#059669' // Default green
+    }
 })
 
 definePageMeta({

@@ -98,7 +98,7 @@ const getTournamentById = async (req, res) => {
 // Crear nuevo torneo
 const createTournament = async (req, res) => {
   try {
-    const { name, description, league_id, start_date, end_date, format, max_teams } = req.body;
+    const { name, description, league_id, start_date, end_date, format, max_teams, settings, cover_photo, primary_color, secondary_color } = req.body;
     const pool = getPool();
 
     // Verificar que la liga exista
@@ -124,9 +124,9 @@ const createTournament = async (req, res) => {
 
     const [result] = await pool.query(
       `INSERT INTO tournaments 
-       (name, description, league_id, start_date, end_date, format, max_teams, status) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, description, league_id, start_date, end_date || null, format || 'league', max_teams || null, 'upcoming']
+       (name, description, league_id, start_date, end_date, format, max_teams, status, settings, cover_photo, primary_color, secondary_color) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, description, league_id, start_date, end_date || null, format || 'league', max_teams || null, 'upcoming', settings ? JSON.stringify(settings) : null, cover_photo || null, primary_color || null, secondary_color || null]
     );
 
     await logActivity({
@@ -186,7 +186,7 @@ const createTournament = async (req, res) => {
 const updateTournament = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, start_date, end_date, format, status, max_teams } = req.body;
+    const { name, description, start_date, end_date, format, status, max_teams, settings, cover_photo, primary_color, secondary_color } = req.body;
     const pool = getPool();
 
     // Verificar que el torneo exista y obtener el organizador de la liga padre
@@ -222,9 +222,9 @@ const updateTournament = async (req, res) => {
 
     await pool.query(
       `UPDATE tournaments 
-       SET name = ?, description = ?, start_date = ?, end_date = ?, format = ?, status = ?, max_teams = ?
+       SET name = ?, description = ?, start_date = ?, end_date = ?, format = ?, status = ?, max_teams = ?, settings = ?, cover_photo = ?, primary_color = ?, secondary_color = ?
        WHERE id = ?`,
-      [name, description, start_date, end_date, format, status, max_teams, id]
+      [name, description, start_date, end_date, format, status, max_teams, settings ? JSON.stringify(settings) : null, cover_photo, primary_color, secondary_color, id]
     );
 
     await logActivity({

@@ -1,9 +1,10 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6">
+  <NuxtLink :to="`/teams/${team.id}`"
+    class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6 block hover:scale-[1.02] cursor-pointer">
     <!-- Logo/Avatar -->
     <div class="flex items-start gap-4 mb-4">
       <div
-        class="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+        class="w-16 h-16 rounded-full bg-primary-500 flex items-center justify-center text-black text-2xl font-bold flex-shrink-0">
         {{ team.name.charAt(0) }}
       </div>
       <div class="flex-1 min-w-0">
@@ -42,7 +43,7 @@
       <span class="material-symbols-outlined text-sm">stadium</span>
       <span>{{ team.stadium }}</span>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">

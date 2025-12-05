@@ -15,7 +15,20 @@
     "matches": "Partidos",
     "stats": "Estadísticas",
     "login": "Ingresar",
-    "register": "Registrarse"
+    "register": "Registrarse",
+    "search_placeholder": "Buscar..."
+  },
+  "footer": {
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "contact": "Contacto",
+    "copyright": "© 2024 ProLeague. Todos los derechos reservados."
+  },
+  "user_menu": {
+    "account": "Cuenta",
+    "dashboard": "Dashboard",
+    "profile": "Perfil",
+    "logout": "Cerrar Sesión"
   },
   "register": {
     "title": "Crear Cuenta",
@@ -46,7 +59,13 @@
     "view_all": "Ver Todo",
     "news": "Noticias",
     "team": "Equipo",
-    "pts": "PTS"
+    "pts": "PTS",
+    "upcoming_matches": "Próximos Partidos",
+    "no_matches_date": "No hay partidos programados para esta fecha.",
+    "search_placeholder": "Buscar...",
+    "list": "Lista",
+    "calendar": "Calendario",
+    "view_table": "Ver Tabla"
   },
   "dashboard": {
     "welcome": "Bienvenido, {name}",

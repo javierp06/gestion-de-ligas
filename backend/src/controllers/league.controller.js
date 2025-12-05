@@ -82,7 +82,7 @@ const getLeagueById = async (req, res) => {
 // Crear nueva liga
 const createLeague = async (req, res) => {
   try {
-    const { name, description, sport_id, location, logo, settings } = req.body;
+    const { name, description, sport_id, location, logo, cover_photo, settings, primary_color, secondary_color } = req.body;
     const pool = getPool();
 
     // Verificar que el deporte exista
@@ -99,8 +99,8 @@ const createLeague = async (req, res) => {
     const wasPromoted = await upgradeUserToOrganizerIfNeeded(req.user);
 
     const [result] = await pool.query(
-      'INSERT INTO leagues (name, description, sport_id, organizer_id, location, logo, settings) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [name, description, sport_id, req.user.id, location, logo, JSON.stringify(settings || {})]
+      'INSERT INTO leagues (name, description, sport_id, organizer_id, location, logo, cover_photo, settings, primary_color, secondary_color) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [name, description, sport_id, req.user.id, location, logo, cover_photo, JSON.stringify(settings || {}), primary_color, secondary_color]
     );
 
     await logActivity({
@@ -158,7 +158,7 @@ const createLeague = async (req, res) => {
 const updateLeague = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, location, status, logo, settings } = req.body;
+    const { name, description, location, status, logo, cover_photo, settings, primary_color, secondary_color } = req.body;
     const pool = getPool();
 
     // Verificar que la liga exista y el usuario sea el organizador o admin
@@ -182,8 +182,8 @@ const updateLeague = async (req, res) => {
     }
 
     const [result] = await pool.query(
-      'UPDATE leagues SET name = ?, description = ?, location = ?, status = ?, logo = ?, settings = ? WHERE id = ?',
-      [name, description, location, status, logo, JSON.stringify(settings || {}), id]
+      'UPDATE leagues SET name = ?, description = ?, location = ?, status = ?, logo = ?, cover_photo = ?, settings = ?, primary_color = ?, secondary_color = ? WHERE id = ?',
+      [name, description, location, status, logo, cover_photo, JSON.stringify(settings || {}), primary_color, secondary_color, id]
     );
 
     await logActivity({

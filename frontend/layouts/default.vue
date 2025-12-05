@@ -34,7 +34,7 @@
           <div class="hidden lg:flex items-center relative mx-4">
             <span
               class="material-symbols-outlined absolute left-3 text-text-secondary-light dark:text-text-secondary-dark">search</span>
-            <input type="text" placeholder="Buscar..."
+            <input type="text" :placeholder="$t('nav.search_placeholder')"
               class="bg-surface-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all w-48 focus:w-64 text-text-primary-light dark:text-white" />
           </div>
 
@@ -87,7 +87,8 @@
                   <div class="px-4 py-3 border-b border-border-light dark:border-border-dark mb-2">
                     <p
                       class="text-xs text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider font-bold">
-                      Cuenta</p>
+                      {{ $t('user_menu.account') }}
+                    </p>
                     <p class="text-sm font-bold text-text-primary-light dark:text-white truncate">
                       {{ authStore.user?.email }}
                     </p>
@@ -95,13 +96,13 @@
                   <button @click="navigateAndClose('/dashboard')"
                     class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
                     <span class="material-symbols-outlined text-xl">dashboard</span>
-                    <span>Dashboard</span>
+                    <span>{{ $t('user_menu.dashboard') }}</span>
                   </button>
 
                   <button @click="navigateAndClose('/profile')"
                     class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
                     <span class="material-symbols-outlined text-xl">person</span>
-                    <span>Perfil</span>
+                    <span>{{ $t('user_menu.profile') }}</span>
                   </button>
 
                   <div class="border-t border-border-light dark:border-border-dark my-2"></div>
@@ -109,7 +110,7 @@
                   <button @click="handleLogout"
                     class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                     <span class="material-symbols-outlined text-xl">logout</span>
-                    <span>Cerrar Sesión</span>
+                    <span>{{ $t('user_menu.logout') }}</span>
                   </button>
                 </div>
               </div>
@@ -147,13 +148,13 @@
           </div>
 
           <div class="flex gap-8 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">
-            <a href="#" class="hover:text-primary-500 transition-colors">Términos</a>
-            <a href="#" class="hover:text-primary-500 transition-colors">Privacidad</a>
-            <a href="#" class="hover:text-primary-500 transition-colors">Contacto</a>
+            <a href="#" class="hover:text-primary-500 transition-colors">{{ $t('footer.terms') }}</a>
+            <a href="#" class="hover:text-primary-500 transition-colors">{{ $t('footer.privacy') }}</a>
+            <a href="#" class="hover:text-primary-500 transition-colors">{{ $t('footer.contact') }}</a>
           </div>
 
           <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-            © 2024 ProLeague. All rights reserved.
+            {{ $t('footer.copyright') }}
           </p>
         </div>
       </div>

@@ -1,9 +1,14 @@
 <template>
-  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" @click.self="$emit('close')">
+  <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    @click.self="$emit('close')">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
       <!-- Header -->
-      <div class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Crear Nuevo Torneo</h2>
+      <div
+        class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between z-10">
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Crear Nuevo Torneo</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Paso {{ currentStep }} de 3</p>
+        </div>
         <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
           <span class="material-symbols-outlined">close</span>
         </button>
@@ -11,105 +16,224 @@
 
       <!-- Form -->
       <form @submit.prevent="handleSubmit" class="p-6 space-y-6">
-        <!-- Nombre -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Nombre del Torneo *
-          </label>
-          <input 
-            v-model="formData.name"
-            type="text"
-            required
-            class="input-field"
-            placeholder="Ej: Torneo Apertura 2024"
-          />
-        </div>
 
-        <!-- Formato -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Formato *
-          </label>
-          <select v-model="formData.format" required class="input-field">
-            <option value="">Selecciona un formato</option>
-            <option value="league">Liga (todos contra todos)</option>
-            <option value="knockout">Eliminación Directa</option>
-            <option value="group_knockout">Grupos + Eliminación</option>
-          </select>
-        </div>
-
-        <!-- Fechas -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Step 1: Basic Info -->
+        <div v-if="currentStep === 1" class="space-y-6 animate-fade-in">
           <div>
             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Fecha de Inicio *
+              Nombre del Torneo *
             </label>
-            <input 
-              v-model="formData.start_date"
-              type="date"
-              required
-              class="input-field"
-            />
+            <input v-model="formData.name" type="text" required class="input-field"
+              placeholder="Ej: Torneo Apertura 2024" />
           </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Fecha de Inicio *
+              </label>
+              <input v-model="formData.start_date" type="date" required class="input-field" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Fecha de Fin
+              </label>
+              <input v-model="formData.end_date" type="date" class="input-field" />
+            </div>
+          </div>
+
           <div>
             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-              Fecha de Fin
+              Descripción
             </label>
-            <input 
-              v-model="formData.end_date"
-              type="date"
-              class="input-field"
-            />
+            <textarea v-model="formData.description" rows="3" class="input-field resize-none"
+              placeholder="Describe el torneo, premios, reglas especiales, etc."></textarea>
           </div>
         </div>
 
-        <!-- Max Teams -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Máximo de Equipos
-          </label>
-          <input 
-            v-model.number="formData.max_teams"
-            type="number"
-            min="2"
-            class="input-field"
-            placeholder="Ej: 16"
-          />
+        <!-- Step 2: Format Selection -->
+        <div v-if="currentStep === 2" class="space-y-6 animate-fade-in">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4">
+              Selecciona el Formato del Torneo *
+            </label>
+            <div class="grid grid-cols-1 gap-4">
+              <button type="button" v-for="format in formats" :key="format.value"
+                @click="formData.format = format.value"
+                class="p-4 rounded-xl border-2 text-left transition-all duration-200 flex items-start gap-4" :class="formData.format === format.value
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/10'
+                  : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'">
+                <div class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-primary-600 dark:text-primary-400">
+                  <span class="material-symbols-outlined text-2xl">{{ format.icon }}</span>
+                </div>
+                <div>
+                  <h3 class="font-bold text-gray-900 dark:text-white">{{ format.label }}</h3>
+                  <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ format.description }}</p>
+                </div>
+                <div class="ml-auto flex items-center h-full">
+                  <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center"
+                    :class="formData.format === format.value ? 'border-primary-500' : 'border-gray-300 dark:border-gray-600'">
+                    <div v-if="formData.format === format.value" class="w-2.5 h-2.5 rounded-full bg-primary-500"></div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+              Máximo de Equipos
+            </label>
+            <input v-model.number="formData.max_teams" type="number" min="2" class="input-field" placeholder="Ej: 16" />
+          </div>
         </div>
 
-        <!-- Descripción -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-            Descripción
-          </label>
-          <textarea 
-            v-model="formData.description"
-            rows="4"
-            class="input-field resize-none"
-            placeholder="Describe el torneo, premios, reglas especiales, etc."
-          ></textarea>
+        <!-- Step 3: Format Configuration -->
+        <div v-if="currentStep === 3" class="space-y-6 animate-fade-in">
+          <h3
+            class="text-lg font-bold text-gray-900 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">
+            Configuración de {{ getFormatLabel(formData.format) }}
+          </h3>
+
+          <!-- League Settings -->
+          <div v-if="formData.format === 'league'" class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Enfrentamientos
+              </label>
+              <select v-model="formData.settings.matches_per_pair" class="input-field">
+                <option :value="1">Una vuelta (Solo Ida)</option>
+                <option :value="2">Ida y Vuelta</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+              <input type="checkbox" v-model="formData.settings.has_playoff" id="has_playoff"
+                class="w-5 h-5 text-primary-500 rounded focus:ring-primary-500">
+              <label for="has_playoff" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                Incluir fase final (Liguilla/Playoffs)
+              </label>
+            </div>
+
+            <div v-if="formData.settings.has_playoff"
+              class="pl-8 space-y-4 border-l-2 border-gray-200 dark:border-gray-700">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Equipos que clasifican
+                </label>
+                <select v-model="formData.settings.playoff_teams" class="input-field">
+                  <option :value="4">Top 4 (Semifinales)</option>
+                  <option :value="6">Top 6 (Repechaje)</option>
+                  <option :value="8">Top 8 (Cuartos de Final)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Formato de Playoffs
+                </label>
+                <select v-model="formData.settings.playoff_legs" class="input-field">
+                  <option value="single">Partido Único</option>
+                  <option value="double">Ida y Vuelta</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Group + Knockout Settings -->
+          <div v-if="formData.format === 'group_knockout'" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Número de Grupos
+                </label>
+                <input type="number" v-model.number="formData.settings.groups_count" min="2"
+                  :max="formData.max_teams ? Math.floor(formData.max_teams / 2) : 16" class="input-field">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Clasifican por grupo
+                </label>
+                <input type="number" v-model.number="formData.settings.advancement_count" min="1" max="4"
+                  class="input-field">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Formato de Fase de Grupos
+              </label>
+              <select v-model="formData.settings.group_matches" class="input-field">
+                <option value="single">Una vuelta (Solo Ida)</option>
+                <option value="double">Ida y Vuelta</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Formato de Eliminatorias
+              </label>
+              <select v-model="formData.settings.knockout_legs" class="input-field">
+                <option value="single">Partido Único</option>
+                <option value="double">Ida y Vuelta</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Knockout Settings -->
+          <div v-if="formData.format === 'knockout'" class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Formato de Partidos
+              </label>
+              <select v-model="formData.settings.knockout_legs" class="input-field">
+                <option value="single">Partido Único</option>
+                <option value="double">Ida y Vuelta</option>
+              </select>
+            </div>
+            <div class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+              <input type="checkbox" v-model="formData.settings.third_place_match" id="third_place"
+                class="w-5 h-5 text-primary-500 rounded focus:ring-primary-500">
+              <label for="third_place" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer">
+                Incluir partido por 3er lugar
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex gap-3">
+            <span class="material-symbols-outlined text-blue-600 dark:text-blue-400">info</span>
+            <p class="text-sm text-blue-700 dark:text-blue-300">
+              Podrás ajustar los cruces y calendario específico una vez creado el torneo.
+            </p>
+          </div>
         </div>
 
         <!-- Error Message -->
-        <div v-if="error" class="bg-red-100 dark:bg-red-900/20 border border-red-400 text-red-700 dark:text-red-400 px-4 py-3 rounded">
+        <div v-if="error"
+          class="bg-red-100 dark:bg-red-900/20 border border-red-400 text-red-700 dark:text-red-400 px-4 py-3 rounded">
           {{ error }}
         </div>
 
         <!-- Buttons -->
-        <div class="flex gap-3 pt-4">
-          <button 
-            type="button"
-            @click="$emit('close')"
-            class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-            :disabled="loading"
-          >
+        <div class="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <button type="button" v-if="currentStep > 1" @click="currentStep--"
+            class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-bold"
+            :disabled="loading">
+            Atrás
+          </button>
+
+          <button type="button" v-if="currentStep === 1" @click="$emit('close')"
+            class="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-bold">
             Cancelar
           </button>
-          <button 
-            type="submit"
-            class="flex-1 btn-primary flex items-center justify-center gap-2"
-            :disabled="loading"
-          >
+
+          <button type="button" v-if="currentStep < 3" @click="nextStep"
+            class="ml-auto btn-primary px-8 py-2 rounded-lg font-bold flex items-center gap-2">
+            Siguiente
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </button>
+
+          <button v-else type="submit"
+            class="ml-auto btn-primary px-8 py-2 rounded-lg font-bold flex items-center gap-2" :disabled="loading">
             <span v-if="loading" class="animate-spin material-symbols-outlined">progress_activity</span>
             <span>{{ loading ? 'Creando...' : 'Crear Torneo' }}</span>
           </button>
@@ -128,8 +252,10 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: []
-  created: []
+  created: [id?: number]
 }>()
+
+const currentStep = ref(1)
 
 const formData = ref({
   name: '',
@@ -137,8 +263,60 @@ const formData = ref({
   start_date: '',
   end_date: '',
   max_teams: null as number | null,
-  description: ''
+  description: '',
+  settings: {
+    matches_per_pair: 2,
+    has_playoff: false,
+    playoff_teams: 4,
+    playoff_legs: 'double',
+    groups_count: 4,
+    advancement_count: 2,
+    group_matches: 'double',
+    knockout_legs: 'single',
+    third_place_match: false
+  }
 })
+
+const formats = [
+  {
+    value: 'league',
+    label: 'Liga',
+    icon: 'format_list_numbered',
+    description: 'Todos contra todos. El que tenga más puntos gana.'
+  },
+  {
+    value: 'group_knockout',
+    label: 'Grupos + Eliminatoria',
+    icon: 'grid_view',
+    description: 'Fase de grupos seguida de llaves de eliminación (Mundial, Champions).'
+  },
+  {
+    value: 'knockout',
+    label: 'Eliminación Directa',
+    icon: 'emoji_events',
+    description: 'Llaves de eliminación desde el inicio (Copa del Rey).'
+  }
+]
+
+const getFormatLabel = (value: string) => {
+  return formats.find(f => f.value === value)?.label || value
+}
+
+const nextStep = () => {
+  if (currentStep.value === 1) {
+    if (!formData.value.name || !formData.value.start_date) {
+      error.value = 'Por favor completa los campos obligatorios.'
+      return
+    }
+  } else if (currentStep.value === 2) {
+    if (!formData.value.format) {
+      error.value = 'Por favor selecciona un formato.'
+      return
+    }
+  }
+  error.value = ''
+  currentStep.value++
+}
 
 const loading = ref(false)
 const error = ref('')
@@ -149,13 +327,24 @@ const handleSubmit = async () => {
   loading.value = true
   error.value = ''
 
+  // Validation for Group + Knockout format
+  if (formData.value.format === 'group_knockout' && formData.value.max_teams) {
+    const maxGroups = Math.floor(formData.value.max_teams / 2)
+    if (formData.value.settings.groups_count > maxGroups) {
+      error.value = `Para ${formData.value.max_teams} equipos, el máximo de grupos permitidos es ${maxGroups} (mínimo 2 equipos por grupo).`
+      loading.value = false
+      return
+    }
+  }
+
   try {
     const payload: any = {
       name: formData.value.name,
       league_id: props.leagueId,
       format: formData.value.format,
       start_date: formData.value.start_date,
-      description: formData.value.description || null
+      description: formData.value.description || null,
+      settings: formData.value.settings
     }
 
     if (formData.value.end_date) {
@@ -170,7 +359,7 @@ const handleSubmit = async () => {
 
     if (response.data.success) {
       toastStore.success(`Torneo "${formData.value.name}" creado exitosamente 🏆`)
-      emit('created')
+      emit('created', response.data.data.id)
     }
   } catch (err: any) {
     error.value = err.response?.data?.message || 'Error al crear el torneo'
@@ -180,3 +369,21 @@ const handleSubmit = async () => {
   }
 }
 </script>
+
+<style scoped>
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

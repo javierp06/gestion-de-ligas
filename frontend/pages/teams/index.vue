@@ -29,7 +29,7 @@
 
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div v-for="team in teams" :key="team.id"
+        <NuxtLink v-for="team in teams" :key="team.id" :to="`/teams/${team.id}`"
           class="group bg-surface-light dark:bg-surface-dark rounded-2xl p-6 border border-border-light dark:border-border-dark hover:border-primary-500/50 transition-all duration-300 hover:shadow-neon cursor-pointer flex flex-col items-center text-center">
           <div
             class="w-24 h-24 rounded-full bg-surface-light dark:bg-surface-dark-alt mb-4 flex items-center justify-center relative group-hover:scale-110 transition-transform duration-300 overflow-hidden">
@@ -65,7 +65,7 @@
             class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark group-hover:text-primary-500 transition-colors">
             Ver Perfil ->
           </button>
-        </div>
+        </NuxtLink>
       </div>
 
     </div>

@@ -106,7 +106,7 @@ const getTeamById = async (req, res) => {
 // Crear nuevo equipo
 const createTeam = async (req, res) => {
   try {
-    const { name, short_name, logo, captain_id, league_id, founded_date, colors, stadium } = req.body;
+    const { name, short_name, logo, cover_photo, captain_id, league_id, founded_date, colors, primary_color, secondary_color, stadium } = req.body;
     const pool = getPool();
 
     // Verificar que la liga exista
@@ -136,9 +136,9 @@ const createTeam = async (req, res) => {
 
     const [result] = await pool.query(
       `INSERT INTO teams 
-       (name, short_name, logo, captain_id, league_id, founded_date, colors, stadium) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, short_name || null, logo || null, captain_id || null, league_id, founded_date || null, colors || null, stadium || null]
+       (name, short_name, logo, cover_photo, captain_id, league_id, founded_date, colors, primary_color, secondary_color, stadium) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [name, short_name || null, logo || null, cover_photo || null, captain_id || null, league_id, founded_date || null, colors || null, primary_color || null, secondary_color || null, stadium || null]
     );
 
     await logActivity({
@@ -168,10 +168,13 @@ const createTeam = async (req, res) => {
         name,
         short_name,
         logo,
+        cover_photo,
         captain_id,
         league_id,
         founded_date,
         colors,
+        primary_color,
+        secondary_color,
         stadium,
         user_was_promoted: wasPromoted
       }
@@ -198,7 +201,7 @@ const createTeam = async (req, res) => {
 const updateTeam = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, short_name, logo, captain_id, founded_date, colors, stadium } = req.body;
+    const { name, short_name, logo, cover_photo, captain_id, founded_date, colors, primary_color, secondary_color, stadium } = req.body;
     const pool = getPool();
 
     // Verificar que el equipo exista
@@ -233,9 +236,9 @@ const updateTeam = async (req, res) => {
 
     await pool.query(
       `UPDATE teams 
-       SET name = ?, short_name = ?, logo = ?, captain_id = ?, founded_date = ?, colors = ?, stadium = ?
+       SET name = ?, short_name = ?, logo = ?, cover_photo = ?, captain_id = ?, founded_date = ?, colors = ?, primary_color = ?, secondary_color = ?, stadium = ?
        WHERE id = ?`,
-      [name, short_name, logo, captain_id, founded_date, colors, stadium, id]
+      [name, short_name, logo, cover_photo, captain_id, founded_date, colors, primary_color, secondary_color, stadium, id]
     );
 
     await logActivity({

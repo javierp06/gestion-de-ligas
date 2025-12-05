@@ -103,8 +103,7 @@
           <div
             class="flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-fit">
             <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
-              class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300"
-              :class="activeTab === tab.value
+              class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300" :class="activeTab === tab.value
                 ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
                 : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'">
               {{ tab.label }}
@@ -311,9 +310,13 @@ const canManage = computed(() => {
   return authStore.user.id === league.value.organizer_id || authStore.isAdmin
 })
 
-const handleTournamentCreated = () => {
+const handleTournamentCreated = (tournamentId?: number) => {
   showCreateTournamentModal.value = false
-  refreshTournaments()
+  if (tournamentId) {
+    router.push(`/tournaments/${tournamentId}`)
+  } else {
+    refreshTournaments()
+  }
 }
 
 const handleTeamCreated = () => {

@@ -102,8 +102,8 @@
               class="text-center py-12 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark">
               <span
                 class="material-symbols-outlined text-4xl text-text-secondary-light dark:text-text-secondary-dark mb-2">event_busy</span>
-              <p class="text-text-secondary-light dark:text-text-secondary-dark font-medium">No hay partidos programados
-                para esta fecha.</p>
+              <p class="text-text-secondary-light dark:text-text-secondary-dark font-medium">
+                {{ $t('home.no_matches_date') }}</p>
             </div>
 
             <!-- Live Matches -->
@@ -112,7 +112,7 @@
               <div
                 class="px-4 py-3 bg-red-500/10 border-b border-border-light dark:border-border-dark flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                <h3 class="font-bold text-red-500 text-sm uppercase tracking-wider">En Vivo</h3>
+                <h3 class="font-bold text-red-500 text-sm uppercase tracking-wider">{{ $t('home.live') }}</h3>
               </div>
               <div class="divide-y divide-border-light dark:divide-border-dark">
                 <div v-for="match in liveMatches" :key="match.id"
@@ -162,8 +162,8 @@
               class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
               <div
                 class="px-4 py-3 bg-surface-light dark:bg-surface-dark-alt border-b border-border-light dark:border-border-dark">
-                <h3 class="font-bold text-text-primary-light dark:text-white text-sm uppercase tracking-wider">Próximos
-                  Partidos</h3>
+                <h3 class="font-bold text-text-primary-light dark:text-white text-sm uppercase tracking-wider">
+                  {{ $t('home.upcoming_matches') }}</h3>
               </div>
               <div class="divide-y divide-border-light dark:divide-border-dark">
                 <div v-for="match in upcomingMatches" :key="match.id"
@@ -265,12 +265,14 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue';
 import { useNuxtApp } from '#app';
+import { useI18n } from 'vue-i18n';
 
 definePageMeta({
   layout: 'default'
 });
 
 const { $api } = useNuxtApp();
+const { t } = useI18n();
 const leagues = ref<any[]>([]);
 const liveMatches = ref<any[]>([]);
 const upcomingMatches = ref<any[]>([]);
@@ -301,8 +303,8 @@ const dateOptions = computed(() => {
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() + 1);
 
-    if (date.toDateString() === today.toDateString()) label = 'Hoy';
-    else if (date.toDateString() === tomorrow.toDateString()) label = 'Mañana';
+    if (date.toDateString() === today.toDateString()) label = t('home.today');
+    else if (date.toDateString() === tomorrow.toDateString()) label = t('home.tomorrow');
     else label = date.toLocaleDateString('es-HN', { weekday: 'short', day: 'numeric' });
 
     dates.push({ label, value });
