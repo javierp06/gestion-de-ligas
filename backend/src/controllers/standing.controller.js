@@ -17,7 +17,7 @@ const getStandings = async (req, res) => {
 
     // Verificar que el torneo existe
     const [tournaments] = await pool.query('SELECT id, name FROM tournaments WHERE id = ?', [tournament_id]);
-    
+
     if (tournaments.length === 0) {
       return res.status(404).json({
         success: false,
@@ -30,8 +30,7 @@ const getStandings = async (req, res) => {
       SELECT 
         s.*,
         t.name as team_name,
-        t.logo as team_logo,
-        t.city as team_city
+        t.logo as team_logo
       FROM standings s
       INNER JOIN teams t ON s.team_id = t.id
       WHERE s.tournament_id = ?
@@ -62,7 +61,7 @@ const initializeStandings = async (req, res) => {
 
     // Verificar que el torneo existe
     const [tournaments] = await pool.query('SELECT id, league_id FROM tournaments WHERE id = ?', [tid]);
-    
+
     if (tournaments.length === 0) {
       return res.status(404).json({
         success: false,
@@ -75,23 +74,13 @@ const initializeStandings = async (req, res) => {
     // Verificar permisos: debe ser organizador de la liga o admin
     if (req.user.role !== 'admin') {
       const [leagues] = await pool.query('SELECT organizer_id FROM leagues WHERE id = ?', [leagueId]);
-      
+
       if (leagues.length === 0 || leagues[0].organizer_id !== req.user.id) {
         return res.status(403).json({
           success: false,
           message: 'No tienes permisos para inicializar la tabla de posiciones de este torneo'
         });
       }
-    }
-
-    // Verificar si ya existen standings para este torneo
-    const [existingStandings] = await pool.query('SELECT COUNT(*) as count FROM standings WHERE tournament_id = ?', [tid]);
-    
-    if (existingStandings[0].count > 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'La tabla de posiciones ya está inicializada para este torneo'
-      });
     }
 
     // Obtener todos los equipos de la liga
@@ -104,18 +93,30 @@ const initializeStandings = async (req, res) => {
       });
     }
 
-    // Insertar registro inicial para cada equipo (todos en cero)
+    // Insertar registro inicial para cada equipo si no existe
     let insertedCount = 0;
-    for (let i = 0; i < teams.length; i++) {
-      const team = teams[i];
-      await pool.query(
-        `INSERT INTO standings 
-         (tournament_id, team_id, matches_played, wins, draws, losses, 
-          goals_for, goals_against, goal_difference, points, position)
-         VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, ?)`,
-        [tid, team.id, i + 1]
+    for (const team of teams) {
+      // Verificar si ya existe en la tabla
+      const [exists] = await pool.query(
+        'SELECT 1 FROM standings WHERE tournament_id = ? AND team_id = ?',
+        [tid, team.id]
       );
-      insertedCount++;
+
+      if (exists.length === 0) {
+        await pool.query(
+          `INSERT INTO standings 
+           (tournament_id, team_id, matches_played, wins, draws, losses, 
+            goals_for, goals_against, goal_difference, points, position)
+           VALUES (?, ?, 0, 0, 0, 0, 0, 0, 0, 0, 0)`,
+          [tid, team.id]
+        );
+        insertedCount++;
+      }
+    }
+
+    // Recalcular posiciones después de insertar
+    if (insertedCount > 0) {
+      await calculateStandings(tid);
     }
 
     res.status(201).json({

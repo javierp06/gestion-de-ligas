@@ -1,230 +1,334 @@
 <template>
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-
-        <div v-if="pending" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="animate-pulse">
-                <div class="h-48 bg-gray-200 dark:bg-gray-800 rounded-lg mb-6"></div>
-                <div class="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mb-4"></div>
-                <div class="h-64 bg-gray-200 dark:bg-gray-800 rounded"></div>
+    <div class="min-h-screen bg-background-light dark:bg-background-dark pb-12">
+        <!-- Loading State -->
+        <div v-if="pending" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="animate-pulse space-y-8">
+                <div class="h-64 bg-surface-light dark:bg-surface-dark rounded-3xl"></div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 h-96 bg-surface-light dark:bg-surface-dark rounded-3xl"></div>
+                    <div class="h-96 bg-surface-light dark:bg-surface-dark rounded-3xl"></div>
+                </div>
             </div>
         </div>
 
+        <div v-else-if="tournament" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Header Card -->
+            <div
+                class="relative bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden mb-8 animate-fade-in">
+                <!-- Cover Image / Pattern -->
+                <div class="h-48 bg-gradient-to-br from-blue-600 to-indigo-700 relative">
+                    <!-- Abstract Pattern -->
+                    <div class="absolute inset-0 opacity-20"
+                        style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;">
+                    </div>
 
-        <div v-else-if="tournament">
+                    <!-- Back Button (Top Left) -->
+                    <div class="absolute top-4 left-4 z-10">
+                        <button @click="navigateTo(`/leagues/${tournament.league_id}`)"
+                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
+                            <span class="material-symbols-outlined">arrow_back</span>
+                            <span class="text-sm font-bold">Volver a la Liga</span>
+                        </button>
+                    </div>
 
-            <div class="bg-gradient-to-r from-primary to-blue-600 text-white py-16">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="material-symbols-outlined text-5xl">emoji_events</span>
-                                <div>
-                                    <h1 class="text-4xl font-bold">{{ tournament.name }}</h1>
-                                    <p class="text-blue-100 mt-1">{{ tournament.league?.name }}</p>
+                    <!-- Edit/Delete Actions (Top Right) -->
+                    <div v-if="canManage" class="absolute top-4 right-4 flex gap-2">
+                        <button @click="showCreateMatchModal = true"
+                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white">
+                            <span class="material-symbols-outlined">add_circle</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Info -->
+                <div class="px-8 pb-8">
+                    <div class="relative flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
+                        <!-- Icon/Logo -->
+                        <div
+                            class="w-32 h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center">
+                            <div
+                                class="w-full h-full rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white">
+                                <span class="material-symbols-outlined text-6xl drop-shadow-md">emoji_events</span>
+                            </div>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="flex-1 pt-2 md:pt-0">
+                            <div class="flex flex-wrap items-center gap-3 mb-2">
+                                <h1 class="text-3xl font-display font-black text-text-primary-light dark:text-white">
+                                    {{ tournament.name }}
+                                </h1>
+                                <span :class="getStatusColor(tournament.status)"
+                                    class="px-3 py-1 rounded-full text-xs font-bold border border-current/20">
+                                    {{ getStatusText(tournament.status) }}
+                                </span>
+                            </div>
+
+                            <div
+                                class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-primary-500">trophy</span>
+                                    {{ formatType(tournament.format) }}
+                                </span>
+                                <span v-if="tournament.league_name" class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-primary-500">stadium</span>
+                                    {{ tournament.league_name }}
+                                </span>
+                                <span v-if="tournament.start_date" class="flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-primary-500">event</span>
+                                    {{ formatDate(tournament.start_date) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div
+                            class="hidden md:flex gap-8 px-6 py-3 bg-background-light dark:bg-surface-dark-alt rounded-2xl border border-border-light dark:border-border-dark">
+                            <div class="text-center">
+                                <div class="text-2xl font-black text-text-primary-light dark:text-white">
+                                    {{ matches?.length || 0 }}
+                                </div>
+                                <div
+                                    class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
+                                    Partidos</div>
+                            </div>
+                            <div class="w-px bg-border-light dark:border-border-dark"></div>
+                            <div class="text-center">
+                                <div class="text-2xl font-black text-text-primary-light dark:text-white">
+                                    {{ teams?.length || 0 }}
+                                </div>
+                                <div
+                                    class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
+                                    Equipos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Navigation/Tabs -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Custom Tabs -->
+                    <div
+                        class="flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-fit overflow-x-auto max-w-full">
+                        <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
+                            class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap flex items-center gap-2"
+                            :class="activeTab === tab.value
+                                ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
+                                : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'">
+                            <span class="material-symbols-outlined text-lg">{{ tab.icon }}</span>
+                            {{ tab.label }}
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="animate-slide-up">
+
+                        <!-- Matches Tab -->
+                        <div v-if="activeTab === 'matches'" class="space-y-8">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Calendario de
+                                    Partidos</h3>
+                                <div v-if="canManage" class="flex gap-2">
+                                    <button @click="showGenerateFixtureModal = true"
+                                        class="btn-secondary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                        <span class="material-symbols-outlined text-lg">calendar_month</span>
+                                        Generar Calendario
+                                    </button>
+                                    <button @click="showCreateMatchModal = true"
+                                        class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-lg">add</span>
+                                        Nuevo Partido
+                                    </button>
                                 </div>
                             </div>
 
-                            <div class="flex items-center gap-4 mt-4 text-sm flex-wrap">
-                                <span :class="getStatusColor(tournament.status)"
-                                    class="px-3 py-1 rounded-full font-medium">
-                                    {{ getStatusText(tournament.status) }}
-                                </span>
-                                <span
-                                    class="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 font-medium">
-                                    {{ formatType(tournament.format) }}
-                                </span>
-                                <span v-if="tournament.start_date" class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-sm">event</span>
-                                    {{ formatDate(tournament.start_date) }}
-                                </span>
-                                <span v-if="tournament.max_teams" class="flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-sm">group</span>
-                                    Máx. {{ tournament.max_teams }} equipos
-                                </span>
+                            <div v-if="matches?.length" class="space-y-8">
+                                <div v-for="(roundMatches, round) in matchesByRound" :key="round" class="space-y-4">
+                                    <div class="flex items-center gap-4">
+                                        <h4
+                                            class="text-lg font-bold text-text-primary-light dark:text-white flex items-center gap-2">
+                                            <span
+                                                class="w-8 h-8 rounded-lg bg-primary-500/10 flex items-center justify-center text-primary-500">
+                                                <span class="material-symbols-outlined text-sm">flag</span>
+                                            </span>
+                                            Jornada {{ round }}
+                                        </h4>
+                                        <div class="h-px flex-1 bg-border-light dark:border-border-dark"></div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div v-for="match in roundMatches" :key="match.id" class="relative group">
+                                            <MatchCard :match="match" @click="navigateTo(`/matches/${match.id}`)" />
+
+                                            <!-- Quick Edit Button -->
+                                            <button v-if="canManage && match.status !== 'finished'"
+                                                @click.stop="openScoreModal(match)"
+                                                class="absolute top-2 right-2 p-2 bg-surface-light dark:bg-surface-dark rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity text-primary-500 hover:text-primary-600 hover:scale-110 transform duration-200">
+                                                <span class="material-symbols-outlined text-sm">edit</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-
-                        <div v-if="canManage" class="flex gap-2">
-                            <button @click="showCreateMatchModal = true"
-                                class="btn-primary bg-white text-primary hover:bg-gray-100 flex items-center gap-2">
-                                <span class="material-symbols-outlined">add_circle</span>
-                                <span class="hidden sm:inline">Crear Partido</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex gap-8 overflow-x-auto">
-                        <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
-                            class="py-4 px-2 border-b-2 font-medium transition-colors whitespace-nowrap"
-                            :class="activeTab === tab.value
-                                ? 'border-primary text-primary'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'">
-                            <span class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-sm">{{ tab.icon }}</span>
-                                {{ tab.label }}
-                            </span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-                <div v-if="activeTab === 'matches'">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold dark:text-white">Partidos</h2>
-                        <button v-if="canManage" @click="showCreateMatchModal = true"
-                            class="btn-primary flex items-center gap-2">
-                            <span class="material-symbols-outlined">add_circle</span>
-                            Crear Partido
-                        </button>
-                    </div>
-
-
-                    <div v-if="matches?.length" class="space-y-8">
-                        <div v-for="(roundMatches, round) in matchesByRound" :key="round" class="space-y-4">
-                            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                                <span class="material-symbols-outlined">flag</span>
-                                Jornada {{ round }}
-                            </h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div v-for="match in roundMatches" :key="match.id" class="relative">
-                                    <MatchCard :match="match" @click="navigateTo(`/matches/${match.id}`)" />
-                                    <button v-if="canManage && match.status !== 'finished'"
-                                        @click.stop="openScoreModal(match)"
-                                        class="absolute top-2 right-2 bg-primary text-white p-2 rounded-full hover:bg-blue-700 transition-colors">
-                                        <span class="material-symbols-outlined text-sm">edit</span>
+                            <div v-else
+                                class="bg-surface-light dark:bg-surface-dark rounded-3xl p-12 text-center border border-border-light dark:border-border-dark border-dashed">
+                                <div
+                                    class="w-16 h-16 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span
+                                        class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">calendar_today</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Partidos
+                                </h3>
+                                <p
+                                    class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
+                                    No hay partidos programados para este torneo.
+                                </p>
+                                <div v-if="canManage" class="flex flex-col sm:flex-row gap-4 justify-center">
+                                    <button @click="showGenerateFixtureModal = true"
+                                        class="text-primary-500 font-bold hover:underline">
+                                        Generar Automáticamente
+                                    </button>
+                                    <span class="text-gray-300 dark:text-gray-600">|</span>
+                                    <button @click="showCreateMatchModal = true"
+                                        class="text-primary-500 font-bold hover:underline">
+                                        Crear Manualmente
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div v-else class="text-center py-16">
-                        <span class="material-symbols-outlined text-gray-300 dark:text-gray-600"
-                            style="font-size: 80px">sports_soccer</span>
-                        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mt-4">No hay partidos
-                            programados</h3>
-                        <p class="text-gray-500 dark:text-gray-400 mt-2">Crea el primer partido del torneo</p>
-                    </div>
-                </div>
 
+                        <!-- Standings Tab -->
+                        <div v-if="activeTab === 'standings'" class="space-y-6">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Tabla de
+                                    Posiciones</h3>
+                                <button v-if="canManage && !standings?.length" @click="initializeStandings"
+                                    class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2"
+                                    :disabled="initializingStandings">
+                                    <span v-if="initializingStandings"
+                                        class="material-symbols-outlined animate-spin">progress_activity</span>
+                                    <span v-else class="material-symbols-outlined">refresh</span>
+                                    Inicializar Tabla
+                                </button>
+                            </div>
 
-                <div v-if="activeTab === 'standings'">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold dark:text-white">Tabla de Posiciones</h2>
-                        <button v-if="canManage && !standings?.length" @click="initializeStandings"
-                            class="btn-primary flex items-center gap-2" :disabled="initializingStandings">
-                            <span v-if="initializingStandings"
-                                class="material-symbols-outlined animate-spin">progress_activity</span>
-                            <span v-else class="material-symbols-outlined">add_circle</span>
-                            Inicializar Tabla
-                        </button>
-                    </div>
+                            <div v-if="standings?.length"
+                                class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark overflow-hidden">
+                                <StandingsTable :standings="standings" />
+                            </div>
 
-                    <div v-if="standings?.length">
-                        <StandingsTable :standings="standings" />
-                    </div>
-                    <div v-else class="text-center py-16 bg-white dark:bg-gray-800 rounded-lg">
-                        <span class="material-symbols-outlined text-gray-300 dark:text-gray-600"
-                            style="font-size: 80px">leaderboard</span>
-                        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mt-4">Tabla no inicializada
-                        </h3>
-                        <p class="text-gray-500 dark:text-gray-400 mt-2">Inicializa la tabla para empezar a registrar
-                            resultados</p>
-                    </div>
-                </div>
-
-
-                <div v-if="activeTab === 'teams'">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold dark:text-white">Equipos Participantes</h2>
-                        <button v-if="canManage" @click="showAddTeamModal = true"
-                            class="btn-primary flex items-center gap-2">
-                            <span class="material-symbols-outlined">add_circle</span>
-                            Añadir Equipo
-                        </button>
-                    </div>
-
-                    <div v-if="teams?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <TeamCard v-for="team in teams" :key="team.id" :team="team" />
-                    </div>
-                    <div v-else class="text-center py-16">
-                        <span class="material-symbols-outlined text-gray-300 dark:text-gray-600"
-                            style="font-size: 80px">group</span>
-                        <h3 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mt-4">No hay equipos inscritos
-                        </h3>
-                        <p class="text-gray-500 dark:text-gray-400 mt-2">Añade equipos para comenzar el torneo</p>
-                    </div>
-                </div>
-
-
-                <div v-if="activeTab === 'info'">
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                        <h2 class="text-2xl font-bold mb-4 dark:text-white">Información del Torneo</h2>
-
-                        <div v-if="tournament.description" class="prose dark:prose-invert max-w-none mb-6">
-                            <p>{{ tournament.description }}</p>
+                            <div v-else
+                                class="bg-surface-light dark:bg-surface-dark rounded-3xl p-12 text-center border border-border-light dark:border-border-dark border-dashed">
+                                <div
+                                    class="w-16 h-16 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span
+                                        class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">leaderboard</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Tabla no
+                                    Disponible</h3>
+                                <p
+                                    class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
+                                    La tabla de posiciones aún no ha sido generada.
+                                </p>
+                                <button v-if="canManage" @click="initializeStandings"
+                                    class="text-primary-500 font-bold hover:underline">
+                                    Generar Tabla
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-primary">trophy</span>
-                                <div>
-                                    <p class="font-semibold dark:text-white">Formato</p>
-                                    <p class="text-gray-600 dark:text-gray-400">{{ formatType(tournament.format) }}</p>
-                                </div>
+                        <!-- Stats Tab -->
+                        <div v-if="activeTab === 'stats'" class="space-y-8">
+                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Estadísticas del
+                                Torneo</h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                <!-- Top Scorers -->
+                                <StatsTable title="Goleadores" icon="sports_soccer" :data="stats?.scorers || []"
+                                    statLabel="Goles" statKey="total_goals" />
+
+                                <!-- Top Assists -->
+                                <StatsTable title="Asistencias" icon="handshake" :data="stats?.assists || []"
+                                    statLabel="Asistencias" statKey="total_assists" />
+
+                                <!-- Cards -->
+                                <StatsTable title="Tarjetas" icon="style" :data="stats?.cards || []"
+                                    statLabel="Rojas/Amarillas" statKey="yellow_cards" />
+                            </div>
+                        </div>
+
+                        <!-- Teams Tab -->
+                        <div v-if="activeTab === 'teams'" class="space-y-6">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Equipos
+                                    Participantes</h3>
+                                <button v-if="canManage" @click="showAddTeamModal = true"
+                                    class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                                    <span class="material-symbols-outlined">group_add</span>
+                                    Gestionar Equipos
+                                </button>
                             </div>
 
-                            <div class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-primary">emoji_events</span>
-                                <div>
-                                    <p class="font-semibold dark:text-white">Liga</p>
-                                    <p class="text-gray-600 dark:text-gray-400">{{ tournament.league?.name }}</p>
-                                </div>
+                            <div v-if="teams?.length" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <TeamCard v-for="team in teams" :key="team.id" :team="team" />
                             </div>
 
-                            <div v-if="tournament.start_date" class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-primary">event</span>
-                                <div>
-                                    <p class="font-semibold dark:text-white">Fecha de inicio</p>
-                                    <p class="text-gray-600 dark:text-gray-400">{{ formatDate(tournament.start_date) }}
-                                    </p>
+                            <div v-else
+                                class="bg-surface-light dark:bg-surface-dark rounded-3xl p-12 text-center border border-border-light dark:border-border-dark border-dashed">
+                                <div
+                                    class="w-16 h-16 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <span
+                                        class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">groups</span>
                                 </div>
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Equipos
+                                </h3>
+                                <p
+                                    class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
+                                    No hay equipos inscritos en este torneo.
+                                </p>
                             </div>
+                        </div>
+                    </div>
+                </div>
 
-                            <div v-if="tournament.end_date" class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-primary">event</span>
-                                <div>
-                                    <p class="font-semibold dark:text-white">Fecha de fin</p>
-                                    <p class="text-gray-600 dark:text-gray-400">{{ formatDate(tournament.end_date) }}
-                                    </p>
-                                </div>
+                <!-- Right Column: Info/Sidebar -->
+                <div class="space-y-6">
+                    <!-- About Card -->
+                    <div
+                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6">
+                        <h3
+                            class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary-500">info</span>
+                            Detalles
+                        </h3>
+                        <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm leading-relaxed mb-6">
+                            {{ tournament.description || 'Sin descripción disponible.' }}
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Formato</span>
+                                <span
+                                    class="font-bold text-text-primary-light dark:text-white">{{ formatType(tournament.format) }}</span>
                             </div>
-
-                            <div v-if="tournament.max_teams" class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-primary">group</span>
-                                <div>
-                                    <p class="font-semibold dark:text-white">Equipos</p>
-                                    <p class="text-gray-600 dark:text-gray-400">{{ teams?.length || 0 }} /
-                                        {{ tournament.max_teams }}
-                                    </p>
-                                </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Equipos</span>
+                                <span class="font-bold text-text-primary-light dark:text-white">{{ teams?.length || 0 }}
+                                    / {{ tournament.max_teams || '∞' }}</span>
                             </div>
-
-                            <div class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-primary">calendar_today</span>
-                                <div>
-                                    <p class="font-semibold dark:text-white">Creado</p>
-                                    <p class="text-gray-600 dark:text-gray-400">{{ formatDate(tournament.created_at) }}
-                                    </p>
-                                </div>
+                            <div v-if="tournament.start_date" class="flex items-center justify-between text-sm">
+                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Inicio</span>
+                                <span
+                                    class="font-bold text-text-primary-light dark:text-white">{{ formatDate(tournament.start_date) }}</span>
+                            </div>
+                            <div v-if="tournament.end_date" class="flex items-center justify-between text-sm">
+                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Fin</span>
+                                <span
+                                    class="font-bold text-text-primary-light dark:text-white">{{ formatDate(tournament.end_date) }}</span>
                             </div>
                         </div>
                     </div>
@@ -232,9 +336,11 @@
             </div>
         </div>
 
-
+        <!-- Modals -->
         <UpdateScoreModal v-if="showScoreModal && selectedMatch" :match="selectedMatch" @close="showScoreModal = false"
             @updated="handleScoreUpdated" />
+        <GenerateFixtureModal v-if="showGenerateFixtureModal" :tournamentId="parseInt(route.params.id as string)"
+            @close="showGenerateFixtureModal = false" @created="handleFixtureCreated" />
     </div>
 </template>
 
@@ -242,6 +348,9 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import UpdateScoreModal from '@/components/modals/UpdateScoreModal.vue'
+import GenerateFixtureModal from '@/components/modals/GenerateFixtureModal.vue'
+import StatsTable from '@/components/StatsTable.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
@@ -251,6 +360,7 @@ const { getStatusColor, getStatusText } = useSports()
 const activeTab = ref('matches')
 const showScoreModal = ref(false)
 const showCreateMatchModal = ref(false)
+const showGenerateFixtureModal = ref(false)
 const showAddTeamModal = ref(false)
 const selectedMatch = ref<any>(null)
 const initializingStandings = ref(false)
@@ -258,6 +368,7 @@ const initializingStandings = ref(false)
 const tabs = [
     { value: 'matches', label: 'Partidos', icon: 'sports_soccer' },
     { value: 'standings', label: 'Tabla', icon: 'leaderboard' },
+    { value: 'stats', label: 'Estadísticas', icon: 'bar_chart' },
     { value: 'teams', label: 'Equipos', icon: 'group' },
     { value: 'info', label: 'Información', icon: 'info' }
 ]
@@ -277,7 +388,20 @@ const { data: matches, refresh: refreshMatches } = await useAsyncData(`matches-$
 
 const { data: standings, refresh: refreshStandings } = await useAsyncData(`standings-${route.params.id}`, async () => {
     const response = await $api.get(`/standings?tournament_id=${route.params.id}`)
-    return response.data.success ? response.data.data : []
+    return response.data.success ? response.data.data.standings : []
+})
+
+const { data: stats } = await useAsyncData(`stats-${route.params.id}`, async () => {
+    const [scorersRes, assistsRes, cardsRes] = await Promise.all([
+        $api.get(`/stats/scorers?tournament_id=${route.params.id}&limit=5`),
+        $api.get(`/stats/assists?tournament_id=${route.params.id}&limit=5`),
+        $api.get(`/stats/cards?tournament_id=${route.params.id}&limit=5`)
+    ])
+    return {
+        scorers: scorersRes.data.success ? scorersRes.data.data : [],
+        assists: assistsRes.data.success ? assistsRes.data.data : [],
+        cards: cardsRes.data.success ? cardsRes.data.data : []
+    }
 })
 
 
@@ -289,8 +413,8 @@ const { data: teams } = await useAsyncData(`tournament-teams-${route.params.id}`
 
 
 const canManage = computed(() => {
-    if (!authStore.user || !tournament.value?.league) return false
-    return authStore.user.id === tournament.value.league.organizer_id || authStore.isAdmin
+    if (!authStore.user || !tournament.value) return false
+    return authStore.user.id === tournament.value.league_organizer_id || authStore.isAdmin
 })
 
 const matchesByRound = computed(() => {
@@ -331,6 +455,11 @@ const handleScoreUpdated = () => {
     showScoreModal.value = false
     refreshMatches()
     refreshStandings()
+}
+
+const handleFixtureCreated = () => {
+    showGenerateFixtureModal.value = false
+    refreshMatches()
 }
 
 const initializeStandings = async () => {

@@ -121,7 +121,7 @@ const createMatch = async (req, res) => {
 const getMatches = async (req, res) => {
   try {
     const pool = getPool();
-    const { tournament_id, status, date } = req.query;
+    const { tournament_id, status, date, team_id } = req.query;
 
     let query = `
       SELECT 
@@ -145,6 +145,11 @@ const getMatches = async (req, res) => {
     if (tournament_id) {
       query += ' AND m.tournament_id = ?';
       params.push(tournament_id);
+    }
+
+    if (team_id) {
+      query += ' AND (m.home_team_id = ? OR m.away_team_id = ?)';
+      params.push(team_id, team_id);
     }
 
     if (status) {
@@ -434,11 +439,149 @@ const deleteMatch = async (req, res) => {
   }
 };
 
+// Generar fixture (calendario) automático
+const generateFixture = async (req, res) => {
+  try {
+    const { tournament_id, start_date, interval_days = 7, has_return_leg = false } = req.body;
+    const pool = getPool();
+
+    // 1. Validar torneo y permisos
+    const [tournaments] = await pool.query('SELECT * FROM tournaments WHERE id = ?', [tournament_id]);
+    if (tournaments.length === 0) {
+      return res.status(404).json({ success: false, message: 'Torneo no encontrado' });
+    }
+
+    const leagueId = tournaments[0].league_id;
+
+    // Verificar ownership
+    const [leagues] = await pool.query('SELECT organizer_id FROM leagues WHERE id = ?', [leagueId]);
+    if (leagues.length === 0 || (leagues[0].organizer_id !== req.user.id && req.user.role !== 'admin')) {
+      return res.status(403).json({ success: false, message: 'No tienes permisos para generar el calendario' });
+    }
+
+    // 2. Obtener equipos
+    const [teams] = await pool.query('SELECT id FROM teams WHERE league_id = ?', [leagueId]);
+    if (teams.length < 2) {
+      return res.status(400).json({ success: false, message: 'Se necesitan al menos 2 equipos para generar un calendario' });
+    }
+
+    // 3. Algoritmo Round Robin
+    let roundRobinTeams = [...teams];
+    if (roundRobinTeams.length % 2 !== 0) {
+      roundRobinTeams.push(null); // Bye
+    }
+
+    const numRounds = roundRobinTeams.length - 1;
+    const half = roundRobinTeams.length / 2;
+    const matches = [];
+
+    let currentDate = new Date(start_date);
+
+    // Generar Ida
+    for (let i = 0; i < numRounds; i++) {
+      for (let j = 0; j < half; j++) {
+        const home = roundRobinTeams[j];
+        const away = roundRobinTeams[roundRobinTeams.length - 1 - j];
+
+        if (home && away) {
+          matches.push({
+            tournament_id,
+            home_team_id: home.id,
+            away_team_id: away.id,
+            match_date: new Date(currentDate),
+            round: i + 1,
+            status: 'scheduled'
+          });
+        }
+      }
+
+      // Rotar equipos (mantener el primero fijo)
+      roundRobinTeams.splice(1, 0, roundRobinTeams.pop());
+
+      // Avanzar fecha para la siguiente jornada
+      currentDate.setDate(currentDate.getDate() + parseInt(interval_days));
+    }
+
+    // Generar Vuelta (si aplica)
+    if (has_return_leg) {
+      const firstLegMatches = [...matches]; // Copia de los partidos de ida
+
+      for (const match of firstLegMatches) {
+        matches.push({
+          tournament_id,
+          home_team_id: match.away_team_id, // Invertir localía
+          away_team_id: match.home_team_id,
+          match_date: new Date(currentDate), // Usar la fecha acumulada
+          round: match.round + numRounds, // Ronda continua
+          status: 'scheduled'
+        });
+      }
+      // Nota: Esto pone todos los partidos de vuelta en la misma fecha base si no ajustamos la fecha por ronda.
+      // Ajuste correcto para vuelta: iterar rondas de nuevo o simplemente duplicar lógica con inversión.
+      // Simplificación para este MVP: La vuelta se genera como un bloque espejo, pero las fechas deberían seguir incrementando.
+
+      // Re-generar fechas para la vuelta correctamente:
+      // Resetear matches de vuelta y hacerlo ronda por ronda
+      // (Omitido por brevedad, pero para un MVP simple, podríamos simplemente invertir y sumar fechas)
+
+      // Corrección rápida para fechas de vuelta:
+      // Recorrer las rondas de ida (1 a numRounds)
+      // Para cada ronda i, crear la ronda i + numRounds con localía invertida
+      // Fecha = fecha de ronda i + (numRounds * interval)
+
+      // Limpiar matches de vuelta añadidos incorrectamente arriba y hacerlo bien:
+      matches.splice(firstLegMatches.length); // Borrar lo añadido
+
+      for (let i = 0; i < numRounds; i++) {
+        const roundMatches = firstLegMatches.filter(m => m.round === i + 1);
+        const returnRoundDate = new Date(roundMatches[0].match_date);
+        returnRoundDate.setDate(returnRoundDate.getDate() + (numRounds * parseInt(interval_days)));
+
+        for (const match of roundMatches) {
+          matches.push({
+            tournament_id,
+            home_team_id: match.away_team_id,
+            away_team_id: match.home_team_id,
+            match_date: returnRoundDate,
+            round: i + 1 + numRounds,
+            status: 'scheduled'
+          });
+        }
+      }
+    }
+
+    // 4. Insertar en BD
+    // Usar transacción idealmente, pero por simplicidad haremos inserts masivos
+    let insertedCount = 0;
+    for (const match of matches) {
+      await pool.query(
+        `INSERT INTO matches (tournament_id, home_team_id, away_team_id, match_date, round, status)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [match.tournament_id, match.home_team_id, match.away_team_id, match.match_date, match.round, match.status]
+      );
+      insertedCount++;
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'Calendario generado exitosamente',
+      data: {
+        matches_count: insertedCount
+      }
+    });
+
+  } catch (error) {
+    console.error('Error generando fixture:', error);
+    res.status(500).json({ success: false, message: 'Error al generar el calendario' });
+  }
+};
+
 module.exports = {
   createMatch,
   getMatches,
   getMatchById,
   updateMatch,
   updateMatchScore,
-  deleteMatch
+  deleteMatch,
+  generateFixture
 };

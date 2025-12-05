@@ -2,7 +2,12 @@ const mongoose = require('mongoose');
 
 const connectMongoDB = async () => {
     try {
-        const uri = process.env.MONGODB_URI || 'mongodb+srv://javierp191999_db_user:r0DSPbwG7ZHuNIY3@cluster0.96ocxfm.mongodb.net/';
+        const uri = process.env.MONGODB_URI;
+
+        if (!uri) {
+            console.warn('MONGODB_URI no está definido en las variables de entorno. MongoDB no se conectará.');
+            return;
+        }
 
         await mongoose.connect(uri);
 

@@ -44,11 +44,17 @@ const { matchSchema, scoreSchema } = require('../validators/match.validator');
  *       201:
  *         description: Partido creado exitosamente
  */
+router.post('/generate-fixture', [
+  authenticateToken,
+  validateRequest
+], matchController.generateFixture);
+
 router.post('/', [
   authenticateToken,
   ...matchSchema,
   validateRequest
 ], matchController.createMatch);
+
 
 /**
  * @swagger

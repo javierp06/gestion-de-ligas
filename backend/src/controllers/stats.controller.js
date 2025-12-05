@@ -31,6 +31,11 @@ const getTopScorers = async (req, res) => {
             params.push(tournament_id);
         }
 
+        if (req.query.team_id) {
+            query += ' AND p.team_id = ?';
+            params.push(req.query.team_id);
+        }
+
         query += `
       GROUP BY p.id
       ORDER BY total_goals DESC
@@ -82,6 +87,11 @@ const getTopAssists = async (req, res) => {
         if (tournament_id) {
             query += ' AND m.tournament_id = ?';
             params.push(tournament_id);
+        }
+
+        if (req.query.team_id) {
+            query += ' AND p.team_id = ?';
+            params.push(req.query.team_id);
         }
 
         query += `
@@ -136,6 +146,11 @@ const getCards = async (req, res) => {
         if (tournament_id) {
             query += ' AND m.tournament_id = ?';
             params.push(tournament_id);
+        }
+
+        if (req.query.team_id) {
+            query += ' AND p.team_id = ?';
+            params.push(req.query.team_id);
         }
 
         query += `

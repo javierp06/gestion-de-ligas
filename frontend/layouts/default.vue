@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col bg-background-light dark:bg-background-dark transition-colors duration-300">
     <!-- Top Navigation -->
     <header class="sticky top-0 z-50 glass">
-      <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="w-full px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <!-- Logo -->
           <NuxtLink :to="localePath('/')" class="flex items-center gap-3 group">
@@ -22,8 +22,7 @@
               { key: 'nav.leagues', path: '/leagues' },
               { key: 'nav.tournaments', path: '/tournaments' },
               { key: 'nav.teams', path: '/teams' },
-              { key: 'nav.matches', path: '/matches' },
-              { key: 'nav.stats', path: '/stats' }
+              { key: 'nav.matches', path: '/matches' }
             ]" :key="item.key" :to="localePath(item.path)"
               class="text-sm font-bold uppercase tracking-wide transition-colors" active-class="text-primary-500"
               :class="route.path === localePath(item.path) ? 'text-primary-500' : 'text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-primary-500'">

@@ -1,93 +1,130 @@
 <template>
   <div class="overflow-x-auto">
-    <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <thead class="bg-gray-100 dark:bg-gray-700 sticky top-0">
-        <tr>
-          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.pos') }}</th>
-          <th class="px-4 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.team') }}</th>
-          <th class="px-2 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.pj') }}</th>
-          <th class="px-2 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.g') }}</th>
-          <th class="px-2 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.e') }}</th>
-          <th class="px-2 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.p') }}</th>
-          <th class="px-2 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.gf') }}</th>
-          <th class="px-2 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.gc') }}</th>
-          <th class="px-2 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.dg') }}</th>
-          <th class="px-4 py-3 text-center text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase">
-            {{ $t('table.pts') }}</th>
+    <table class="min-w-full">
+      <thead>
+        <tr class="border-b border-border-light dark:border-border-dark">
+          <th
+            class="px-4 py-4 text-left text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
+            #
+          </th>
+          <th
+            class="px-4 py-4 text-left text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
+            Equipo
+          </th>
+          <th
+            class="px-2 py-4 text-center text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider"
+            title="Partidos Jugados">
+            PJ
+          </th>
+          <th
+            class="px-2 py-4 text-center text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider hidden sm:table-cell"
+            title="Ganados">
+            G
+          </th>
+          <th
+            class="px-2 py-4 text-center text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider hidden sm:table-cell"
+            title="Empatados">
+            E
+          </th>
+          <th
+            class="px-2 py-4 text-center text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider hidden sm:table-cell"
+            title="Perdidos">
+            P
+          </th>
+          <th
+            class="px-2 py-4 text-center text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider hidden md:table-cell"
+            title="Goles a Favor">
+            GF
+          </th>
+          <th
+            class="px-2 py-4 text-center text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider hidden md:table-cell"
+            title="Goles en Contra">
+            GC
+          </th>
+          <th
+            class="px-2 py-4 text-center text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider"
+            title="Diferencia de Goles">
+            DG
+          </th>
+          <th class="px-4 py-4 text-center text-xs font-black text-primary-500 uppercase tracking-wider">
+            PTS
+          </th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+      <tbody class="divide-y divide-border-light dark:divide-border-dark">
         <tr v-for="(standing, index) in standings" :key="standing.id"
-          class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          :class="{ 'bg-green-50 dark:bg-green-900/20': index < 4 }">
-          <td class="px-4 py-3 text-sm font-bold text-gray-900 dark:text-white">
-            {{ standing.position || index + 1 }}
+          class="group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors duration-200">
+
+          <!-- Position -->
+          <td class="px-4 py-4 whitespace-nowrap">
+            <div class="flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm"
+              :class="getPositionClass(index + 1)">
+              {{ index + 1 }}
+            </div>
           </td>
-          <td class="px-4 py-3">
-            <div class="flex items-center gap-2">
+
+          <!-- Team -->
+          <td class="px-4 py-4 whitespace-nowrap">
+            <div class="flex items-center gap-3">
               <div
-                class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                {{ standing.team_name?.charAt(0) || '?' }}
+                class="w-10 h-10 rounded-xl bg-surface-light dark:bg-surface-dark-alt p-1 shadow-sm flex items-center justify-center border border-border-light dark:border-border-dark group-hover:border-primary-500/50 transition-colors">
+                <img v-if="standing.team_logo" :src="standing.team_logo" :alt="standing.team_name"
+                  class="w-full h-full object-contain" />
+                <span v-else class="text-lg font-bold text-primary-500">{{ standing.team_name?.charAt(0) }}</span>
               </div>
-              <span class="font-medium text-gray-900 dark:text-white">
+              <span
+                class="font-bold text-text-primary-light dark:text-white group-hover:text-primary-500 transition-colors">
                 {{ standing.team_name }}
               </span>
             </div>
           </td>
-          <td class="px-2 py-3 text-center text-sm text-gray-700 dark:text-gray-300">
+
+          <!-- Stats -->
+          <td class="px-2 py-4 text-center text-sm font-medium text-text-primary-light dark:text-white">
             {{ standing.matches_played }}
           </td>
-          <td class="px-2 py-3 text-center text-sm text-green-600 dark:text-green-400 font-medium">
+          <td class="px-2 py-4 text-center text-sm text-green-600 dark:text-green-400 font-medium hidden sm:table-cell">
             {{ standing.wins }}
           </td>
-          <td class="px-2 py-3 text-center text-sm text-gray-600 dark:text-gray-400">
+          <td
+            class="px-2 py-4 text-center text-sm text-text-secondary-light dark:text-text-secondary-dark hidden sm:table-cell">
             {{ standing.draws }}
           </td>
-          <td class="px-2 py-3 text-center text-sm text-red-600 dark:text-red-400">
+          <td class="px-2 py-4 text-center text-sm text-red-500 dark:text-red-400 hidden sm:table-cell">
             {{ standing.losses }}
           </td>
-          <td class="px-2 py-3 text-center text-sm text-gray-700 dark:text-gray-300">
+          <td
+            class="px-2 py-4 text-center text-sm text-text-secondary-light dark:text-text-secondary-dark hidden md:table-cell">
             {{ standing.goals_for }}
           </td>
-          <td class="px-2 py-3 text-center text-sm text-gray-700 dark:text-gray-300">
+          <td
+            class="px-2 py-4 text-center text-sm text-text-secondary-light dark:text-text-secondary-dark hidden md:table-cell">
             {{ standing.goals_against }}
           </td>
-          <td class="px-2 py-3 text-center text-sm font-medium"
-            :class="standing.goal_difference >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
+          <td class="px-2 py-4 text-center text-sm font-bold"
+            :class="standing.goal_difference > 0 ? 'text-green-600 dark:text-green-400' : (standing.goal_difference < 0 ? 'text-red-500 dark:text-red-400' : 'text-text-secondary-light dark:text-text-secondary-dark')">
             {{ standing.goal_difference > 0 ? '+' : '' }}{{ standing.goal_difference }}
           </td>
-          <td class="px-4 py-3 text-center text-sm font-bold text-primary">
+          <td
+            class="px-4 py-4 text-center text-base font-black text-text-primary-light dark:text-white group-hover:scale-110 transition-transform">
             {{ standing.points }}
           </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Legend -->
-    <div class="mt-4 flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
+    <!-- Legend/Footer -->
+    <div
+      class="px-4 py-4 border-t border-border-light dark:border-border-dark flex flex-wrap gap-4 text-xs text-text-secondary-light dark:text-text-secondary-dark">
       <div class="flex items-center gap-2">
-        <div class="w-4 h-4 bg-green-100 dark:bg-green-900/20 rounded"></div>
-        <span>{{ $t('table.legend.qualification') }}</span>
+        <div class="w-3 h-3 rounded-full bg-primary-500"></div>
+        <span>Líder / Clasificación</span>
       </div>
       <div class="flex items-center gap-2">
-        <span class="font-semibold">{{ $t('table.pj') }}:</span> {{ $t('table.legend.pj') }}
+        <div class="w-3 h-3 rounded-full bg-blue-400"></div>
+        <span>Zona de Clasificación</span>
       </div>
-      <div class="flex items-center gap-2">
-        <span class="font-semibold">{{ $t('table.g') }}/{{ $t('table.e') }}/{{ $t('table.p') }}:</span>
-        {{ $t('table.legend.gep') }}
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="font-semibold">{{ $t('table.dg') }}:</span> {{ $t('table.legend.dg') }}
-      </div>
+      <span class="ml-auto opacity-50 hidden sm:inline">Actualizado automáticamente</span>
     </div>
   </div>
 </template>
@@ -96,6 +133,7 @@
 interface Standing {
   id: number
   team_name: string
+  team_logo?: string
   position?: number
   matches_played: number
   wins: number
@@ -110,4 +148,10 @@ interface Standing {
 defineProps<{
   standings: Standing[]
 }>()
+
+const getPositionClass = (pos: number) => {
+  if (pos === 1) return 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
+  if (pos <= 4) return 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
+  return 'bg-gray-100 dark:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'
+}
 </script>
