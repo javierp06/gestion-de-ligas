@@ -17,55 +17,76 @@
           <div class="relative flex-1 md:w-64">
             <span
               class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">search</span>
-            <input type="text" placeholder="Buscar equipo..."
-              class="w-full pl-10 pr-4 py-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all text-sm">
+            <input type="text" v-model="searchQuery" placeholder="Buscar equipo..."
+              class="w-full pl-10 pr-4 py-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all text-sm text-text-primary-light dark:text-white placeholder-text-secondary-light dark:placeholder-text-secondary-dark">
           </div>
-          <button class="btn-primary flex items-center gap-2 whitespace-nowrap">
+          <button
+            class="btn-primary flex items-center gap-2 whitespace-nowrap px-4 py-2 rounded-lg shadow-neon hover:scale-105 transition-transform">
             <span class="material-symbols-outlined">add</span>
-            Registrar Equipo
+            <span class="font-bold">Registrar Equipo</span>
           </button>
         </div>
       </div>
 
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div v-if="teams.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <NuxtLink v-for="team in teams" :key="team.id" :to="`/teams/${team.id}`"
-          class="group bg-surface-light dark:bg-surface-dark rounded-2xl p-6 border border-border-light dark:border-border-dark hover:border-primary-500/50 transition-all duration-300 hover:shadow-neon cursor-pointer flex flex-col items-center text-center">
+          class="group bg-surface-light dark:bg-surface-dark rounded-2xl p-6 border border-border-light dark:border-border-dark hover:border-primary-500/50 transition-all duration-300 hover:shadow-neon cursor-pointer flex flex-col items-center text-center relative overflow-hidden">
+
+          <!-- Background Decoration -->
           <div
-            class="w-24 h-24 rounded-full bg-surface-light dark:bg-surface-dark-alt mb-4 flex items-center justify-center relative group-hover:scale-110 transition-transform duration-300 overflow-hidden">
-            <img v-if="team.logo" :src="team.logo" :alt="team.name" class="w-full h-full object-cover" />
-            <span v-else class="material-symbols-outlined text-4xl">groups</span>
-            <div
-              class="absolute bottom-0 right-0 w-6 h-6 rounded-full bg-green-500 border-2 border-surface-light dark:border-surface-dark"
-              title="Verificado"></div>
+            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           </div>
 
-          <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-1">{{ team.name }}</h3>
-          <p class="text-xs font-bold text-primary-600 dark:text-primary-500 uppercase tracking-wider mb-4">
+          <div
+            class="w-24 h-24 rounded-full bg-surface-light dark:bg-surface-dark-alt mb-4 flex items-center justify-center relative group-hover:scale-110 transition-transform duration-300 overflow-hidden shadow-lg border-2 border-transparent group-hover:border-primary-500">
+            <img v-if="team.logo" :src="team.logo" :alt="team.name" class="w-full h-full object-cover" />
+            <span v-else
+              class="material-symbols-outlined text-4xl text-text-secondary-light dark:text-text-secondary-dark">groups</span>
+          </div>
+
+          <h3 class="text-lg font-black text-text-primary-light dark:text-white mb-1 tracking-tight">{{ team.name }}
+          </h3>
+          <p class="text-xs font-bold text-primary-600 dark:text-primary-500 uppercase tracking-wider mb-6">
             {{ team.sport }}
           </p>
 
           <div
-            class="w-full grid grid-cols-3 gap-2 py-3 border-t border-b border-border-light dark:border-border-dark mb-4">
+            class="w-full grid grid-cols-3 gap-2 py-3 border-t border-b border-border-light dark:border-border-dark mb-6 bg-gray-50/50 dark:bg-white/5 rounded-lg">
             <div>
-              <span class="block text-xs text-text-secondary-light dark:text-text-secondary-dark">PJ</span>
-              <span class="block font-bold text-text-primary-light dark:text-white">{{ team.stats.played }}</span>
+              <span
+                class="block text-[10px] uppercase font-bold text-text-secondary-light dark:text-text-secondary-dark mb-1">Juegos</span>
+              <span
+                class="block font-black text-lg text-text-primary-light dark:text-white leading-none">{{ team.stats.played }}</span>
             </div>
             <div>
-              <span class="block text-xs text-text-secondary-light dark:text-text-secondary-dark">G</span>
-              <span class="block font-bold text-text-primary-light dark:text-white">{{ team.stats.won }}</span>
+              <span
+                class="block text-[10px] uppercase font-bold text-text-secondary-light dark:text-text-secondary-dark mb-1">Ganes</span>
+              <span
+                class="block font-black text-lg text-text-primary-light dark:text-white leading-none">{{ team.stats.won }}</span>
             </div>
             <div>
-              <span class="block text-xs text-text-secondary-light dark:text-text-secondary-dark">PTS</span>
-              <span class="block font-bold text-primary-600 dark:text-primary-500">{{ team.stats.points }}</span>
+              <span
+                class="block text-[10px] uppercase font-bold text-text-secondary-light dark:text-text-secondary-dark mb-1">Puntos</span>
+              <span
+                class="block font-black text-lg text-primary-600 dark:text-primary-500 leading-none">{{ team.stats.points }}</span>
             </div>
           </div>
 
           <button
-            class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark group-hover:text-primary-500 transition-colors">
-            Ver Perfil ->
+            class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark group-hover:text-primary-500 transition-colors uppercase tracking-widest flex items-center gap-1">
+            Ver Perfil <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </button>
         </NuxtLink>
+      </div>
+
+      <!-- No Results State -->
+      <div v-else class="text-center py-20">
+        <span
+          class="material-symbols-outlined text-6xl text-text-secondary-light dark:text-text-secondary-dark mb-4 opacity-50">search_off</span>
+        <h3 class="text-xl font-bold text-text-primary-light dark:text-white mb-2">No se encontraron equipos</h3>
+        <p class="text-text-secondary-light dark:text-text-secondary-dark">Intenta buscar con otro nombre o categoría.
+        </p>
       </div>
 
     </div>
@@ -73,17 +94,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import { useTeamStore } from '@/stores/team';
 
 const teamStore = useTeamStore();
+const searchQuery = ref('');
 
 onMounted(() => {
   teamStore.fetchTeams();
 });
 
 const teams = computed(() => {
-  return teamStore.teams.map(team => ({
+  let filtered = teamStore.teams;
+
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(team =>
+      team.name.toLowerCase().includes(query) ||
+      team.sport_name?.toLowerCase().includes(query)
+    );
+  }
+
+  return filtered.map(team => ({
     ...team,
     sport: team.sport_name,
     stats: {

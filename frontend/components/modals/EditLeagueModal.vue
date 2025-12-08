@@ -40,31 +40,7 @@
                     <ImageUpload label="Portada" v-model="formData.cover_photo" :circle="false" ref="coverUpload" />
                 </div>
 
-                <!-- Personalization -->
-                <div class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Personalización</h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Color Primario</label>
-                            <div class="flex items-center gap-3">
-                                <input v-model="formData.primary_color" type="color"
-                                    class="h-10 w-20 rounded cursor-pointer border-0 p-0" />
-                                <input v-model="formData.primary_color" type="text" class="input-field"
-                                    placeholder="#000000" />
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Color Secundario</label>
-                            <div class="flex items-center gap-3">
-                                <input v-model="formData.secondary_color" type="color"
-                                    class="h-10 w-20 rounded cursor-pointer border-0 p-0" />
-                                <input v-model="formData.secondary_color" type="text" class="input-field"
-                                    placeholder="#FFFFFF" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Error Message -->
                 <div v-if="error"
@@ -118,8 +94,6 @@ const formData = ref({
     location: props.league.location,
     logo: props.league.logo,
     cover_photo: props.league.cover_photo,
-    primary_color: props.league.primary_color || '#000000',
-    secondary_color: props.league.secondary_color || '#ffffff',
     status: props.league.status,
     settings: props.league.settings // Preserve existing settings
 })

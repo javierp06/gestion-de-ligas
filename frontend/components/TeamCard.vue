@@ -3,9 +3,12 @@
     class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 p-6 block hover:scale-[1.02] cursor-pointer">
     <!-- Logo/Avatar -->
     <div class="flex items-start gap-4 mb-4">
-      <div
-        class="w-16 h-16 rounded-full bg-primary-500 flex items-center justify-center text-black text-2xl font-bold flex-shrink-0">
-        {{ team.name.charAt(0) }}
+      <div class="flex-shrink-0">
+        <img v-if="team.logo" :src="team.logo" :alt="team.name" class="w-16 h-16 rounded-full object-cover bg-white" />
+        <div v-else
+          class="w-16 h-16 rounded-full bg-primary-500 flex items-center justify-center text-black text-2xl font-bold">
+          {{ team.name.charAt(0) }}
+        </div>
       </div>
       <div class="flex-1 min-w-0">
         <h3 class="text-lg font-bold text-gray-900 dark:text-white truncate">
@@ -22,14 +25,6 @@
       <div v-if="team.captain_name" class="flex items-center gap-2">
         <span class="material-symbols-outlined text-sm">person</span>
         <span>{{ $t('components.team_card.captain') }}: {{ team.captain_name }}</span>
-      </div>
-      <div v-if="team.founded_date" class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-sm">calendar_today</span>
-        <span>{{ $t('components.team_card.founded') }}: {{ formatDate(team.founded_date) }}</span>
-      </div>
-      <div v-if="team.colors" class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-sm">palette</span>
-        <span>{{ team.colors }}</span>
       </div>
       <div v-if="team.player_count !== undefined" class="flex items-center gap-2">
         <span class="material-symbols-outlined text-sm">group</span>
@@ -51,6 +46,7 @@ interface Team {
   id: number
   name: string
   short_name?: string
+  logo?: string
   captain_name?: string
   founded_date?: string
   colors?: string
@@ -62,11 +58,5 @@ defineProps<{
   team: Team
 }>()
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('es-HN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  })
-}
+
 </script>

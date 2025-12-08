@@ -33,11 +33,7 @@
                         <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Estadio</label>
                         <input v-model="formData.stadium" type="text" class="input-field" />
                     </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Año de
-                            Fundación</label>
-                        <input v-model="formData.founded_date" type="date" class="input-field" />
-                    </div>
+
                 </div>
 
                 <!-- Images -->
@@ -49,40 +45,7 @@
                     <ImageUpload label="Portada / Foto de Equipo" v-model="formData.cover_photo" :circle="false" ref="coverUpload" />
                 </div>
 
-                <!-- Personalization -->
-                <div class="space-y-4 border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Personalización</h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Color
-                                Primario</label>
-                            <div class="flex items-center gap-3">
-                                <input v-model="formData.primary_color" type="color"
-                                    class="h-10 w-20 rounded cursor-pointer border-0 p-0" />
-                                <input v-model="formData.primary_color" type="text" class="input-field"
-                                    placeholder="#000000" />
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Color
-                                Secundario</label>
-                            <div class="flex items-center gap-3">
-                                <input v-model="formData.secondary_color" type="color"
-                                    class="h-10 w-20 rounded cursor-pointer border-0 p-0" />
-                                <input v-model="formData.secondary_color" type="text" class="input-field"
-                                    placeholder="#FFFFFF" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Colores (Texto
-                            descriptivo)</label>
-                        <input v-model="formData.colors" type="text" class="input-field"
-                            placeholder="Ej: Rojo y Azul" />
-                    </div>
-                </div>
 
                 <!-- Error Message -->
                 <div v-if="error"
@@ -135,11 +98,7 @@ const formData = ref({
     short_name: props.team.short_name,
     logo: props.team.logo,
     cover_photo: props.team.cover_photo,
-    stadium: props.team.stadium,
-    founded_date: props.team.founded_date ? new Date(props.team.founded_date).toISOString().split('T')[0] : '',
-    colors: props.team.colors,
-    primary_color: props.team.primary_color || '#000000',
-    secondary_color: props.team.secondary_color || '#ffffff'
+    stadium: props.team.stadium
 })
 
 const handleSubmit = async () => {

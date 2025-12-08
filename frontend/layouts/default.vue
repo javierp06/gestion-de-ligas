@@ -39,7 +39,7 @@
           </div>
 
           <!-- Right Side Actions -->
-          <div class="flex items-center gap-4">
+          <div class="hidden md:flex items-center gap-4">
             <!-- Language Switcher -->
             <div class="relative">
               <button @click="showLangDropdown = !showLangDropdown"
@@ -126,9 +126,152 @@
               </NuxtLink>
             </template>
           </div>
+          <!-- Mobile Menu Toggle -->
+          <button @click="showMobileMenu = !showMobileMenu"
+            class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark">
+            <span class="material-symbols-outlined">{{ showMobileMenu ? 'close' : 'menu' }}</span>
+          </button>
+        </div>
+      </div>
+      <!-- Mobile Menu -->
+      <div v-show="showMobileMenu"
+        class="md:hidden absolute top-16 left-0 w-full bg-surface-light dark:bg-surface-dark border-b border-border-light dark:border-border-dark shadow-2xl animate-fade-in px-4 py-6 flex flex-col gap-4 max-h-[calc(100vh-4rem)] overflow-y-auto">
+
+        <!-- Mobile Navigation Links -->
+        <nav class="flex flex-col gap-2">
+          <NuxtLink v-for="item in [
+            { key: 'nav.home', path: '/' },
+            { key: 'nav.leagues', path: '/leagues' },
+            { key: 'nav.tournaments', path: '/tournaments' },
+            { key: 'nav.teams', path: '/teams' },
+            { key: 'nav.matches', path: '/matches' }
+          ]" :key="item.key" :to="localePath(item.path)" @click="showMobileMenu = false"
+            class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3"
+            :class="route.path === localePath(item.path) ? 'bg-primary-500/10 text-primary-600 dark:text-primary-500' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5'">
+            <!-- Icons for mobile menu -->
+            <span class="material-symbols-outlined" v-if="item.key === 'nav.home'">home</span>
+            <span class="material-symbols-outlined" v-if="item.key === 'nav.leagues'">emoji_events</span>
+            <span class="material-symbols-outlined" v-if="item.key === 'nav.tournaments'">trophy</span>
+            <span class="material-symbols-outlined" v-if="item.key === 'nav.teams'">groups</span>
+            <span class="material-symbols-outlined" v-if="item.key === 'nav.matches'">sports_soccer</span>
+            {{ $t(item.key) }}
+          </NuxtLink>
+        </nav>
+
+        <div class="h-px bg-border-light dark:border-border-dark my-2"></div>
+
+        <!-- Mobile Auth/Account Links -->
+        <template v-if="authStore.isAuthenticated">
+          <div class="flex flex-col gap-2">
+            <div class="px-3 py-2 flex items-center gap-3">
+              <div
+                class="w-8 h-8 rounded-full bg-primary-500 text-black flex items-center justify-center font-bold text-sm">
+                {{ authStore.user?.name?.charAt(0).toUpperCase() }}
+              </div>
+              <div class="flex flex-col">
+                <span
+                  class="text-sm font-bold text-text-primary-light dark:text-white">{{ authStore.user?.name }}</span>
+                <span
+                  class="text-xs text-text-secondary-light dark:text-text-secondary-dark truncate max-w-[150px]">{{ authStore.user?.email }}</span>
+              </div>
+            </div>
+
+            <button @click="navigateAndClose('/dashboard')"
+              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
+              <span class="material-symbols-outlined">dashboard</span>
+              <span>{{ $t('user_menu.dashboard') }}</span>
+            </button>
+
+            <button @click="navigateAndClose('/profile')"
+              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
+              <span class="material-symbols-outlined">person</span>
+              <span>{{ $t('user_menu.profile') }}</span>
+            </button>
+
+            <button @click="handleLogout"
+              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+              <span class="material-symbols-outlined">logout</span>
+              <span>{{ $t('user_menu.logout') }}</span>
+            </button>
+          </div>
+        </template>
+        <template v-else>
+          <div class="flex flex-col gap-2">
+            <NuxtLink :to="localePath('/login')" @click="showMobileMenu = false"
+              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
+              <span class="material-symbols-outlined">login</span>
+              <span>{{ $t('nav.login') }}</span>
+            </NuxtLink>
+            <NuxtLink :to="localePath('/register')" @click="showMobileMenu = false"
+              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-primary-600 dark:text-primary-500 bg-primary-500/10">
+              <span class="material-symbols-outlined">person_add</span>
+              <span>{{ $t('nav.register') }}</span>
+            </NuxtLink>
+          </div>
+        </template>
+
+        <div class="h-px bg-border-light dark:border-border-dark my-2"></div>
+
+        <!-- Mobile Search -->
+        <div class="relative">
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">search</span>
+          <input type="text" :placeholder="$t('nav.search_placeholder')"
+            class="w-full bg-surface-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-text-primary-light dark:text-white" />
+        </div>
+
+        <div class="h-px bg-border-light dark:border-border-dark my-2"></div>
+
+        <div class="flex items-center gap-4 justify-between mt-2">
+          <!-- Language Switcher -->
+          <div class="relative">
+            <button @click="showLangDropdown = !showLangDropdown"
+              class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark flex items-center gap-1">
+              <span class="material-symbols-outlined">language</span>
+              <span class="text-xs font-bold uppercase">{{ locale }}</span>
+            </button>
+
+            <div v-if="showLangDropdown" @click="showLangDropdown = false"
+              class="absolute left-0 bottom-full mb-2 w-40 bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-border-light dark:border-border-dark py-2 z-50 overflow-hidden">
+              <button v-for="l in availableLocales" :key="l.code" @click="setLocale(l.code)"
+                class="w-full text-left px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center gap-3"
+                :class="locale === l.code ? 'text-primary-500' : 'text-text-secondary-light dark:text-text-secondary-dark'">
+                <span class="uppercase">{{ l.code }}</span>
+                <span>{{ l.name }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dark Mode Toggle -->
+          <button @click="toggleDarkMode"
+            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark">
+            <span class="material-symbols-outlined">
+              {{ isDark ? 'light_mode' : 'dark_mode' }}
+            </span>
+          </button>
         </div>
       </div>
     </header>
+
+    <!-- Mobile Quick Navigation (Secondary Header) -->
+    <div
+      class="md:hidden sticky top-16 z-40 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-b border-border-light dark:border-border-dark overflow-x-auto scrollbar-hide">
+      <div class="flex items-center gap-2 px-4 py-2 min-w-max">
+        <NuxtLink v-for="item in [
+          { key: 'nav.leagues', path: '/leagues', icon: 'emoji_events' },
+          { key: 'nav.tournaments', path: '/tournaments', icon: 'trophy' },
+          { key: 'nav.teams', path: '/teams', icon: 'groups' },
+          { key: 'nav.matches', path: '/matches', icon: 'sports_soccer' }
+        ]" :key="item.key" :to="localePath(item.path)"
+          class="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border"
+          :class="route.path === localePath(item.path)
+            ? 'bg-primary-500 text-black border-primary-500 shadow-neon'
+            : 'bg-background-light dark:bg-background-dark text-text-secondary-light dark:text-text-secondary-dark border-border-light dark:border-border-dark hover:border-primary-500 hover:text-primary-500'">
+          <span class="material-symbols-outlined text-[18px]">{{ item.icon }}</span>
+          {{ $t(item.key) }}
+        </NuxtLink>
+      </div>
+    </div>
 
     <main class="flex-grow">
       <slot />
@@ -180,6 +323,7 @@ const localePath = useLocalePath();
 const { locale, locales, setLocale } = useI18n();
 const showDropdown = ref(false);
 const showLangDropdown = ref(false);
+const showMobileMenu = ref(false);
 const isDark = ref(false);
 
 const availableLocales = computed(() => {
@@ -225,6 +369,7 @@ const route = useRoute();
 watch(() => route.fullPath, () => {
   showDropdown.value = false;
   showLangDropdown.value = false;
+  showMobileMenu.value = false;
 });
 
 onMounted(() => {

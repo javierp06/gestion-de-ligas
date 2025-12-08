@@ -53,15 +53,7 @@
             placeholder="Ej: RMA" />
         </div>
 
-        <!-- Colores -->
-        <div>
-          <label class="block text-sm font-bold text-text-primary-light dark:text-white mb-2">
-            Colores
-          </label>
-          <input v-model="formData.colors" type="text"
-            class="w-full px-4 py-2 rounded-lg bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none transition-all text-text-primary-light dark:text-white"
-            placeholder="Ej: Blanco y Azul" />
-        </div>
+
 
         <!-- Estadio -->
         <div>
@@ -158,7 +150,6 @@ const handleSubmit = async () => {
       name: formData.value.name,
       league_id: targetLeagueId,
       short_name: formData.value.short_name || null,
-      colors: formData.value.colors || null,
       stadium: formData.value.stadium || null
     }
 

@@ -35,12 +35,17 @@
                         </button>
                     </div>
 
-                    <!-- Edit Button -->
-                    <div v-if="canManage" class="absolute top-4 right-4 z-10">
+                    <!-- Edit/Delete Actions -->
+                    <div v-if="canManage" class="absolute top-4 right-4 z-10 flex gap-2">
                         <button @click="showEditModal = true"
-                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
+                            class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-black/70 transition-colors text-white shadow-lg border border-white/10"
+                            title="Editar Equipo">
                             <span class="material-symbols-outlined">edit</span>
-                            <span class="text-sm font-bold">Editar Equipo</span>
+                        </button>
+                        <button @click="deleteTeam"
+                            class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-red-500/80 transition-colors text-red-400 hover:text-white shadow-lg border border-white/10"
+                            title="Eliminar Equipo">
+                            <span class="material-symbols-outlined">delete</span>
                         </button>
                     </div>
                 </div>
@@ -50,37 +55,28 @@
                     <div class="relative flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
                         <!-- Logo -->
                         <div
-                            class="w-32 h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center relative z-10">
+                            class="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center relative z-10 flex-shrink-0 transition-all duration-300">
                             <img v-if="team.logo" :src="team.logo" :alt="team.name"
                                 class="w-full h-full object-contain rounded-xl bg-white" />
                             <div v-else
-                                class="w-full h-full rounded-xl flex items-center justify-center text-4xl font-bold text-white"
-                                :style="{ backgroundColor: team.primary_color || '#10b981' }">
+                                class="w-full h-full rounded-xl flex items-center justify-center text-4xl font-bold text-black bg-primary-500">
                                 {{ team.name.charAt(0) }}
                             </div>
                         </div>
 
                         <!-- Info -->
                         <div class="flex-1 pt-2 md:pt-0 relative z-10">
-                            <h1 class="text-3xl font-display font-black text-text-primary-light dark:text-white mb-2 drop-shadow-md md:drop-shadow-none"
-                                :class="{ 'text-white': team.cover_photo }">
+                            <h1 class="text-2xl md:text-3xl font-display font-black text-text-primary-light dark:text-white mb-2 drop-shadow-md md:drop-shadow-none">
                                 {{ team.name }}
                             </h1>
-                            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium"
-                                :class="team.cover_photo ? 'text-gray-200' : 'text-text-secondary-light dark:text-text-secondary-dark'">
+                            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">
                                 <span v-if="team.league_name" class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined"
-                                        :style="{ color: team.primary_color || '#10b981' }">emoji_events</span>
+                                    <span class="material-symbols-outlined text-primary-500">emoji_events</span>
                                     {{ team.league_name }}
                                 </span>
-                                <span v-if="team.founded_year" class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined"
-                                        :style="{ color: team.primary_color || '#10b981' }">calendar_month</span>
-                                    Fundado en {{ team.founded_year }}
-                                </span>
+
                                 <span v-if="team.stadium" class="flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined"
-                                        :style="{ color: team.primary_color || '#10b981' }">stadium</span>
+                                    <span class="material-symbols-outlined text-primary-500">stadium</span>
                                     {{ team.stadium }}
                                 </span>
                             </div>
@@ -98,8 +94,7 @@
                         class="flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-fit overflow-x-auto max-w-full">
                         <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
                             class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap flex items-center gap-2"
-                            :class="activeTab === tab.value ? 'text-white shadow-lg' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'"
-                            :style="activeTab === tab.value ? { backgroundColor: team.primary_color || '#10b981', boxShadow: `0 4px 14px 0 ${team.primary_color}40` } : {}">
+                            :class="activeTab === tab.value ? 'bg-primary-500 text-black shadow-lg shadow-neon' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'">
                             <span class="material-symbols-outlined text-lg">{{ tab.icon }}</span>
                             {{ tab.label }}
                         </button>
@@ -112,8 +107,7 @@
                             <div class="flex justify-between items-center">
                                 <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Plantilla</h3>
                                 <button v-if="canManage" @click="showAddPlayerModal = true"
-                                    class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 text-white transition-transform hover:scale-105"
-                                    :style="{ backgroundColor: team.primary_color || '#10b981' }">
+                                    class="btn-primary flex items-center gap-2">
                                     <span class="material-symbols-outlined">person_add</span>
                                     Agregar Jugador
                                 </button>
@@ -202,8 +196,7 @@
                         class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6">
                         <h3
                             class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
-                            <span class="material-symbols-outlined"
-                                :style="{ color: team.primary_color || '#10b981' }">info</span>
+                            <span class="material-symbols-outlined text-primary-500">info</span>
                             Detalles
                         </h3>
                         <div class="space-y-4">
@@ -217,19 +210,7 @@
                                 <span
                                     class="font-bold text-text-primary-light dark:text-white">{{ team.stadium || 'No asignado' }}</span>
                             </div>
-                            <div class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Colores</span>
-                                <div class="flex items-center gap-2">
-                                    <div v-if="team.primary_color"
-                                        class="w-4 h-4 rounded-full border border-gray-200 dark:border-gray-600"
-                                        :style="{ backgroundColor: team.primary_color }"></div>
-                                    <div v-if="team.secondary_color"
-                                        class="w-4 h-4 rounded-full border border-gray-200 dark:border-gray-600"
-                                        :style="{ backgroundColor: team.secondary_color }"></div>
-                                    <span
-                                        class="font-bold text-text-primary-light dark:text-white">{{ team.colors || 'No asignado' }}</span>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -242,14 +223,17 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useToastStore } from '@/stores/toast'
 import MatchCard from '@/components/MatchCard.vue'
 import StatsTable from '@/components/StatsTable.vue'
 import EditTeamModal from '@/components/modals/EditTeamModal.vue'
 
 const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
+const toastStore = useToastStore()
 const { $api } = useNuxtApp()
 
 const activeTab = ref('squad')
@@ -295,16 +279,38 @@ const { data: stats } = await useAsyncData(`team-stats-${route.params.id}`, asyn
 
 const canManage = computed(() => {
     if (!authStore.user || !team.value) return false
-    // Logic to check if user manages this team (e.g. is captain or league organizer)
-    return authStore.isAdmin || authStore.user.id === team.value.captain_id
+    // Logic: Admin OR Team Captain OR League Organizer
+    return authStore.isAdmin || 
+           authStore.user.id === team.value.captain_id || 
+           authStore.user.id === team.value.league_organizer_id
 })
+
+const deleteTeam = async () => {
+  if (!confirm('¿Estás seguro de eliminar este equipo? Esta acción no se puede deshacer.')) return
+
+  try {
+    const response = await $api.delete(`/teams/${route.params.id}`)
+    if (response.data.success) {
+      toastStore.success('Equipo eliminado exitosamente')
+      // Redirect to the league page if available, otherwise teams list
+      if (team.value.league_id) {
+          router.push(`/leagues/${team.value.league_id}`)
+      } else {
+          router.push('/teams')
+      }
+    }
+  } catch (error: any) {
+    toastStore.error(error.response?.data?.message || 'Error al eliminar el equipo')
+  }
+}
+
 
 const headerStyle = computed(() => {
     if (team.value?.cover_photo) {
-        return {} // Let the img tag handle it
+        return {} 
     }
     return {
-        backgroundColor: team.value?.primary_color || '#059669' // Default green
+        backgroundColor: '#CCFF00' // Default Volt
     }
 })
 

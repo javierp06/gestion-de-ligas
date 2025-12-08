@@ -131,14 +131,14 @@ const createTeam = async (req, res) => {
       }
     }
 
-    // 🎯 Upgrade automático a organizer si es user
+    // Upgrade automático a organizer si es user
     const wasPromoted = await upgradeUserToOrganizerIfNeeded(req.user);
 
     const [result] = await pool.query(
       `INSERT INTO teams 
-       (name, short_name, logo, cover_photo, captain_id, league_id, founded_date, colors, primary_color, secondary_color, stadium) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, short_name || null, logo || null, cover_photo || null, captain_id || null, league_id, founded_date || null, colors || null, primary_color || null, secondary_color || null, stadium || null]
+       (name, short_name, logo, cover_photo, captain_id, league_id, stadium) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [name, short_name || null, logo || null, cover_photo || null, captain_id || null, league_id, stadium || null]
     );
 
     await logActivity({
@@ -204,8 +204,13 @@ const updateTeam = async (req, res) => {
     const { name, short_name, logo, cover_photo, captain_id, founded_date, colors, primary_color, secondary_color, stadium } = req.body;
     const pool = getPool();
 
-    // Verificar que el equipo exista
-    const [teams] = await pool.query('SELECT * FROM teams WHERE id = ?', [id]);
+    // Obtener equipo y el organizador de la liga
+    const [teams] = await pool.query(`
+      SELECT t.*, l.organizer_id as league_organizer_id 
+      FROM teams t
+      INNER JOIN leagues l ON t.league_id = l.id
+      WHERE t.id = ?
+    `, [id]);
 
     if (teams.length === 0) {
       return res.status(404).json({
@@ -214,11 +219,15 @@ const updateTeam = async (req, res) => {
       });
     }
 
-    // Verificar ownership: solo el capitán o admin pueden modificar
-    if (teams[0].captain_id !== req.user.id && req.user.role !== 'admin') {
+    // Verificar permissions: Admin OR Team Captain OR League Organizer
+    const isCaptain = teams[0].captain_id === req.user.id;
+    const isLeagueOrganizer = teams[0].league_organizer_id === req.user.id;
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isCaptain && !isLeagueOrganizer && !isAdmin) {
       return res.status(403).json({
         success: false,
-        message: 'No tienes permisos para actualizar este equipo. Solo el capitán o un administrador pueden hacerlo.'
+        message: 'No tienes permisos para actualizar este equipo.'
       });
     }
 
@@ -246,9 +255,9 @@ const updateTeam = async (req, res) => {
 
     await pool.query(
       `UPDATE teams 
-       SET name = ?, short_name = ?, logo = ?, cover_photo = ?, captain_id = ?, founded_date = ?, colors = ?, primary_color = ?, secondary_color = ?, stadium = ?
+       SET name = ?, short_name = ?, logo = ?, cover_photo = ?, captain_id = ?, stadium = ?
        WHERE id = ?`,
-      [name, short_name, logo, cover_photo, captain_id, founded_date, colors, primary_color, secondary_color, stadium, id]
+      [name, short_name, logo, cover_photo, captain_id, stadium, id]
     );
 
     await logActivity({
@@ -281,8 +290,13 @@ const deleteTeam = async (req, res) => {
     const { id } = req.params;
     const pool = getPool();
 
-    // Verificar que el equipo exista
-    const [teams] = await pool.query('SELECT * FROM teams WHERE id = ?', [id]);
+    // Obtener equipo y el organizador de la liga
+    const [teams] = await pool.query(`
+      SELECT t.*, l.organizer_id as league_organizer_id 
+      FROM teams t
+      INNER JOIN leagues l ON t.league_id = l.id
+      WHERE t.id = ?
+    `, [id]);
 
     if (teams.length === 0) {
       return res.status(404).json({
@@ -291,11 +305,15 @@ const deleteTeam = async (req, res) => {
       });
     }
 
-    // Verificar ownership: solo el capitán o admin pueden eliminar
-    if (teams[0].captain_id !== req.user.id && req.user.role !== 'admin') {
+    // Verificar permissions: Admin OR Team Captain OR League Organizer
+    const isCaptain = teams[0].captain_id === req.user.id;
+    const isLeagueOrganizer = teams[0].league_organizer_id === req.user.id;
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isCaptain && !isLeagueOrganizer && !isAdmin) {
       return res.status(403).json({
         success: false,
-        message: 'No tienes permisos para eliminar este equipo. Solo el capitán o un administrador pueden hacerlo.'
+        message: 'No tienes permisos para eliminar este equipo.'
       });
     }
 

@@ -35,17 +35,21 @@
           <span class="material-symbols-outlined">chevron_left</span>
         </button>
 
-        <div class="flex items-center gap-8 overflow-x-auto scrollbar-hide px-4">
-          <div v-for="date in dates" :key="date.value" @click="selectedDate = date.value"
-            class="flex flex-col items-center gap-1 cursor-pointer group transition-all duration-300"
-            :class="selectedDate === date.value ? 'scale-110' : 'opacity-50 hover:opacity-100'">
-            <span class="text-xs font-bold transition-colors"
+        <div class="flex-1 flex justify-center items-center gap-1 sm:gap-4 overflow-hidden px-2">
+          <div v-for="(date, index) in dates" :key="date.value" @click="selectedDate = date.value"
+            class="flex flex-col items-center gap-1 cursor-pointer group transition-all duration-300 rounded-xl py-2 w-12 sm:w-14"
+            :class="[
+              selectedDate === date.value ? 'bg-primary-500/10' : 'hover:bg-gray-100 dark:hover:bg-white/5',
+              (index === 0 || index === 6) ? 'hidden md:flex' :
+                (index === 1 || index === 5) ? 'hidden sm:flex' : 'flex'
+            ]">
+            <span class="text-[10px] md:text-xs font-bold transition-colors uppercase truncate w-full text-center"
               :class="selectedDate === date.value ? 'text-primary-500' : 'text-text-secondary-light dark:text-text-secondary-dark'">
               {{ date.label }}
             </span>
             <span
-              class="w-10 h-10 rounded-full flex items-center justify-center font-black text-lg transition-all duration-300"
-              :class="selectedDate === date.value ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white'">
+              class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center font-black text-sm md:text-lg transition-all duration-300"
+              :class="selectedDate === date.value ? 'bg-primary-500 text-black shadow-neon scale-110' : 'bg-surface-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white'">
               {{ date.day }}
             </span>
           </div>
