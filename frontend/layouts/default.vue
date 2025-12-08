@@ -21,7 +21,6 @@
               { key: 'nav.home', path: '/' },
               { key: 'nav.leagues', path: '/leagues' },
               { key: 'nav.tournaments', path: '/tournaments' },
-              { key: 'nav.teams', path: '/teams' },
               { key: 'nav.matches', path: '/matches' }
             ]" :key="item.key" :to="localePath(item.path)"
               class="text-sm font-bold uppercase tracking-wide transition-colors" active-class="text-primary-500"
@@ -143,7 +142,6 @@
             { key: 'nav.home', path: '/' },
             { key: 'nav.leagues', path: '/leagues' },
             { key: 'nav.tournaments', path: '/tournaments' },
-            { key: 'nav.teams', path: '/teams' },
             { key: 'nav.matches', path: '/matches' }
           ]" :key="item.key" :to="localePath(item.path)" @click="showMobileMenu = false"
             class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3"
@@ -260,7 +258,6 @@
         <NuxtLink v-for="item in [
           { key: 'nav.leagues', path: '/leagues', icon: 'emoji_events' },
           { key: 'nav.tournaments', path: '/tournaments', icon: 'trophy' },
-          { key: 'nav.teams', path: '/teams', icon: 'groups' },
           { key: 'nav.matches', path: '/matches', icon: 'sports_soccer' }
         ]" :key="item.key" :to="localePath(item.path)"
           class="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border"

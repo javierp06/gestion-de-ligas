@@ -57,8 +57,8 @@
 
             <div class="absolute top-4 right-4 z-20">
               <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider backdrop-blur-md border"
-                :class="tournament.status === 'upcoming' || tournament.status === 'open' ? 'bg-green-500/20 text-green-500 border-green-500/30' : 'bg-blue-500/20 text-blue-500 border-blue-500/30'">
-                {{ tournament.status === 'upcoming' ? 'Inscripciones' : (tournament.status === 'in_progress' ? 'En Curso' : tournament.status) }}
+                :class="getTournamentStatusClass(tournament.status)">
+                {{ getTournamentStatusText(tournament.status) }}
               </span>
             </div>
           </div>
@@ -140,6 +140,31 @@ const filteredTournaments = computed(() => {
 
   return tournaments.value
 })
+
+const getTournamentStatusText = (status: string) => {
+  const map: Record<string, string> = {
+    'upcoming': 'Inscripciones',
+    'open': 'Inscripciones',
+    'in_progress': 'En Curso',
+    'active': 'En Curso',
+    'finished': 'Finalizado',
+    'completed': 'Finalizado'
+  }
+  return map[status] || status
+}
+
+const getTournamentStatusClass = (status: string) => {
+  if (status === 'upcoming' || status === 'open') {
+    return 'bg-green-500/20 text-green-500 border-green-500/30'
+  }
+  if (status === 'in_progress' || status === 'active') {
+    return 'bg-blue-500/20 text-blue-500 border-blue-500/30'
+  }
+  if (status === 'finished' || status === 'completed') {
+    return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30'
+  }
+  return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+}
 
 const formatDate = (dateString: string) => {
   if (!dateString) return 'Por definir'

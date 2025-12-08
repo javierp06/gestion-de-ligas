@@ -124,57 +124,131 @@
                                 Configuración de Reglas (Opcional)
                             </h3>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Match Duration -->
+                            <!-- Dynamic Settings Based on Sport -->
+                            <!-- Universal Settings -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <label
                                         class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Duración Partido (min)
+                                        Duración (min)
                                     </label>
-                                    <input v-model.number="formData.settings.match_duration" type="number" min="1"
-                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium"
-                                        placeholder="Ej: 90" />
+                                    <input v-model.number="formData.settings.match_duration" type="number"
+                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none focus:border-primary-500 font-medium" />
                                 </div>
-
-                                <!-- Players per Team -->
                                 <div>
                                     <label
                                         class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Jugadores por Equipo
+                                        Jugadores / Equipo
                                     </label>
-                                    <input v-model.number="formData.settings.players_per_team" type="number" min="1"
-                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium"
-                                        placeholder="Ej: 11" />
+                                    <input v-model.number="formData.settings.players_per_team" type="number"
+                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none focus:border-primary-500 font-medium" />
                                 </div>
                             </div>
 
-                            <div class="mt-6">
+                            <!-- Soccer / Points Based -->
+                            <div v-if="!selectedSportName || selectedSportName.match(/fútbol|soccer/i)" class="mt-4">
                                 <label
                                     class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                    Sistema de Puntuación
+                                    Puntos en Tabla
                                 </label>
                                 <div class="grid grid-cols-3 gap-4">
                                     <div>
                                         <span
                                             class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1 block">Victoria</span>
                                         <input v-model.number="formData.settings.points_win" type="number"
-                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-2 px-3 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium text-center"
-                                            placeholder="3" />
+                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-2 px-3 text-center" />
                                     </div>
                                     <div>
                                         <span
                                             class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1 block">Empate</span>
                                         <input v-model.number="formData.settings.points_draw" type="number"
-                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-2 px-3 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium text-center"
-                                            placeholder="1" />
+                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-2 px-3 text-center" />
                                     </div>
                                     <div>
                                         <span
                                             class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-1 block">Derrota</span>
                                         <input v-model.number="formData.settings.points_loss" type="number"
-                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-2 px-3 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium text-center"
-                                            placeholder="0" />
+                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-2 px-3 text-center" />
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Tennis / Padel -->
+                            <div v-if="selectedSportName && selectedSportName.match(/tenis|pádel|padel/i)"
+                                class="mt-4 grid grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                        Sets para Ganar
+                                    </label>
+                                    <select v-model="formData.settings.sets_to_win"
+                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none">
+                                        <option :value="1">1 Set (Rápido)</option>
+                                        <option :value="2">Mejor de 3 (2 Sets)</option>
+                                        <option :value="3">Mejor de 5 (3 Sets)</option>
+                                    </select>
+                                </div>
+
+                                <div v-if="selectedSportName.match(/pádel|padel/i)">
+                                    <label
+                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                        Punto de Oro
+                                    </label>
+                                    <div class="flex items-center gap-3 py-3">
+                                        <input type="checkbox" v-model="formData.settings.golden_point"
+                                            class="w-5 h-5 accent-primary-500 rounded" />
+                                        <span
+                                            class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Activar
+                                            Punto de Oro</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Basketball -->
+                            <div v-if="selectedSportName && selectedSportName.match(/baloncesto|basket/i)"
+                                class="mt-4 grid grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                        Duración Cuarto (min)
+                                    </label>
+                                    <input v-model.number="formData.settings.period_length" type="number"
+                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none"
+                                        placeholder="10" />
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                        Límite Faltas
+                                    </label>
+                                    <input v-model.number="formData.settings.foul_limit" type="number"
+                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none"
+                                        placeholder="5" />
+                                </div>
+                            </div>
+
+                            <!-- Volleyball -->
+                            <div v-if="selectedSportName && selectedSportName.match(/voleibol|voley/i)"
+                                class="mt-4 grid grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                        Puntos por Set
+                                    </label>
+                                    <input v-model.number="formData.settings.max_points_set" type="number"
+                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none"
+                                        placeholder="25" />
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                        Sets para Ganar
+                                    </label>
+                                    <select v-model="formData.settings.sets_to_win"
+                                        class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none">
+                                        <option :value="2">Mejor de 3</option>
+                                        <option :value="3">Mejor de 5</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -297,7 +371,29 @@ const toastStore = useToastStore()
 const loading = ref(false)
 const sports = ref<{ id: number; name: string }[]>([])
 
-const formData = ref({
+interface LeagueSettings {
+    match_duration: number | null;
+    players_per_team: number | null;
+    points_win: number;
+    points_draw: number;
+    points_loss: number;
+    sets_to_win?: number;
+    tie_break_rule?: string;
+    golden_point?: boolean;
+    period_length?: number;
+    foul_limit?: number;
+    rally_scoring?: boolean;
+    max_points_set?: number;
+}
+
+const formData = ref<{
+    name: string;
+    description: string;
+    sport_id: string | number;
+    location: string;
+    logo: string;
+    settings: LeagueSettings;
+}>({
     name: '',
     description: '',
     sport_id: '',
@@ -308,7 +404,49 @@ const formData = ref({
         players_per_team: null,
         points_win: 3,
         points_draw: 1,
-        points_loss: 0
+        points_loss: 0,
+        // Advanced Sport Settings
+        sets_to_win: 2, // Tennis/Volleyball
+        tie_break_rule: 'standard', // Tennis
+        golden_point: false, // Padel
+        period_length: 10, // Basketball
+        foul_limit: 5, // Basketball
+        rally_scoring: true, // Volleyball
+        max_points_set: 25 // Volleyball
+    }
+})
+
+const selectedSportName = computed(() => {
+    const s = sports.value.find(sp => sp.id == formData.value.sport_id)
+    return s ? s.name : ''
+})
+
+/* Set defaults when sport changes */
+import { watch } from 'vue'
+watch(() => formData.value.sport_id, (newId) => {
+    const sport = sports.value.find(s => s.id == newId)
+    if (!sport) return
+
+    const name = sport.name.toLowerCase()
+
+    // Reset specific defaults
+    if (name.includes('fútbol') || name.includes('soccer')) {
+        formData.value.settings.points_win = 3
+        formData.value.settings.points_draw = 1
+        formData.value.settings.match_duration = name.includes('7') ? 50 : 90
+        formData.value.settings.players_per_team = name.includes('7') ? 7 : 11
+    } else if (name.includes('baloncesto') || name.includes('basket')) {
+        formData.value.settings.points_win = 2 // FIBA
+        formData.value.settings.points_loss = 1
+        formData.value.settings.match_duration = 40
+        formData.value.settings.players_per_team = 5
+    } else if (name.includes('tenis') || name.includes('pádel')) {
+        formData.value.settings.sets_to_win = 2
+        formData.value.settings.players_per_team = name.includes('pádel') ? 2 : 1
+    } else if (name.includes('voleibol')) {
+        formData.value.settings.sets_to_win = 3
+        formData.value.settings.match_duration = 60 // Approx
+        formData.value.settings.players_per_team = 6
     }
 })
 

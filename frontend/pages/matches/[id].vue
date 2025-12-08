@@ -10,12 +10,27 @@
             </div>
 
             <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <!-- Breadcrumb -->
-                <div
-                    class="flex items-center gap-2 text-sm text-text-secondary-light dark:text-text-secondary-dark mb-8 animate-fade-in">
-                    <NuxtLink to="/matches" class="hover:text-primary-500 transition-colors">Partidos</NuxtLink>
-                    <span class="material-symbols-outlined text-sm">chevron_right</span>
-                    <span class="text-text-primary-light dark:text-white font-medium">Detalles del Partido</span>
+                <!-- Navigation & Actions -->
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+                    <div
+                        class="flex items-center gap-2 text-sm text-text-secondary-light dark:text-text-secondary-dark animate-fade-in">
+                        <NuxtLink to="/matches" class="hover:text-primary-500 transition-colors">Partidos</NuxtLink>
+                        <span class="material-symbols-outlined text-sm">chevron_right</span>
+                        <span class="text-text-primary-light dark:text-white font-medium">Detalles del Partido</span>
+                    </div>
+
+                    <div v-if="canManage" class="flex gap-2 animate-fade-in">
+                        <button @click="openManageStats"
+                            class="btn-secondary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                            <span class="material-symbols-outlined">leaderboard</span>
+                            Estadísticas
+                        </button>
+                        <button @click="openEditModal"
+                            class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                            <span class="material-symbols-outlined">edit</span>
+                            Editar Partido
+                        </button>
+                    </div>
                 </div>
 
                 <div v-if="loading" class="flex justify-center py-12">
@@ -36,10 +51,11 @@
                     <!-- Scoreboard -->
                     <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
                         <!-- Home Team -->
-                        <div class="flex flex-col items-center gap-4 flex-1 text-center">
-                            <div class="relative group">
+                        <NuxtLink :to="`/teams/${match.home_team_id}`"
+                            class="flex flex-col items-center gap-4 flex-1 text-center group/team">
+                            <div class="relative">
                                 <div
-                                    class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white p-4 shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                    class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white p-4 shadow-lg flex items-center justify-center transform group-hover/team:scale-110 transition-transform duration-300">
                                     <img v-if="match.home_team_logo" :src="match.home_team_logo"
                                         :alt="match.home_team_name" class="w-full h-full object-contain">
                                     <span v-else class="material-symbols-outlined text-4xl text-gray-400">groups</span>
@@ -51,13 +67,13 @@
                             </div>
                             <div>
                                 <h2
-                                    class="text-xl md:text-2xl font-display font-black text-text-primary-light dark:text-white uppercase tracking-tight">
+                                    class="text-xl md:text-2xl font-display font-black text-text-primary-light dark:text-white uppercase tracking-tight group-hover/team:text-primary-500 transition-colors">
                                     {{ match.home_team_name }}
                                 </h2>
                                 <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
                                     Local</p>
                             </div>
-                        </div>
+                        </NuxtLink>
 
                         <!-- Score -->
                         <div class="flex flex-col items-center gap-2">
@@ -83,10 +99,11 @@
                         </div>
 
                         <!-- Away Team -->
-                        <div class="flex flex-col items-center gap-4 flex-1 text-center">
-                            <div class="relative group">
+                        <NuxtLink :to="`/teams/${match.away_team_id}`"
+                            class="flex flex-col items-center gap-4 flex-1 text-center group/team">
+                            <div class="relative">
                                 <div
-                                    class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white p-4 shadow-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                                    class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white p-4 shadow-lg flex items-center justify-center transform group-hover/team:scale-110 transition-transform duration-300">
                                     <img v-if="match.away_team_logo" :src="match.away_team_logo"
                                         :alt="match.away_team_name" class="w-full h-full object-contain">
                                     <span v-else class="material-symbols-outlined text-4xl text-gray-400">groups</span>
@@ -98,13 +115,13 @@
                             </div>
                             <div>
                                 <h2
-                                    class="text-xl md:text-2xl font-display font-black text-text-primary-light dark:text-white uppercase tracking-tight">
+                                    class="text-xl md:text-2xl font-display font-black text-text-primary-light dark:text-white uppercase tracking-tight group-hover/team:text-primary-500 transition-colors">
                                     {{ match.away_team_name }}
                                 </h2>
                                 <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
                                     Visitante</p>
                             </div>
-                        </div>
+                        </NuxtLink>
                     </div>
 
                     <!-- Match Info -->
@@ -172,9 +189,11 @@
                             </div>
                             <div class="flex-1">
                                 <p class="text-sm font-bold text-text-primary-light dark:text-white">
-                                    {{ event.player_name }}</p>
+                                    {{ event.player_name }}
+                                </p>
                                 <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
-                                    {{ getEventText(event.type) }}</p>
+                                    {{ getEventText(event.type) }}
+                                </p>
                             </div>
                             <div
                                 class="text-xs font-bold px-2 py-1 rounded bg-background-light dark:bg-white/5 border border-border-light dark:border-border-dark">
@@ -234,9 +253,11 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-bold text-text-primary-light dark:text-white">
-                                        {{ player.player_name }}</p>
+                                        {{ player.player_name }}
+                                    </p>
                                     <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
-                                        {{ player.position || 'Jugador' }}</p>
+                                        {{ player.position || 'Jugador' }}
+                                    </p>
                                 </div>
                             </div>
                             <div class="flex gap-1">
@@ -274,9 +295,11 @@
                                 </div>
                                 <div>
                                     <p class="text-sm font-bold text-text-primary-light dark:text-white">
-                                        {{ player.player_name }}</p>
+                                        {{ player.player_name }}
+                                    </p>
                                     <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
-                                        {{ player.position || 'Jugador' }}</p>
+                                        {{ player.position || 'Jugador' }}
+                                    </p>
                                 </div>
                             </div>
                             <div class="flex gap-1">
@@ -297,6 +320,12 @@
                 </div>
             </div>
         </div>
+        <!-- Modals -->
+        <UpdateScoreModal v-if="showEditModal && match" :match="match" @close="showEditModal = false"
+            @updated="fetchMatchDetails" />
+
+        <UpdateMatchStatsModal v-if="showStatsModal && match" :match="match" @close="showStatsModal = false"
+            @updated="fetchMatchDetails" />
     </div>
 </template>
 
@@ -304,19 +333,37 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useNuxtApp } from '#app'
+import { useAuthStore } from '@/stores/auth'
+import UpdateScoreModal from '@/components/modals/UpdateScoreModal.vue'
+import UpdateMatchStatsModal from '@/components/modals/UpdateMatchStatsModal.vue'
 
 const route = useRoute()
 const { $api } = useNuxtApp()
+const authStore = useAuthStore()
 
 const match = ref<any>(null)
 const loading = ref(true)
 const activeTab = ref('summary')
+const showEditModal = ref(false)
+const showStatsModal = ref(false)
 
 const tabs = [
     { id: 'summary', label: 'Resumen' },
     { id: 'lineups', label: 'Alineaciones' },
     { id: 'stats', label: 'Estadísticas' }
 ]
+
+const canManage = computed(() => {
+    return authStore.isAdmin || authStore.isOrganizer
+})
+
+const openEditModal = () => {
+    showEditModal.value = true
+}
+
+const openManageStats = () => {
+    showStatsModal.value = true
+}
 
 const fetchMatchDetails = async () => {
     loading.value = true
@@ -407,10 +454,9 @@ const getStatPercentage = (val1: number, val2: number) => {
 
 const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
     })
 }
 

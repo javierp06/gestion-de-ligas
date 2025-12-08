@@ -272,10 +272,19 @@ const calendarDays = computed(() => {
 });
 
 const getMatchesForDate = (date: Date) => {
-  const dateString = date.toISOString().split('T')[0];
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const dateString = `${year}-${month}-${day}`;
+
   return matchStore.matches.filter(match => {
-    const matchDate = new Date(match.match_date).toISOString().split('T')[0];
-    return matchDate === dateString;
+    const mDate = new Date(match.match_date);
+    const mYear = mDate.getFullYear();
+    const mMonth = String(mDate.getMonth() + 1).padStart(2, '0');
+    const mDay = String(mDate.getDate()).padStart(2, '0');
+    const matchDateString = `${mYear}-${mMonth}-${mDay}`;
+
+    return matchDateString === dateString;
   });
 };
 

@@ -1,18 +1,20 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all p-4"
+  <NuxtLink :to="`/matches/${match.id}`"
+    class="block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all p-4"
     :class="{ 'bg-blue-50 dark:bg-blue-900/20': match.status === 'live' }">
     <div class="flex items-center justify-between gap-4">
       <!-- Home Team -->
-      <div class="flex-1 text-right">
-        <p class="font-bold text-gray-900 dark:text-white truncate">
+      <div class="flex-1 text-right min-w-0">
+        <p class="font-bold text-gray-900 dark:text-white text-sm md:text-base line-clamp-2 leading-tight">
           {{ match.home_team_name }}
         </p>
-        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('components.match_card.home') }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('components.match_card.home') }}</p>
       </div>
 
       <!-- Score/Time -->
-      <div class="flex flex-col items-center gap-1 min-w-[100px]">
-        <span :class="getStatusColor(match.status)" class="px-2 py-1 rounded-full text-xs font-medium">
+      <div class="flex flex-col items-center gap-1 min-w-[100px] shrink-0">
+        <span :class="getStatusColor(match.status)"
+          class="px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap">
           {{ getStatusText(match.status) }}
         </span>
 
@@ -23,18 +25,18 @@
           <span>{{ match.away_score }}</span>
         </div>
 
-        <div v-else class="text-sm text-gray-600 dark:text-gray-400">
-          <p>{{ formatMatchDate(match.match_date) }}</p>
-          <p>{{ formatTime(match.match_date) }}</p>
+        <div v-else class="text-sm text-gray-600 dark:text-gray-400 text-center">
+          <p class="font-medium">{{ formatMatchDate(match.match_date) }}</p>
+          <p class="text-xs">{{ formatTime(match.match_date) }}</p>
         </div>
       </div>
 
       <!-- Away Team -->
-      <div class="flex-1">
-        <p class="font-bold text-gray-900 dark:text-white truncate">
+      <div class="flex-1 text-left min-w-0">
+        <p class="font-bold text-gray-900 dark:text-white text-sm md:text-base line-clamp-2 leading-tight">
           {{ match.away_team_name }}
         </p>
-        <p class="text-xs text-gray-500 dark:text-gray-400">{{ $t('components.match_card.away') }}</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ $t('components.match_card.away') }}</p>
       </div>
     </div>
 
@@ -50,7 +52,7 @@
         {{ $t('components.match_card.round') }} {{ match.round }}
       </span>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">

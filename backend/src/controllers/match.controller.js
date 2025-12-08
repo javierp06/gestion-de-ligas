@@ -194,10 +194,8 @@ const getMatchById = async (req, res) => {
         l.name as league_name,
         ht.name as home_team_name,
         ht.logo as home_team_logo,
-        ht.founded_year as home_team_founded,
         at.name as away_team_name,
-        at.logo as away_team_logo,
-        at.founded_year as away_team_founded
+        at.logo as away_team_logo
       FROM matches m
       INNER JOIN tournaments t ON m.tournament_id = t.id
       INNER JOIN leagues l ON t.league_id = l.id
@@ -576,6 +574,97 @@ const generateFixture = async (req, res) => {
   }
 };
 
+// Actualizar estadísticas de jugadores
+const updatePlayerStats = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { stats } = req.body; // Array of { player_id, goals, assists, yellow_cards, red_cards, minutes_played, mvp }
+    const pool = getPool();
+
+    // 1. Verificar match y permisos
+    const [matches] = await pool.query('SELECT * FROM matches WHERE id = ?', [id]);
+    if (matches.length === 0) {
+      return res.status(404).json({ success: false, message: 'Partido no encontrado' });
+    }
+
+    const [ownership] = await pool.query(`
+      SELECT l.organizer_id, m.tournament_id
+      FROM leagues l
+      INNER JOIN tournaments t ON l.id = t.league_id
+      INNER JOIN matches m ON t.id = m.tournament_id
+      WHERE m.id = ?
+    `, [id]);
+
+    if (ownership.length === 0 || (ownership[0].organizer_id !== req.user.id && req.user.role !== 'admin')) {
+      return res.status(403).json({ success: false, message: 'No tienes permisos para actualizar estadísticas' });
+    }
+
+    const tournamentId = ownership[0].tournament_id;
+
+    // 2. Transaction for atomic update
+    const connection = await pool.getConnection();
+    await connection.beginTransaction();
+
+    try {
+      // Borrar estadísticas previas para este partido
+      await connection.query('DELETE FROM player_match_stats WHERE match_id = ?', [id]);
+
+      // Insertar nuevas estadísticas
+      if (stats && stats.length > 0) {
+        const values = stats.map(s => [
+          id,
+          s.player_id,
+          s.goals || 0,
+          s.assists || 0,
+          s.yellow_cards || 0,
+          s.red_cards || 0,
+          s.minutes_played || 0,
+          s.mvp || false
+        ]);
+
+        await connection.query(
+          `INSERT INTO player_match_stats 
+           (match_id, player_id, goals, assists, yellow_cards, red_cards, minutes_played, mvp) 
+           VALUES ?`,
+          [values]
+        );
+      }
+
+      await connection.commit();
+    } catch (err) {
+      await connection.rollback();
+      throw err;
+    } finally {
+      connection.release();
+    }
+
+    // 3. Recalcular tabla de posiciones (por si acaso los goles afectan tie-breakers, aunque los goles del match se actualizan en updateMatchScore)
+    // Nota: Es mejor llamar a calculateStandings si las estadisticas afectaran, pero por ahora calculateStandings usa matches.home_score/away_score.
+    // Sin embargo, si tenemos goleadores en standings, sí afectaría.
+    // await calculateStandings(tournamentId);
+
+    await logActivity({
+      userId: req.user.id,
+      userName: req.user.name || 'Usuario',
+      action: 'update_stats',
+      resource: 'match',
+      resourceId: parseInt(id),
+      details: { stats_count: stats ? stats.length : 0 },
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent')
+    });
+
+    res.json({
+      success: true,
+      message: 'Estadísticas de jugadores actualizadas exitosamente'
+    });
+
+  } catch (error) {
+    console.error('Error actualizando estadísticas:', error);
+    res.status(500).json({ success: false, message: 'Error al actualizar estadísticas' });
+  }
+};
+
 module.exports = {
   createMatch,
   getMatches,
@@ -583,5 +672,6 @@ module.exports = {
   updateMatch,
   updateMatchScore,
   deleteMatch,
-  generateFixture
+  generateFixture,
+  updatePlayerStats
 };

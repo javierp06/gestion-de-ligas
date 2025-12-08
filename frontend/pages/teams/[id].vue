@@ -35,18 +35,26 @@
                         </button>
                     </div>
 
-                    <!-- Edit/Delete Actions -->
-                    <div v-if="canManage" class="absolute top-4 right-4 z-10 flex gap-2">
-                        <button @click="showEditModal = true"
-                            class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-black/70 transition-colors text-white shadow-lg border border-white/10"
-                            title="Editar Equipo">
-                            <span class="material-symbols-outlined">edit</span>
-                        </button>
-                        <button @click="deleteTeam"
-                            class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-red-500/80 transition-colors text-red-400 hover:text-white shadow-lg border border-white/10"
-                            title="Eliminar Equipo">
-                            <span class="material-symbols-outlined">delete</span>
-                        </button>
+                    <!-- Favorite & Edit/Delete Actions -->
+                    <div class="absolute top-4 right-4 z-10 flex gap-2">
+                        <!-- Favorite -->
+                        <div
+                            class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-black/70 transition-colors shadow-lg border border-white/10 flex items-center justify-center">
+                            <FavoriteButton type="team" :id="team.id" class="!text-white hover:!text-red-500" />
+                        </div>
+
+                        <template v-if="canManage">
+                            <button @click="showEditModal = true"
+                                class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-black/70 transition-colors text-white shadow-lg border border-white/10"
+                                title="Editar Equipo">
+                                <span class="material-symbols-outlined">edit</span>
+                            </button>
+                            <button @click="deleteTeam"
+                                class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-red-500/80 transition-colors text-red-400 hover:text-white shadow-lg border border-white/10"
+                                title="Eliminar Equipo">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </template>
                     </div>
                 </div>
 
@@ -66,10 +74,12 @@
 
                         <!-- Info -->
                         <div class="flex-1 pt-2 md:pt-0 relative z-10">
-                            <h1 class="text-2xl md:text-3xl font-display font-black text-text-primary-light dark:text-white mb-2 drop-shadow-md md:drop-shadow-none">
+                            <h1
+                                class="text-2xl md:text-3xl font-display font-black text-text-primary-light dark:text-white mb-2 drop-shadow-md md:drop-shadow-none">
                                 {{ team.name }}
                             </h1>
-                            <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">
+                            <div
+                                class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">
                                 <span v-if="team.league_name" class="flex items-center gap-1.5">
                                     <span class="material-symbols-outlined text-primary-500">emoji_events</span>
                                     {{ team.league_name }}
@@ -218,6 +228,8 @@
         </div>
 
         <EditTeamModal v-if="showEditModal" :team="team" @close="showEditModal = false" @updated="refresh" />
+        <AddPlayerModal v-if="showAddPlayerModal" :teamId="team.id" @close="showAddPlayerModal = false"
+            @created="refreshPlayers" />
     </div>
 </template>
 
@@ -229,6 +241,8 @@ import { useToastStore } from '@/stores/toast'
 import MatchCard from '@/components/MatchCard.vue'
 import StatsTable from '@/components/StatsTable.vue'
 import EditTeamModal from '@/components/modals/EditTeamModal.vue'
+import AddPlayerModal from '@/components/modals/AddPlayerModal.vue'
+import FavoriteButton from '@/components/FavoriteButton.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -254,7 +268,7 @@ const { data: team, pending, refresh } = await useAsyncData(`team-${route.params
 })
 
 // Fetch Players
-const { data: players } = await useAsyncData(`team-players-${route.params.id}`, async () => {
+const { data: players, refresh: refreshPlayers } = await useAsyncData(`team-players-${route.params.id}`, async () => {
     const response = await $api.get(`/players?team_id=${route.params.id}`)
     return response.data.success ? response.data.data : []
 })
@@ -280,34 +294,34 @@ const { data: stats } = await useAsyncData(`team-stats-${route.params.id}`, asyn
 const canManage = computed(() => {
     if (!authStore.user || !team.value) return false
     // Logic: Admin OR Team Captain OR League Organizer
-    return authStore.isAdmin || 
-           authStore.user.id === team.value.captain_id || 
-           authStore.user.id === team.value.league_organizer_id
+    return authStore.isAdmin ||
+        authStore.user.id === team.value.captain_id ||
+        authStore.user.id === team.value.league_organizer_id
 })
 
 const deleteTeam = async () => {
-  if (!confirm('¿Estás seguro de eliminar este equipo? Esta acción no se puede deshacer.')) return
+    if (!confirm('¿Estás seguro de eliminar este equipo? Esta acción no se puede deshacer.')) return
 
-  try {
-    const response = await $api.delete(`/teams/${route.params.id}`)
-    if (response.data.success) {
-      toastStore.success('Equipo eliminado exitosamente')
-      // Redirect to the league page if available, otherwise teams list
-      if (team.value.league_id) {
-          router.push(`/leagues/${team.value.league_id}`)
-      } else {
-          router.push('/teams')
-      }
+    try {
+        const response = await $api.delete(`/teams/${route.params.id}`)
+        if (response.data.success) {
+            toastStore.success('Equipo eliminado exitosamente')
+            // Redirect to the league page if available, otherwise teams list
+            if (team.value.league_id) {
+                router.push(`/leagues/${team.value.league_id}`)
+            } else {
+                router.push('/teams')
+            }
+        }
+    } catch (error: any) {
+        toastStore.error(error.response?.data?.message || 'Error al eliminar el equipo')
     }
-  } catch (error: any) {
-    toastStore.error(error.response?.data?.message || 'Error al eliminar el equipo')
-  }
 }
 
 
 const headerStyle = computed(() => {
     if (team.value?.cover_photo) {
-        return {} 
+        return {}
     }
     return {
         backgroundColor: '#CCFF00' // Default Volt

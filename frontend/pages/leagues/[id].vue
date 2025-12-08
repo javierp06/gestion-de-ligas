@@ -21,20 +21,29 @@
             style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;">
           </div>
           <img v-if="league.cover_photo" :src="league.cover_photo" class="w-full h-full object-cover" />
-          
-           <!-- Gradient Overlay for text readability if cover photo exists -->
-           <div v-if="league.cover_photo" class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
 
-          <!-- Edit/Delete Actions (Top Right) -->
-          <div v-if="canManage" class="absolute top-4 right-4 flex gap-2 z-10">
-            <button @click="editLeague"
-              class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-black/70 transition-colors text-white shadow-lg border border-white/10">
-              <span class="material-symbols-outlined">edit</span>
-            </button>
-            <button @click="deleteLeague"
-              class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-red-500/80 transition-colors text-red-400 hover:text-white shadow-lg border border-white/10">
-              <span class="material-symbols-outlined">delete</span>
-            </button>
+          <!-- Gradient Overlay for text readability if cover photo exists -->
+          <div v-if="league.cover_photo"
+            class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+
+          <!-- Actions (Top Right) -->
+          <div class="absolute top-4 right-4 flex gap-2 z-10">
+            <!-- Favorite -->
+            <div
+              class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-black/70 transition-colors shadow-lg border border-white/10 flex items-center justify-center">
+              <FavoriteButton type="league" :id="league.id" class="!text-white hover:!text-red-500" />
+            </div>
+
+            <template v-if="canManage">
+              <button @click="editLeague"
+                class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-black/70 transition-colors text-white shadow-lg border border-white/10">
+                <span class="material-symbols-outlined">edit</span>
+              </button>
+              <button @click="deleteLeague"
+                class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-red-500/80 transition-colors text-red-400 hover:text-white shadow-lg border border-white/10">
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </template>
           </div>
         </div>
 
@@ -42,7 +51,8 @@
         <div class="px-8 pb-8">
           <div class="relative flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
             <!-- Logo -->
-            <div class="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl relative z-10 transition-all duration-300">
+            <div
+              class="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl relative z-10 transition-all duration-300">
               <img :src="league.logo || `https://ui-avatars.com/api/?name=${league.name}&background=random`"
                 class="w-full h-full object-cover rounded-xl bg-gray-50 dark:bg-white/5" alt="League Logo" />
             </div>
@@ -50,7 +60,8 @@
             <!-- Info -->
             <div class="flex-1 pt-2 md:pt-0 relative z-10">
               <div class="flex flex-wrap items-center gap-3 mb-2">
-                <h1 class="text-2xl md:text-3xl font-display font-black text-text-primary-light dark:text-white drop-shadow-md md:drop-shadow-none">
+                <h1
+                  class="text-2xl md:text-3xl font-display font-black text-text-primary-light dark:text-white drop-shadow-md md:drop-shadow-none">
                   {{ league.name }}
                 </h1>
                 <span :class="getStatusColor(league.status)"
@@ -102,7 +113,7 @@
           <div
             class="flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-fit">
             <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
-              class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300" 
+              class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300"
               :class="activeTab === tab.value ? 'bg-primary-500 text-black shadow-lg shadow-neon' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'">
               {{ tab.label }}
             </button>
@@ -250,6 +261,7 @@
 import CreateTournamentModal from '@/components/modals/CreateTournamentModal.vue'
 import CreateTeamModal from '@/components/modals/CreateTeamModal.vue'
 import EditLeagueModal from '@/components/modals/EditLeagueModal.vue'
+import FavoriteButton from '@/components/FavoriteButton.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -349,12 +361,12 @@ const deleteLeague = async () => {
 }
 
 const headerStyle = computed(() => {
-    if (league.value?.cover_photo) {
-        return {} 
-    }
-    return {
-        backgroundColor: '#CCFF00' // Default Volt
-    }
+  if (league.value?.cover_photo) {
+    return {}
+  }
+  return {
+    backgroundColor: '#CCFF00' // Default Volt
+  }
 })
 
 definePageMeta({

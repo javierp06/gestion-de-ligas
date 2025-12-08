@@ -47,15 +47,10 @@ export const useSports = () => {
   const formatMatchDate = (dateString: string): string => {
     const date = new Date(dateString)
     const now = new Date()
-    const diffTime = date.getTime() - now.getTime()
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-    if (diffDays === 0) return 'Hoy'
-    if (diffDays === 1) return 'Mañana'
-    if (diffDays === -1) return 'Ayer'
-    if (diffDays > 0 && diffDays <= 7) return `En ${diffDays} días`
     
+    // Always show date e.g., "Lun, 24 Oct"
     return date.toLocaleDateString('es-HN', { 
+      weekday: 'short',
       day: 'numeric', 
       month: 'short',
       year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined

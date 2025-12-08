@@ -208,4 +208,35 @@ router.delete('/:id', [
   authenticateToken
 ], matchController.deleteMatch);
 
+/**
+ * @swagger
+ * /api/matches/{id}/stats:
+ *   post:
+ *     tags: [Matches]
+ *     summary: Actualizar estadísticas de jugadores del partido
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - stats
+ *     responses:
+ *       200:
+ *         description: Estadísticas actualizadas
+ */
+router.post('/:id/stats', [
+  authenticateToken,
+  validateRequest
+], matchController.updatePlayerStats);
+
 module.exports = router;

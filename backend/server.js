@@ -23,6 +23,7 @@ const playerRoutes = require('./src/routes/player.routes');
 const statsRoutes = require('./src/routes/stats.routes');
 const sportRoutes = require('./src/routes/sport.routes');
 const uploadRoutes = require('./src/routes/upload.routes');
+const favoritesRoutes = require('./src/routes/favorites.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -77,6 +78,7 @@ app.use('/api/players', playerRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/sports', sportRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {
