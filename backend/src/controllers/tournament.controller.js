@@ -220,6 +220,13 @@ const updateTournament = async (req, res) => {
       });
     }
 
+    const currentTournament = tournaments[0];
+    const { deleteFile } = require('../services/appwrite.service');
+
+    if (cover_photo && cover_photo !== currentTournament.cover_photo && currentTournament.cover_photo) {
+      await deleteFile(currentTournament.cover_photo);
+    }
+
     await pool.query(
       `UPDATE tournaments 
        SET name = ?, description = ?, start_date = ?, end_date = ?, format = ?, status = ?, max_teams = ?, settings = ?, cover_photo = ?, primary_color = ?, secondary_color = ?

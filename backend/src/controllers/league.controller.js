@@ -181,6 +181,17 @@ const updateLeague = async (req, res) => {
       });
     }
 
+    const currentLeague = leagues[0];
+    const { deleteFile } = require('../services/appwrite.service');
+
+    // Delete old images if they are being replaced
+    if (logo && logo !== currentLeague.logo && currentLeague.logo) {
+      await deleteFile(currentLeague.logo);
+    }
+    if (cover_photo && cover_photo !== currentLeague.cover_photo && currentLeague.cover_photo) {
+      await deleteFile(currentLeague.cover_photo);
+    }
+
     const [result] = await pool.query(
       'UPDATE leagues SET name = ?, description = ?, location = ?, status = ?, logo = ?, cover_photo = ?, settings = ?, primary_color = ?, secondary_color = ? WHERE id = ?',
       [name, description, location, status, logo, cover_photo, JSON.stringify(settings || {}), primary_color, secondary_color, id]

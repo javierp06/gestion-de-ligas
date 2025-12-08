@@ -5,7 +5,7 @@
             <!-- Header -->
             <div
                 class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between z-10">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Editar Equipo</h2>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Editar Liga</h2>
                 <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                     <span class="material-symbols-outlined">close</span>
                 </button>
@@ -15,38 +15,29 @@
             <form @submit.prevent="handleSubmit" class="p-6 space-y-6">
 
                 <!-- Basic Info -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nombre del
-                            Equipo</label>
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nombre de la Liga</label>
                         <input v-model="formData.name" type="text" required class="input-field" />
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nombre Corto
-                            (Abreviatura)</label>
-                        <input v-model="formData.short_name" type="text" class="input-field" placeholder="Ej: FCB" />
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Ubicación</label>
+                        <input v-model="formData.location" type="text" class="input-field" placeholder="Ej: San Pedro Sula" />
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Estadio</label>
-                        <input v-model="formData.stadium" type="text" class="input-field" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Año de
-                            Fundación</label>
-                        <input v-model="formData.founded_date" type="date" class="input-field" />
-                    </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Descripción</label>
+                    <textarea v-model="formData.description" rows="3" class="input-field"></textarea>
                 </div>
 
                 <!-- Images -->
                 <div class="space-y-6 border-t border-gray-200 dark:border-gray-700 pt-4">
                     <h3 class="text-lg font-bold text-gray-900 dark:text-white">Imágenes</h3>
+                    
+                    <ImageUpload label="Logo de la Liga" v-model="formData.logo" ref="logoUpload" />
 
-                    <ImageUpload label="Logo del Equipo" v-model="formData.logo" ref="logoUpload" />
-
-                    <ImageUpload label="Portada / Foto de Equipo" v-model="formData.cover_photo" :circle="false" ref="coverUpload" />
+                    <ImageUpload label="Portada" v-model="formData.cover_photo" :circle="false" ref="coverUpload" />
                 </div>
 
                 <!-- Personalization -->
@@ -55,8 +46,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Color
-                                Primario</label>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Color Primario</label>
                             <div class="flex items-center gap-3">
                                 <input v-model="formData.primary_color" type="color"
                                     class="h-10 w-20 rounded cursor-pointer border-0 p-0" />
@@ -65,8 +55,7 @@
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Color
-                                Secundario</label>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Color Secundario</label>
                             <div class="flex items-center gap-3">
                                 <input v-model="formData.secondary_color" type="color"
                                     class="h-10 w-20 rounded cursor-pointer border-0 p-0" />
@@ -74,13 +63,6 @@
                                     placeholder="#FFFFFF" />
                             </div>
                         </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Colores (Texto
-                            descriptivo)</label>
-                        <input v-model="formData.colors" type="text" class="input-field"
-                            placeholder="Ej: Rojo y Azul" />
                     </div>
                 </div>
 
@@ -115,7 +97,7 @@ const { $api } = useNuxtApp()
 const toastStore = useToastStore()
 
 const props = defineProps<{
-    team: any
+    league: any
 }>()
 
 const emit = defineEmits<{
@@ -126,20 +108,20 @@ const emit = defineEmits<{
 const loading = ref(false)
 const error = ref('')
 
-// Refs
+// Refs for ImageUpload components
 const logoUpload = ref()
 const coverUpload = ref()
 
 const formData = ref({
-    name: props.team.name,
-    short_name: props.team.short_name,
-    logo: props.team.logo,
-    cover_photo: props.team.cover_photo,
-    stadium: props.team.stadium,
-    founded_date: props.team.founded_date ? new Date(props.team.founded_date).toISOString().split('T')[0] : '',
-    colors: props.team.colors,
-    primary_color: props.team.primary_color || '#000000',
-    secondary_color: props.team.secondary_color || '#ffffff'
+    name: props.league.name,
+    description: props.league.description,
+    location: props.league.location,
+    logo: props.league.logo,
+    cover_photo: props.league.cover_photo,
+    primary_color: props.league.primary_color || '#000000',
+    secondary_color: props.league.secondary_color || '#ffffff',
+    status: props.league.status,
+    settings: props.league.settings // Preserve existing settings
 })
 
 const handleSubmit = async () => {
@@ -147,22 +129,22 @@ const handleSubmit = async () => {
     error.value = ''
 
     try {
-        // Upload images if awaiting
+        // Upload images if changed/pending
         const logoUrl = await logoUpload.value.upload()
         const coverUrl = await coverUpload.value.upload()
-        
+
         if (logoUrl) formData.value.logo = logoUrl
         if (coverUrl) formData.value.cover_photo = coverUrl
 
-        const response = await $api.put(`/teams/${props.team.id}`, formData.value)
+        const response = await $api.put(`/leagues/${props.league.id}`, formData.value)
 
         if (response.data.success) {
-            toastStore.success('Equipo actualizado exitosamente')
+            toastStore.success('Liga actualizada exitosamente')
             emit('updated')
             emit('close')
         }
     } catch (err: any) {
-        error.value = err.response?.data?.message || 'Error al actualizar el equipo'
+        error.value = err.response?.data?.message || 'Error al actualizar la liga'
         toastStore.error(error.value)
     } finally {
         loading.value = false

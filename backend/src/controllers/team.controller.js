@@ -234,6 +234,16 @@ const updateTeam = async (req, res) => {
       }
     }
 
+    const currentTeam = teams[0];
+    const { deleteFile } = require('../services/appwrite.service');
+
+    if (logo && logo !== currentTeam.logo && currentTeam.logo) {
+      await deleteFile(currentTeam.logo);
+    }
+    if (cover_photo && cover_photo !== currentTeam.cover_photo && currentTeam.cover_photo) {
+      await deleteFile(currentTeam.cover_photo);
+    }
+
     await pool.query(
       `UPDATE teams 
        SET name = ?, short_name = ?, logo = ?, cover_photo = ?, captain_id = ?, founded_date = ?, colors = ?, primary_color = ?, secondary_color = ?, stadium = ?

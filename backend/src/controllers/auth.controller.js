@@ -491,11 +491,22 @@ const updateProfile = async (req, res) => {
       });
     }
 
-    values.push(userId);
-    await pool.query(
-      `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
-      values
-    );
+    if (updates.length > 0) {
+      // Check for avatar update to delete old one
+      if (avatar && avatar !== user.avatar && user.avatar) {
+        const { deleteFile } = require('../services/appwrite.service');
+        // Only delete if it's an Appwrite URL (starts with http)
+        if (user.avatar.startsWith('http')) {
+          await deleteFile(user.avatar);
+        }
+      }
+
+      values.push(userId);
+      await pool.query(
+        `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
+        values
+      );
+    }
 
     // Obtener usuario actualizado
     const [updatedUsers] = await pool.query(

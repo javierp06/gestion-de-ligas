@@ -19,8 +19,6 @@ npm install
 npm run dev
 ```
 
-Asegúrate de configurar las variables de entorno en el archivo `.env` (puedes usar `.env.example` como guía).
-
 ### 2. Frontend
 
 ```bash

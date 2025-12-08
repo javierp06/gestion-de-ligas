@@ -6,6 +6,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./src/config/swagger');
+const path = require('path');
 
 // Importar configuraciones de base de datos
 const { connectMySQL } = require('./src/config/mysql');
@@ -21,6 +22,7 @@ const standingRoutes = require('./src/routes/standing.routes');
 const playerRoutes = require('./src/routes/player.routes');
 const statsRoutes = require('./src/routes/stats.routes');
 const sportRoutes = require('./src/routes/sport.routes');
+const uploadRoutes = require('./src/routes/upload.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -29,7 +31,9 @@ const PORT = process.env.PORT || 3001;
 process.setMaxListeners(15);
 
 // Middlewares de seguridad y optimización
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 app.use(compression());
 app.use(morgan('dev'));
 
@@ -38,6 +42,9 @@ app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
   credentials: true
 }));
+
+// Servir archivos estáticos (uploads)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Body parser
 app.use(express.json());
@@ -69,6 +76,7 @@ app.use('/api/standings', standingRoutes);
 app.use('/api/players', playerRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/sports', sportRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {
