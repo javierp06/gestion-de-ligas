@@ -186,7 +186,7 @@ const createTournament = async (req, res) => {
 const updateTournament = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, start_date, end_date, format, status, max_teams, settings, cover_photo, primary_color, secondary_color } = req.body;
+    const { name, description, start_date, end_date, format, status, max_teams, settings, cover_photo, logo, primary_color, secondary_color } = req.body;
     const pool = getPool();
 
     // Verificar que el torneo exista y obtener el organizador de la liga padre
@@ -227,11 +227,15 @@ const updateTournament = async (req, res) => {
       await deleteFile(currentTournament.cover_photo);
     }
 
+    if (logo && logo !== currentTournament.logo && currentTournament.logo) {
+      await deleteFile(currentTournament.logo);
+    }
+
     await pool.query(
       `UPDATE tournaments 
-       SET name = ?, description = ?, start_date = ?, end_date = ?, format = ?, status = ?, max_teams = ?, settings = ?, cover_photo = ?, primary_color = ?, secondary_color = ?
+       SET name = ?, description = ?, start_date = ?, end_date = ?, format = ?, status = ?, max_teams = ?, settings = ?, cover_photo = ?, logo = ?, primary_color = ?, secondary_color = ?
        WHERE id = ?`,
-      [name, description, start_date, end_date, format, status, max_teams, settings ? JSON.stringify(settings) : null, cover_photo, primary_color, secondary_color, id]
+      [name, description, start_date, end_date, format, status, max_teams, settings ? JSON.stringify(settings) : null, cover_photo, logo, primary_color, secondary_color, id]
     );
 
     await logActivity({

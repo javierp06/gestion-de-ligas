@@ -178,5 +178,71 @@
         "group_knockout": "Gruppen + K.o."
       }
     }
+  },
+  "create_tournament": {
+    "title": "Neues Turnier erstellen",
+    "step": "Schritt {current} von {total}",
+    "name": "Turniername",
+    "start_date": "Startdatum",
+    "end_date": "Enddatum",
+    "description": "Beschreibung",
+    "description_placeholder": "Beschreiben Sie das Turnier, Preise, Regeln usw.",
+    "select_format": "Turnierformat wählen",
+    "max_teams": "Max Teams",
+    "config_title": "Konfiguration: {format}",
+    "settings": {
+      "rounds": "Runden",
+      "rounds_desc": "Anzahl der Spiele gegen jeden Gegner (1 = Einzel, 2 = Hin & Rück).",
+      "has_playoff": "Mit Finalrunde",
+      "playoff_teams": "Qualifizierte Teams",
+      "playoff_explanation": {
+        "4": "1. vs 4. und 2. vs 3. (Halbfinale).",
+        "6": "1. & 2. in HF. Repechaje: 3-6, 4-5.",
+        "8": "Viertelfinale: 1-8, 2-7, 3-6, 4-5."
+      },
+      "playoff_legs": "Playoff-Spiele",
+      "playoff_legs_desc": "Spiele pro Serie (1 = Entscheidungsspiel).",
+      "groups_count": "Anzahl Gruppen",
+      "groups_count_desc": "{count} Gruppen (A, B...)",
+      "advancement_count": "Aufsteiger pro Gruppe",
+      "advancement_count_desc": "Teams, die weiterkommen.",
+      "group_matches": "Gruppenspiele",
+      "group_matches_desc": "Spiele gegen jeden Gegner.",
+      "knockout_legs": "K.o.-Spiele",
+      "knockout_legs_desc": "Spiele pro K.o.-Runde.",
+      "knockout_legs_only_desc": "Entscheidungsspiele.",
+      "third_place": "Spiel um Platz 3"
+    },
+    "info_msg": "Sie können den Spielplan später anpassen.",
+    "formats": {
+      "league_desc": "Jeder gegen Jeden. Team mit den meisten Punkten gewinnt.",
+      "group_knockout_desc": "Gruppenphase + K.o.-System (WM, CL).",
+      "knockout_desc": "K.o.-System von Anfang an (Pokal)."
+    },
+    "buttons": {
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "next": "Weiter",
+      "create": "Turnier erstellen",
+      "creating": "Erstelle..."
+    }
+  },
+  "generate_fixture": {
+    "title": "Spielplan generieren",
+    "description": "Erstellt automatisch alle Spiele (Round Robin).",
+    "start_date": "Startdatum",
+    "interval_days": "Tage zwischen Spieltagen",
+    "interval_desc": "Bsp: 7 für wöchentlich",
+    "rounds": "Anzahl Runden",
+    "configured_at_creation": "Bei Erstellung konfiguriert",
+    "rounds_desc": "1 = Einzel, 2 = Hin & Rück",
+    "rounds_1": "Einzel",
+    "rounds_2": "Hin & Rück",
+    "rounds_n": "Runden",
+    "buttons": {
+      "generate": "Generieren",
+      "generating": "Generiere...",
+      "cancel": "Abbrechen"
+    }
   }
 }

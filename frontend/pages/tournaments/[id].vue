@@ -16,11 +16,15 @@
             <div
                 class="relative bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden mb-8 animate-fade-in">
                 <!-- Cover Image / Pattern -->
-                <div class="h-48 bg-gradient-to-br from-blue-600 to-indigo-700 relative">
-                    <!-- Abstract Pattern -->
-                    <div class="absolute inset-0 opacity-20"
+                <div class="h-48 relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700">
+                    <!-- Abstract Pattern (Only if no cover photo) -->
+                    <div v-if="!tournament.cover_photo" class="absolute inset-0 opacity-20"
                         style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;">
                     </div>
+
+                    <!-- Cover Photo -->
+                    <img v-if="tournament.cover_photo" :src="tournament.cover_photo" class="w-full h-full object-cover">
+                    <div v-if="tournament.cover_photo" class="absolute inset-0 bg-black/30"></div>
 
                     <!-- Back Button (Top Left) -->
                     <div class="absolute top-4 left-4 z-10">
@@ -32,9 +36,15 @@
                     </div>
 
                     <!-- Edit/Delete Actions (Top Right) -->
-                    <div v-if="canManage" class="absolute top-4 right-4 flex gap-2">
+                    <div v-if="canManage" class="absolute top-4 right-4 flex gap-2 z-10">
+                        <button @click="showEditTournamentModal = true"
+                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white"
+                            title="Editar Torneo">
+                            <span class="material-symbols-outlined">edit</span>
+                        </button>
                         <button @click="showCreateMatchModal = true"
-                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white">
+                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white"
+                            title="Nuevo Partido">
                             <span class="material-symbols-outlined">add_circle</span>
                         </button>
                     </div>
@@ -45,8 +55,10 @@
                     <div class="relative flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
                         <!-- Icon/Logo -->
                         <div
-                            class="w-32 h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center">
-                            <div
+                            class="w-32 h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center overflow-hidden">
+                            <img v-if="tournament.logo" :src="tournament.logo"
+                                class="w-full h-full object-cover rounded-xl bg-white">
+                            <div v-else
                                 class="w-full h-full rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white">
                                 <span class="material-symbols-outlined text-6xl drop-shadow-md">emoji_events</span>
                             </div>
@@ -132,6 +144,11 @@
                                 <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Calendario de
                                     Partidos</h3>
                                 <div v-if="canManage" class="flex gap-2">
+                                    <button v-if="hasPlayoffSetting" @click="showGeneratePlayoffsModal = true"
+                                        class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-500/20 transition-all">
+                                        <span class="material-symbols-outlined text-lg">emoji_events</span>
+                                        Generar Playoffs
+                                    </button>
                                     <button @click="showGenerateFixtureModal = true"
                                         class="btn-secondary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
                                         <span class="material-symbols-outlined text-lg">calendar_month</span>
@@ -340,7 +357,13 @@
         <UpdateScoreModal v-if="showScoreModal && selectedMatch" :match="selectedMatch" @close="showScoreModal = false"
             @updated="handleScoreUpdated" />
         <GenerateFixtureModal v-if="showGenerateFixtureModal" :tournamentId="parseInt(route.params.id as string)"
-            @close="showGenerateFixtureModal = false" @created="handleFixtureCreated" />
+            :tournament="tournament" @close="showGenerateFixtureModal = false" @created="handleFixtureCreated" />
+        <GeneratePlayoffsModal v-if="showGeneratePlayoffsModal" :tournamentId="parseInt(route.params.id as string)"
+            @close="showGeneratePlayoffsModal = false" @created="handlePlayoffsCreated" />
+        <EditTournamentModal v-if="showEditTournamentModal" :tournament="tournament" :key="tournament.updated_at"
+            @close="showEditTournamentModal = false" @updated="refresh" />
+        <CreateMatchModal v-if="showCreateMatchModal" :tournamentId="parseInt(route.params.id as string)"
+            :teams="teams || []" @close="showCreateMatchModal = false" @created="handleMatchCreated" />
     </div>
 </template>
 
@@ -350,6 +373,9 @@ import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import UpdateScoreModal from '@/components/modals/UpdateScoreModal.vue'
 import GenerateFixtureModal from '@/components/modals/GenerateFixtureModal.vue'
+import EditTournamentModal from '@/components/modals/EditTournamentModal.vue'
+import CreateMatchModal from '@/components/modals/CreateMatchModal.vue'
+import GeneratePlayoffsModal from '@/components/modals/GeneratePlayoffsModal.vue'
 import StatsTable from '@/components/StatsTable.vue'
 
 const route = useRoute()
@@ -361,6 +387,8 @@ const activeTab = ref('matches')
 const showScoreModal = ref(false)
 const showCreateMatchModal = ref(false)
 const showGenerateFixtureModal = ref(false)
+const showGeneratePlayoffsModal = ref(false)
+const showEditTournamentModal = ref(false)
 const showAddTeamModal = ref(false)
 const selectedMatch = ref<any>(null)
 const initializingStandings = ref(false)
@@ -374,7 +402,7 @@ const tabs = [
 ]
 
 
-const { data: tournament, pending } = await useAsyncData(`tournament-${route.params.id}`, async () => {
+const { data: tournament, pending, refresh } = await useAsyncData(`tournament-${route.params.id}`, async () => {
     const response = await $api.get(`/tournaments/${route.params.id}`)
     return response.data.success ? response.data.data : null
 })
@@ -457,8 +485,28 @@ const handleScoreUpdated = () => {
     refreshStandings()
 }
 
+// Helper checks
+const hasPlayoffSetting = computed(() => {
+    if (!tournament.value) return false
+    const settings = typeof tournament.value.settings === 'string'
+        ? JSON.parse(tournament.value.settings)
+        : tournament.value.settings
+    return settings?.has_playoff === true || settings?.has_playoff === 'true'
+})
+
 const handleFixtureCreated = () => {
     showGenerateFixtureModal.value = false
+    refreshMatches()
+}
+
+const handlePlayoffsCreated = () => {
+    showGeneratePlayoffsModal.value = false
+    refreshMatches()
+    refresh() // update tournament status
+}
+
+const handleMatchCreated = () => {
+    showCreateMatchModal.value = false
     refreshMatches()
 }
 

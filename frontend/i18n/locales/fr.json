@@ -178,5 +178,71 @@
         "group_knockout": "Groupes + Élimination"
       }
     }
+  },
+  "create_tournament": {
+    "title": "Créer un nouveau tournoi",
+    "step": "Étape {current} sur {total}",
+    "name": "Nom du tournoi",
+    "start_date": "Date de début",
+    "end_date": "Date de fin",
+    "description": "Description",
+    "description_placeholder": "Décrire le tournoi, les prix, les règles spéciales, etc.",
+    "select_format": "Sélectionner le format",
+    "max_teams": "Équipes max",
+    "config_title": "Configuration : {format}",
+    "settings": {
+      "rounds": "Tours",
+      "rounds_desc": "Nombre de fois qu'une équipe joue contre les autres (1 = Aller, 2 = Aller-Retour).",
+      "has_playoff": "Inclure la phase finale",
+      "playoff_teams": "Équipes qualifiées",
+      "playoff_explanation": {
+        "4": "1er vs 4e et 2e vs 3e.",
+        "6": "1er & 2e en demis. Barrages : 3e vs 6e, 4e vs 5e.",
+        "8": "Quarts classiques : 1-8, 2-7, 3-6, 4-5."
+      },
+      "playoff_legs": "Matchs par série (Playoffs)",
+      "playoff_legs_desc": "Matchs par phase (1 = Match unique).",
+      "groups_count": "Nombre de groupes",
+      "groups_count_desc": "{count} groupes (A, B...)",
+      "advancement_count": "Qualifiés par groupe",
+      "advancement_count_desc": "Équipes passant au tour suivant.",
+      "group_matches": "Matchs de poule",
+      "group_matches_desc": "Matchs contre chaque adversaire.",
+      "knockout_legs": "Matchs éliminatoires",
+      "knockout_legs_desc": "Matchs par tour (8e, Quarts...).",
+      "knockout_legs_only_desc": "Matchs pour décider du vainqueur.",
+      "third_place": "Match pour la 3e place"
+    },
+    "info_msg": "Vous pourrez ajuster le calendrier plus tard.",
+    "formats": {
+      "league_desc": "Tout le monde contre tout le monde. Le plus de points gagne.",
+      "group_knockout_desc": "Poules suivies de phase à élimination directe (CDM, LDC).",
+      "knockout_desc": "Élimination directe dès le début (Coupe)."
+    },
+    "buttons": {
+      "back": "Retour",
+      "cancel": "Annuler",
+      "next": "Suivant",
+      "create": "Créer",
+      "creating": "Création..."
+    }
+  },
+  "generate_fixture": {
+    "title": "Générer le calendrier",
+    "description": "Génère automatiquement tous les matchs (Round Robin).",
+    "start_date": "Date de début",
+    "interval_days": "Jours entre journées",
+    "interval_desc": "Ex: 7 pour hebdomadaire",
+    "rounds": "Nombre de tours",
+    "configured_at_creation": "Configuré à la création",
+    "rounds_desc": "1 = Aller, 2 = Aller-Retour",
+    "rounds_1": "Aller simple",
+    "rounds_2": "Aller-Retour",
+    "rounds_n": "Tours",
+    "buttons": {
+      "generate": "Générer",
+      "generating": "Génération...",
+      "cancel": "Annuler"
+    }
   }
 }

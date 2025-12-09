@@ -49,6 +49,11 @@ router.post('/generate-fixture', [
   validateRequest
 ], matchController.generateFixture);
 
+router.post('/generate-playoffs', [
+  authenticateToken,
+  validateRequest
+], matchController.generatePlayoffs);
+
 router.post('/', [
   authenticateToken,
   ...matchSchema,

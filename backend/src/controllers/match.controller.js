@@ -440,7 +440,7 @@ const deleteMatch = async (req, res) => {
 // Generar fixture (calendario) automático
 const generateFixture = async (req, res) => {
   try {
-    const { tournament_id, start_date, interval_days = 7, has_return_leg = false } = req.body;
+    const { tournament_id, start_date, interval_days = 7, total_rounds = 1 } = req.body;
     const pool = getPool();
 
     // 1. Validar torneo y permisos
@@ -450,6 +450,10 @@ const generateFixture = async (req, res) => {
     }
 
     const leagueId = tournaments[0].league_id;
+    const tournament = tournaments[0];
+    const settings = typeof tournament.settings === 'string'
+      ? JSON.parse(tournament.settings)
+      : (tournament.settings || {});
 
     // Verificar ownership
     const [leagues] = await pool.query('SELECT organizer_id FROM leagues WHERE id = ?', [leagueId]);
@@ -463,99 +467,62 @@ const generateFixture = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Se necesitan al menos 2 equipos para generar un calendario' });
     }
 
+    // Determine total rounds from settings (source of truth) or fallback to body
+    let numRounds = settings.matches_per_pair ? parseInt(settings.matches_per_pair) : (parseInt(total_rounds) || 1);
+
     // 3. Algoritmo Round Robin
     let roundRobinTeams = [...teams];
     if (roundRobinTeams.length % 2 !== 0) {
       roundRobinTeams.push(null); // Bye
     }
 
-    const numRounds = roundRobinTeams.length - 1;
-    const half = roundRobinTeams.length / 2;
+    const numTeams = roundRobinTeams.length;
+    const numDays = numTeams - 1; // Rounds per single leg
+    const half = numTeams / 2;
     const matches = [];
 
     let currentDate = new Date(start_date);
 
-    // Generar Ida
-    for (let i = 0; i < numRounds; i++) {
-      for (let j = 0; j < half; j++) {
-        const home = roundRobinTeams[j];
-        const away = roundRobinTeams[roundRobinTeams.length - 1 - j];
+    // Iterar por el número total de vueltas calculadas
+    for (let leg = 0; leg < numRounds; leg++) {
+      // Definir si es ida (local-visitante normal) o vuelta (invertido)
+      const isReturnLeg = leg % 2 !== 0;
 
-        if (home && away) {
-          matches.push({
-            tournament_id,
-            home_team_id: home.id,
-            away_team_id: away.id,
-            match_date: new Date(currentDate),
-            round: i + 1,
-            status: 'scheduled'
-          });
+      for (let i = 0; i < numDays; i++) {
+        // Calcular fecha correcta: Fecha inicio + ( (RondasPorVuelta * VueltaActual + RondaActual) * Intevalo )
+        const roundIndex = (leg * numDays) + i;
+        const matchDate = new Date(start_date);
+        matchDate.setDate(matchDate.getDate() + (roundIndex * parseInt(interval_days)));
+
+        for (let j = 0; j < half; j++) {
+          const t1 = roundRobinTeams[j];
+          const t2 = roundRobinTeams[numTeams - 1 - j];
+
+          if (t1 && t2) {
+            matches.push({
+              tournament_id,
+              home_team_id: isReturnLeg ? t2.id : t1.id,
+              away_team_id: isReturnLeg ? t1.id : t2.id,
+              match_date: matchDate,
+              round: roundIndex + 1,
+              status: 'scheduled',
+              stage: 'regular_season'
+            });
+          }
         }
-      }
 
-      // Rotar equipos (mantener el primero fijo)
-      roundRobinTeams.splice(1, 0, roundRobinTeams.pop());
-
-      // Avanzar fecha para la siguiente jornada
-      currentDate.setDate(currentDate.getDate() + parseInt(interval_days));
-    }
-
-    // Generar Vuelta (si aplica)
-    if (has_return_leg) {
-      const firstLegMatches = [...matches]; // Copia de los partidos de ida
-
-      for (const match of firstLegMatches) {
-        matches.push({
-          tournament_id,
-          home_team_id: match.away_team_id, // Invertir localía
-          away_team_id: match.home_team_id,
-          match_date: new Date(currentDate), // Usar la fecha acumulada
-          round: match.round + numRounds, // Ronda continua
-          status: 'scheduled'
-        });
-      }
-      // Nota: Esto pone todos los partidos de vuelta en la misma fecha base si no ajustamos la fecha por ronda.
-      // Ajuste correcto para vuelta: iterar rondas de nuevo o simplemente duplicar lógica con inversión.
-      // Simplificación para este MVP: La vuelta se genera como un bloque espejo, pero las fechas deberían seguir incrementando.
-
-      // Re-generar fechas para la vuelta correctamente:
-      // Resetear matches de vuelta y hacerlo ronda por ronda
-      // (Omitido por brevedad, pero para un MVP simple, podríamos simplemente invertir y sumar fechas)
-
-      // Corrección rápida para fechas de vuelta:
-      // Recorrer las rondas de ida (1 a numRounds)
-      // Para cada ronda i, crear la ronda i + numRounds con localía invertida
-      // Fecha = fecha de ronda i + (numRounds * interval)
-
-      // Limpiar matches de vuelta añadidos incorrectamente arriba y hacerlo bien:
-      matches.splice(firstLegMatches.length); // Borrar lo añadido
-
-      for (let i = 0; i < numRounds; i++) {
-        const roundMatches = firstLegMatches.filter(m => m.round === i + 1);
-        const returnRoundDate = new Date(roundMatches[0].match_date);
-        returnRoundDate.setDate(returnRoundDate.getDate() + (numRounds * parseInt(interval_days)));
-
-        for (const match of roundMatches) {
-          matches.push({
-            tournament_id,
-            home_team_id: match.away_team_id,
-            away_team_id: match.home_team_id,
-            match_date: returnRoundDate,
-            round: i + 1 + numRounds,
-            status: 'scheduled'
-          });
-        }
+        // Rotar equipos (mantener el primero fijo)
+        roundRobinTeams.splice(1, 0, roundRobinTeams.pop());
       }
     }
 
     // 4. Insertar en BD
-    // Usar transacción idealmente, pero por simplicidad haremos inserts masivos
     let insertedCount = 0;
     for (const match of matches) {
       await pool.query(
-        `INSERT INTO matches (tournament_id, home_team_id, away_team_id, match_date, round, status)
-         VALUES (?, ?, ?, ?, ?, ?)`,
-        [match.tournament_id, match.home_team_id, match.away_team_id, match.match_date, match.round, match.status]
+        `INSERT INTO matches (tournament_id, home_team_id, away_team_id, match_date, round, status, stage)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [match.tournament_id, match.home_team_id, match.away_team_id, match.match_date, match.round, match.status, match.stage]
       );
       insertedCount++;
     }
@@ -571,6 +538,196 @@ const generateFixture = async (req, res) => {
   } catch (error) {
     console.error('Error generando fixture:', error);
     res.status(500).json({ success: false, message: 'Error al generar el calendario' });
+  }
+};
+
+// Generar Playoffs
+const generatePlayoffs = async (req, res) => {
+  try {
+    const { tournament_id, start_date, interval_days = 3 } = req.body;
+    const pool = getPool();
+
+    // 1. Obtener info del torneo y settings
+    const [tournaments] = await pool.query('SELECT * FROM tournaments WHERE id = ?', [tournament_id]);
+    if (tournaments.length === 0) {
+      return res.status(404).json({ success: false, message: 'Torneo no encontrado' });
+    }
+
+    const tournament = tournaments[0];
+    const settings = typeof tournament.settings === 'string'
+      ? JSON.parse(tournament.settings)
+      : tournament.settings;
+
+    if (!settings || !settings.has_playoff) {
+      return res.status(400).json({ success: false, message: 'Este torneo no tiene playoffs configurados' });
+    }
+
+    // Verificar ownership
+    const [leagues] = await pool.query('SELECT organizer_id FROM leagues WHERE id = ?', [tournament.league_id]);
+    if (leagues.length === 0 || (leagues[0].organizer_id !== req.user.id && req.user.role !== 'admin')) {
+      return res.status(403).json({ success: false, message: 'No tienes permisos para generar playoffs' });
+    }
+
+    // 2. Obtener Standings ordenados
+    const [standings] = await pool.query(`
+      SELECT team_id, position 
+      FROM standings 
+      WHERE tournament_id = ? 
+      ORDER BY position ASC
+    `, [tournament_id]);
+
+    const numQualifiers = parseInt(settings.playoff_teams || 4);
+
+    if (standings.length < numQualifiers) {
+      return res.status(400).json({
+        success: false,
+        message: `No hay suficientes equipos clasificados. Se necesitan al menos ${numQualifiers}, hay ${standings.length}.`
+      });
+    }
+
+    // 3. Generar Llaves
+    const qualifiers = standings.slice(0, numQualifiers);
+    const matches = [];
+    const date = new Date(start_date || new Date());
+
+    // Determinar la ronda actual para no solapar IDs de ronda
+    const [lastMatch] = await pool.query('SELECT MAX(round) as max_round FROM matches WHERE tournament_id = ?', [tournament_id]);
+    let currentRound = (lastMatch[0].max_round || 0) + 1;
+
+    let stageName = '';
+
+    if (numQualifiers === 6) {
+      // REPECHAJE: 1 y 2 descansan. Juegan 3vs6 y 4vs5.
+      stageName = 'quarter_final';
+      const repechajeTeams = standings.slice(2, 6); // Indices 2, 3, 4, 5
+
+      const pairings = [
+        { high: repechajeTeams[0], low: repechajeTeams[3] }, // 3rd vs 6th
+        { high: repechajeTeams[1], low: repechajeTeams[2] }  // 4th vs 5th
+      ];
+
+      // Get number of legs from settings
+      let numLegs = 1;
+      if (settings.playoff_legs === 'double') numLegs = 2;
+      else if (settings.playoff_legs === 'single') numLegs = 1;
+      else numLegs = parseInt(settings.playoff_legs || 1);
+
+      for (const pair of pairings) {
+        for (let leg = 0; leg < numLegs; leg++) {
+          let homeTeamId, awayTeamId;
+
+          if (numLegs === 1) {
+            homeTeamId = pair.high.team_id;
+            awayTeamId = pair.low.team_id;
+          } else {
+            if (leg % 2 === 0) {
+              homeTeamId = pair.low.team_id;
+              awayTeamId = pair.high.team_id;
+            } else {
+              homeTeamId = pair.high.team_id;
+              awayTeamId = pair.low.team_id;
+            }
+          }
+
+          const matchDate = new Date(date);
+          if (leg > 0) {
+            matchDate.setDate(matchDate.getDate() + (leg * parseInt(interval_days)));
+          }
+
+          matches.push({
+            home_team_id: homeTeamId,
+            away_team_id: awayTeamId,
+            match_date: matchDate,
+            round: currentRound + leg,
+            stage: stageName,
+            status: 'scheduled'
+          });
+        }
+      }
+    } else {
+      if (numQualifiers === 8) stageName = 'quarter_final';
+      else if (numQualifiers === 4) stageName = 'semi_final';
+      else if (numQualifiers === 2) stageName = 'final';
+      else stageName = 'quarter_final'; // Default fallback
+
+      // Lógica básica 1 vs N, 2 vs N-1
+      const half = numQualifiers / 2;
+      // Get number of legs from settings (default to 1, maps 'double' to 2 if legacy string)
+      let numLegs = 1;
+      if (settings.playoff_legs === 'double') numLegs = 2;
+      else if (settings.playoff_legs === 'single') numLegs = 1;
+      else numLegs = parseInt(settings.playoff_legs || 1);
+
+      for (let i = 0; i < half; i++) {
+        const highSeed = qualifiers[i]; // 1st, 2nd...
+        const lowSeed = qualifiers[numQualifiers - 1 - i]; // 8th, 7th...
+
+        for (let leg = 0; leg < numLegs; leg++) {
+          // Logic: Low seed is home in first leg(s) (unless single leg match, then usually high seed or neutral)
+          // Common rule: In 2-leg, Leg 1 is at Low Seed. Leg 2 is at High Seed.
+          // If manual N legs, we alternate.
+          // Leg 0 (Odd): Low vs High
+          // Leg 1 (Even): High vs Low
+          // Leg 2 (Odd): Low vs High
+
+          let homeTeamId, awayTeamId;
+
+          if (numLegs === 1) {
+            // Single match: High seed home advantage
+            homeTeamId = highSeed.team_id;
+            awayTeamId = lowSeed.team_id;
+          } else {
+            if (leg % 2 === 0) {
+              // Even index (1st leg, 3rd leg) -> Low seed home
+              homeTeamId = lowSeed.team_id;
+              awayTeamId = highSeed.team_id;
+            } else {
+              // Odd index ((2nd leg, 4th leg) -> High seed home
+              homeTeamId = highSeed.team_id;
+              awayTeamId = lowSeed.team_id;
+            }
+          }
+
+          const matchDate = new Date(date);
+          if (leg > 0) {
+            matchDate.setDate(matchDate.getDate() + (leg * parseInt(interval_days)));
+          }
+
+          matches.push({
+            home_team_id: homeTeamId,
+            away_team_id: awayTeamId,
+            match_date: matchDate,
+            round: currentRound + leg,
+            stage: stageName,
+            status: 'scheduled'
+          });
+        }
+      }
+    }
+
+    // 4. Insertar
+    let insertedCount = 0;
+    for (const match of matches) {
+      await pool.query(
+        `INSERT INTO matches (tournament_id, home_team_id, away_team_id, match_date, round, status, stage)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [tournament_id, match.home_team_id, match.away_team_id, match.match_date, match.round, match.status, match.stage]
+      );
+      insertedCount++;
+    }
+
+    // Actualizar estado del torneo a in_progress si no lo estaba
+    await pool.query('UPDATE tournaments SET status = "in_progress" WHERE id = ?', [tournament_id]);
+
+    res.status(201).json({
+      success: true,
+      message: 'Playoffs generados exitosamente',
+      data: { matches_count: insertedCount }
+    });
+
+  } catch (error) {
+    console.error('Error generando playoffs:', error);
+    res.status(500).json({ success: false, message: 'Error al generar playoffs' });
   }
 };
 
@@ -638,11 +795,6 @@ const updatePlayerStats = async (req, res) => {
       connection.release();
     }
 
-    // 3. Recalcular tabla de posiciones (por si acaso los goles afectan tie-breakers, aunque los goles del match se actualizan en updateMatchScore)
-    // Nota: Es mejor llamar a calculateStandings si las estadisticas afectaran, pero por ahora calculateStandings usa matches.home_score/away_score.
-    // Sin embargo, si tenemos goleadores en standings, sí afectaría.
-    // await calculateStandings(tournamentId);
-
     await logActivity({
       userId: req.user.id,
       userName: req.user.name || 'Usuario',
@@ -673,5 +825,6 @@ module.exports = {
   updateMatchScore,
   deleteMatch,
   generateFixture,
+  generatePlayoffs,
   updatePlayerStats
 };

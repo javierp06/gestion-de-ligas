@@ -178,5 +178,71 @@
         "group_knockout": "Grupos + Mata-mata"
       }
     }
+  },
+  "create_tournament": {
+    "title": "Criar Novo Torneio",
+    "step": "Passo {current} de {total}",
+    "name": "Nome do Torneio",
+    "start_date": "Data de Início",
+    "end_date": "Data de Término",
+    "description": "Descrição",
+    "description_placeholder": "Descreva o torneio, prêmios, regras especiais, etc.",
+    "select_format": "Selecione o Formato",
+    "max_teams": "Máximo de Equipes",
+    "config_title": "Configuração de {format}",
+    "settings": {
+      "rounds": "Rodadas",
+      "rounds_desc": "Número de vezes que cada time joga contra os outros (1 = Ida, 2 = Ida e Volta).",
+      "has_playoff": "Incluir fase final (Mata-mata)",
+      "playoff_teams": "Equipes classificadas",
+      "playoff_explanation": {
+        "4": "1º vs 4º e 2º vs 3º (Semifinais).",
+        "6": "1º e 2º nas semis. Repescagem: 3º vs 6º, 4º vs 5º.",
+        "8": "Quartas de final: 1vs8, 2vs7, 3vs6, 4vs5."
+      },
+      "playoff_legs": "Jogos por série",
+      "playoff_legs_desc": "Jogos por fase (1 = Jogo único).",
+      "groups_count": "Número de Grupos",
+      "groups_count_desc": "{count} grupos (A, B...)",
+      "advancement_count": "Classificam por grupo",
+      "advancement_count_desc": "Equipes que avançam.",
+      "group_matches": "Jogos na fase de grupos",
+      "group_matches_desc": "Jogos contra cada rival.",
+      "knockout_legs": "Jogos eliminatórios",
+      "knockout_legs_desc": "Jogos por fase (Oitavas, Quartas...).",
+      "knockout_legs_only_desc": "Jogos para decidir vencedor.",
+      "third_place": "Disputa de 3º lugar"
+    },
+    "info_msg": "Você poderá ajustar o calendário depois.",
+    "formats": {
+      "league_desc": "Todos contra todos. Quem tiver mais pontos vence.",
+      "group_knockout_desc": "Fase de grupos seguida de mata-mata (Copa do Mundo, Libertadores).",
+      "knockout_desc": "Mata-mata desde o início (Copa do Brasil)."
+    },
+    "buttons": {
+      "back": "Voltar",
+      "cancel": "Cancelar",
+      "next": "Próximo",
+      "create": "Criar Torneio",
+      "creating": "Criando..."
+    }
+  },
+  "generate_fixture": {
+    "title": "Gerar Calendário Automático",
+    "description": "Gera todas as partidas (Round Robin).",
+    "start_date": "Data de Início",
+    "interval_days": "Dias entre rodadas",
+    "interval_desc": "Ex: 7 para jogos semanais",
+    "rounds": "Número de Rodadas",
+    "configured_at_creation": "Configurado na criação",
+    "rounds_desc": "1 = Ida, 2 = Ida e Volta",
+    "rounds_1": "Ida",
+    "rounds_2": "Ida e Volta",
+    "rounds_n": "Rodadas",
+    "buttons": {
+      "generate": "Gerar",
+      "generating": "Gerando...",
+      "cancel": "Cancelar"
+    }
   }
 }

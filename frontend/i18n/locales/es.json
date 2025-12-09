@@ -179,5 +179,71 @@
         "group_knockout": "Grupos + Eliminación"
       }
     }
+  },
+  "create_tournament": {
+    "title": "Crear Nuevo Torneo",
+    "step": "Paso {current} de {total}",
+    "name": "Nombre del Torneo",
+    "start_date": "Fecha de Inicio",
+    "end_date": "Fecha de Fin",
+    "description": "Descripción",
+    "description_placeholder": "Describe el torneo, premios, reglas especiales, etc.",
+    "select_format": "Selecciona el Formato del Torneo",
+    "max_teams": "Máximo de Equipos",
+    "config_title": "Configuración de {format}",
+    "settings": {
+      "rounds": "Vueltas (Rounds)",
+      "rounds_desc": "Número de veces que jugará cada equipo contra todos los demás. (1 = Solo Ida, 2 = Ida y Vuelta).",
+      "has_playoff": "Incluir fase final (Liguilla/Playoffs)",
+      "playoff_teams": "Equipos que clasifican",
+      "playoff_explanation": {
+        "4": "El 1ro vs 4to y 2do vs 3ro juegan Semifinales.",
+        "6": "1ro y 2do esperan en Semis. Repechaje: 3ro vs 6to y 4to vs 5to.",
+        "8": "Cruces tradicionales de Cuartos: 1vs8, 2vs7, 3vs6, 4vs5."
+      },
+      "playoff_legs": "Partidos por Llave (Playoff Legs)",
+      "playoff_legs_desc": "Cantidad de partidos por serie. (1 = Partido único en cancha neutral o del mejor seed).",
+      "groups_count": "Número de Grupos",
+      "groups_count_desc": "Se crearán {count} grupos (A, B, C...).",
+      "advancement_count": "Clasifican por grupo",
+      "advancement_count_desc": "Equipos de cada grupo que pasan a eliminatorias.",
+      "group_matches": "Vueltas en Fase de Grupos",
+      "group_matches_desc": "Partidos contra cada rival de grupo (1 = Solo Ida, 2 = Ida y Vuelta).",
+      "knockout_legs": "Partidos por Llave (Eliminatorias)",
+      "knockout_legs_desc": "Juegos por serie despues de grupos (Octavos, Cuartos...).",
+      "knockout_legs_only_desc": "Número de partidos para decidir quién avanza (1 = Muerte súbita).",
+      "third_place": "Incluir partido por 3er lugar"
+    },
+    "info_msg": "Podrás ajustar los cruces y calendario específico una vez creado el torneo.",
+    "formats": {
+      "league_desc": "Todos contra todos. El que tenga más puntos gana.",
+      "group_knockout_desc": "Fase de grupos seguida de llaves de eliminación (Mundial, Champions).",
+      "knockout_desc": "Llaves de eliminación desde el inicio (Copa del Rey)."
+    },
+    "buttons": {
+      "back": "Atrás",
+      "cancel": "Cancelar",
+      "next": "Siguiente",
+      "create": "Crear Torneo",
+      "creating": "Creando..."
+    }
+  },
+  "generate_fixture": {
+    "title": "Generar Calendario Automático",
+    "description": "Genera automáticamente todos los partidos del torneo usando un formato de 'Todos contra Todos' (Round Robin).",
+    "start_date": "Fecha de Inicio",
+    "interval_days": "Días entre jornadas",
+    "interval_desc": "Ej: 7 para jugar cada semana",
+    "rounds": "Número de Vueltas",
+    "configured_at_creation": "Configurado al crear el torneo",
+    "rounds_desc": "1 = Solo Ida, 2 = Ida y Vuelta, etc.",
+    "rounds_1": "Solo Ida",
+    "rounds_2": "Ida y Vuelta",
+    "rounds_n": "Vueltas",
+    "buttons": {
+      "generate": "Generar Calendario",
+      "generating": "Generando...",
+      "cancel": "Cancelar"
+    }
   }
 }

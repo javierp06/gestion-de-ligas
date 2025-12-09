@@ -20,11 +20,13 @@ async function calculateStandings(tournamentId) {
   const pool = getPool();
 
   try {
-    // 1. Obtener todos los matches finalizados del torneo
+    // 1. Obtener todos los matches finalizados del torneo (Solo Regular Season)
     const [matches] = await pool.query(
       `SELECT home_team_id, away_team_id, home_score, away_score
        FROM matches
-       WHERE tournament_id = ? AND status = 'finished'`,
+       WHERE tournament_id = ? 
+       AND status = 'finished' 
+       AND (stage = 'regular_season' OR stage IS NULL)`,
       [tournamentId]
     );
 

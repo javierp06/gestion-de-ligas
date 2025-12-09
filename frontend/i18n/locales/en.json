@@ -178,5 +178,71 @@
         "group_knockout": "Group + Knockout"
       }
     }
+  },
+  "create_tournament": {
+    "title": "Create New Tournament",
+    "step": "Step {current} of {total}",
+    "name": "Tournament Name",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "description": "Description",
+    "description_placeholder": "Describe the tournament, prizes, special rules, etc.",
+    "select_format": "Select Tournament Format",
+    "max_teams": "Max Teams",
+    "config_title": "Configuration of {format}",
+    "settings": {
+      "rounds": "Rounds",
+      "rounds_desc": "Number of times each team plays against others (1 = Single Leg, 2 = Home & Away).",
+      "has_playoff": "Include Final Phase (Playoffs)",
+      "playoff_teams": "Qualifying Teams",
+      "playoff_explanation": {
+        "4": "1st vs 4th and 2nd vs 3rd play Semi-finals.",
+        "6": "1st and 2nd wait in Semis. Repechaje: 3rd vs 6th and 4th vs 5th.",
+        "8": "Traditional Quarter-finals: 1vs8, 2vs7, 3vs6, 4vs5."
+      },
+      "playoff_legs": "Playoff Legs",
+      "playoff_legs_desc": "Matches per series (1 = Single match at neutral or high seed home).",
+      "groups_count": "Number of Groups",
+      "groups_count_desc": "{count} groups will be created (A, B, C...).",
+      "advancement_count": "Advancement per Group",
+      "advancement_count_desc": "Teams advancing from each group to knockouts.",
+      "group_matches": "Group Stage Rounds",
+      "group_matches_desc": "Matches against each group rival (1 = Single, 2 = Home & Away).",
+      "knockout_legs": "Knockout Legs",
+      "knockout_legs_desc": "Matches per series after groups (Round of 16, Quarters...).",
+      "knockout_legs_only_desc": "Matches per series to decide winner (1 = Sudden Death).",
+      "third_place": "Include Third Place Match"
+    },
+    "info_msg": "You can adjust matchups and specific schedule once the tournament is created.",
+    "formats": {
+      "league_desc": "Round Robin. Team with most points wins.",
+      "group_knockout_desc": "Group stage followed by knockout rounds (World Cup, UCL).",
+      "knockout_desc": "Knockout rounds from the start (FA Cup)."
+    },
+    "buttons": {
+      "back": "Back",
+      "cancel": "Cancel",
+      "next": "Next",
+      "create": "Create Tournament",
+      "creating": "Creating..."
+    }
+  },
+  "generate_fixture": {
+    "title": "Generate Automatic Fixture",
+    "description": "Automatically generates all matches using a Round Robin format.",
+    "start_date": "Start Date",
+    "interval_days": "Days between rounds",
+    "interval_desc": "Ex: 7 for weekly matches",
+    "rounds": "Number of Rounds",
+    "configured_at_creation": "Configured at creation",
+    "rounds_desc": "1 = Single Leg, 2 = Home & Away, etc.",
+    "rounds_1": "Single Leg",
+    "rounds_2": "Home & Away",
+    "rounds_n": "Rounds",
+    "buttons": {
+      "generate": "Generate Calendar",
+      "generating": "Generating...",
+      "cancel": "Cancel"
+    }
   }
 }
