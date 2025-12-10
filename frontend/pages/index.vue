@@ -66,7 +66,7 @@
                   : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'">
                 <span
                   class="material-symbols-outlined text-lg w-8 text-center shrink-0">{{ sport.icon || getSportIcon(sport.name) }}</span>
-                <span class="text-sm font-medium">{{ sport.name }}</span>
+                <span class="text-sm font-medium">{{ getSportName(sport.name) }}</span>
               </div>
             </div>
           </div>

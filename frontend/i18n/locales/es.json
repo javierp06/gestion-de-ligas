@@ -1,5 +1,8 @@
 {
   "welcome": "Bienvenido",
+  "common": {
+    "unknown_tournament": "Torneo Desconocido"
+  },
   "login": {
     "title": "Iniciar Sesión",
     "email": "Correo Electrónico",
@@ -375,6 +378,83 @@
     },
     "tbd": "Por definir"
   },
+  "tournament_details": {
+    "back_to_league": "Volver a la Liga",
+    "edit": "Editar Torneo",
+    "new_match": "Nuevo Partido",
+    "matches": "Partidos",
+    "teams": "Equipos",
+    "calendar": "Calendario de Partidos",
+    "generate_playoffs": "Generar Playoffs",
+    "generate_calendar": "Generar Calendario",
+    "round": "Jornada",
+    "no_matches": "Sin Partidos",
+    "no_matches_desc": "No hay partidos programados para este torneo.",
+    "generate_auto": "Generar Automáticamente",
+    "create_manual": "Crear Manualmente",
+    "standings": "Tabla de Posiciones",
+    "initialize_standings": "Inicializar Tabla",
+    "table_unavailable": "Tabla no Disponible",
+    "table_unavailable_desc": "La tabla de posiciones aún no ha sido generada.",
+    "generate_table": "Generar Tabla",
+    "stats": "Estadísticas del Torneo",
+    "top_scorers": "Goleadores",
+    "top_assists": "Asistencias",
+    "cards": "Tarjetas",
+    "goals_label": "Goles",
+    "assists_label": "Asistencias",
+    "cards_label": "Rojas/Amarillas",
+    "participating_teams": "Equipos Participantes",
+    "manage_teams": "Gestionar Equipos",
+    "no_teams": "Sin Equipos",
+    "no_teams_desc": "No hay equipos inscritos en este torneo.",
+    "details": "Detalles",
+    "no_description": "Sin descripción disponible.",
+    "format": "Formato",
+    "start": "Inicio",
+    "end": "Fin",
+    "tabs": {
+      "matches": "Partidos",
+      "standings": "Tabla",
+      "stats": "Estadísticas",
+      "teams": "Equipos",
+      "info": "Información"
+    },
+    "formats": {
+      "league": "Liga (todos contra todos)",
+      "knockout": "Eliminación Directa",
+      "group_knockout": "Grupos + Eliminación"
+    }
+  },
+  "league_details": {
+    "tournaments": "Torneos",
+    "teams": "Equipos",
+    "active_tournaments": "Torneos Activos",
+    "new_tournament": "Nuevo Torneo",
+    "no_tournaments": "Sin Torneos",
+    "no_tournaments_desc": "No hay torneos creados en esta liga aún.",
+    "create_first_tournament": "Crear el primer torneo",
+    "registered_teams": "Equipos Registrados",
+    "register_team": "Registrar Equipo",
+    "no_teams": "Sin Equipos",
+    "no_teams_desc": "Aún no hay equipos registrados en esta liga.",
+    "register_first_team": "Registrar un equipo",
+    "about": "Sobre la Liga",
+    "no_description": "Sin descripción disponible.",
+    "created": "Creada",
+    "rules": "Reglas",
+    "match_duration": "Duración Partido",
+    "players_per_team": "Jugadores por Equipo",
+    "status": {
+      "active": "Activa",
+      "inactive": "Inactiva",
+      "finished": "Finalizada"
+    },
+    "tabs": {
+      "tournaments": "Torneos",
+      "teams": "Equipos"
+    }
+  },
   "matches_page": {
     "title": "Calendario de",
     "title_highlight": "Partidos",
@@ -384,5 +464,68 @@
       "calendar": "Calendario"
     },
     "view_table": "Ver Tabla ->"
+  },
+  "match_details": {
+    "title": "Detalles del Partido",
+    "edit_match": "Editar Partido",
+    "manage_stats": "Estadísticas",
+    "local": "Local",
+    "visitor": "Visitante",
+    "date": "Fecha",
+    "time": "Hora",
+    "stadium": "Estadio",
+    "referee": "Árbitro",
+    "tbd": "Por definir",
+    "to_be_assigned": "Por asignar",
+    "match_events": "Eventos del Partido",
+    "no_events": "No hay eventos registrados",
+    "no_lineup": "No hay alineación disponible",
+    "player": "Jugador",
+    "tabs": {
+      "summary": "Resumen",
+      "lineups": "Alineaciones",
+      "stats": "Estadísticas"
+    },
+    "stats": {
+      "goals": "Goles",
+      "yellow_cards": "Tarjetas Amarillas",
+      "red_cards": "Tarjetas Rojas",
+      "assists": "Asistencias"
+    },
+    "events": {
+      "goal": "Gol",
+      "yellow_card": "Tarjeta Amarilla",
+      "red_card": "Tarjeta Roja"
+    },
+    "status": {
+      "scheduled": "Programado",
+      "live": "En Vivo",
+      "finished": "Finalizado",
+      "postponed": "Postergado",
+      "cancelled": "Cancelado"
+    },
+    "modals": {
+      "edit_match": {
+        "title": "Editar Partido",
+        "tab_score": "Resultado",
+        "tab_details": "Detalles",
+        "info_status": "Al guardar, el estado cambiará a \"Finalizado\" y se calculará la tabla.",
+        "location": "Ubicación",
+        "location_placeholder": "Ej: Estadio Nacional",
+        "status": "Estado",
+        "cancel": "Cancelar",
+        "save": "Guardar Cambios",
+        "success": "Cambios guardados correctamente",
+        "error": "Error al guardar cambios"
+      },
+      "stats": {
+        "title": "Estadísticas del Partido",
+        "no_players": "Este equipo no tiene jugadores registrados.",
+        "total_goals": "Total Goles",
+        "save_stats": "Guardar Estadísticas",
+        "success": "Estadísticas actualizadas correctamente",
+        "error_loading": "Error al cargar jugadores"
+      }
+    }
   }
 }

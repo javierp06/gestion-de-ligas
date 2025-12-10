@@ -8,7 +8,7 @@
                 class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-lg shrink-0">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                     <span class="material-symbols-outlined text-primary-500">leaderboard</span>
-                    Estadísticas del Partido
+                    {{ $t('match_details.modals.stats.title') }}
                 </h2>
                 <button @click="$emit('close')"
                     class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
@@ -45,11 +45,11 @@
                         <!-- Header Row -->
                         <div
                             class="grid grid-cols-12 gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide px-4 mb-2 text-center">
-                            <div class="col-span-4 text-left">Jugador</div>
-                            <div class="col-span-2">Goles</div>
-                            <div class="col-span-2">Asist.</div>
-                            <div class="col-span-2" title="Tarjeta Amarilla">TA</div>
-                            <div class="col-span-2" title="Tarjeta Roja">TR</div>
+                            <div class="col-span-4 text-left">{{ $t('match_details.player') }}</div>
+                            <div class="col-span-2">{{ $t('match_details.stats.goals') }}</div>
+                            <div class="col-span-2">{{ $t('match_details.stats.assists') }}</div>
+                            <div class="col-span-2" :title="$t('match_details.stats.yellow_cards')">TA</div>
+                            <div class="col-span-2" :title="$t('match_details.stats.red_cards')">TR</div>
                         </div>
 
                         <div v-for="player in currentTeamPlayers" :key="player.id"
@@ -63,9 +63,11 @@
                                 </div>
                                 <div class="min-w-0">
                                     <p class="font-bold text-gray-900 dark:text-white truncate text-sm">
-                                        {{ player.player_name }}</p>
+                                        {{ player.player_name }}
+                                    </p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                        {{ player.position || 'Jugador' }}</p>
+                                        {{ player.position || $t('match_details.player') }}
+                                    </p>
                                 </div>
                             </div>
 
@@ -90,7 +92,7 @@
 
                         <div v-if="currentTeamPlayers.length === 0"
                             class="text-center py-8 text-gray-500 dark:text-gray-400">
-                            Este equipo no tiene jugadores registrados.
+                            {{ $t('match_details.modals.stats.no_players') }}
                         </div>
                     </div>
                 </div>
@@ -100,19 +102,20 @@
             <div
                 class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4 shrink-0 flex items-center justify-between">
                 <div class="text-sm text-gray-500 dark:text-gray-400">
-                    <p>Total Goles: <span class="font-bold text-gray-900 dark:text-white">{{ totalGoals }}</span></p>
+                    <p>{{ $t('match_details.modals.stats.total_goals') }}: <span
+                            class="font-bold text-gray-900 dark:text-white">{{ totalGoals }}</span></p>
                 </div>
                 <div class="flex gap-3">
                     <button type="button" @click="$emit('close')"
                         class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-bold"
                         :disabled="saving">
-                        Cancelar
+                        {{ $t('match_details.modals.edit_match.cancel') }}
                     </button>
                     <button type="button" @click="saveStats"
                         class="btn-primary px-6 py-2 rounded-lg font-bold flex items-center gap-2" :disabled="saving">
                         <span v-if="saving"
                             class="material-symbols-outlined animate-spin text-lg">progress_activity</span>
-                        <span>Guardar Estadísticas</span>
+                        <span>{{ $t('match_details.modals.stats.save_stats') }}</span>
                     </button>
                 </div>
             </div>
@@ -125,6 +128,7 @@
 import { ref, computed, onMounted } from 'vue'
 const { $api } = useNuxtApp()
 const toastStore = useToastStore()
+const { t } = useI18n()
 
 const props = defineProps<{
     match: any
@@ -178,7 +182,7 @@ const fetchPlayers = async () => {
 
     } catch (error) {
         console.error('Error fetching players:', error)
-        toastStore.error('Error al cargar jugadores')
+        toastStore.error(t('match_details.modals.stats.error_loading'))
     } finally {
         loadingPlayers.value = false
     }
@@ -258,12 +262,12 @@ const saveStats = async () => {
             stats: statsPayload
         })
 
-        toastStore.success('✅ Estadísticas actualizadas correctamente')
+        toastStore.success(`✅ ${t('match_details.modals.stats.success')}`)
         emit('updated')
         emit('close')
 
     } catch (error: any) {
-        toastStore.error(error.response?.data?.message || 'Error al guardar estadísticas')
+        toastStore.error(error.response?.data?.message || t('match_details.modals.stats.error_loading'))
     } finally {
         saving.value = false
     }

@@ -1,5 +1,8 @@
 {
   "welcome": "Welcome",
+  "common": {
+    "unknown_tournament": "Unknown Tournament"
+  },
   "login": {
     "title": "Login",
     "email": "Email",
@@ -64,7 +67,8 @@
     "no_matches_date": "No matches scheduled for this date.",
     "list": "List",
     "calendar": "Calendar",
-    "view_table": "View Table"
+    "view_table": "View Table",
+    "view_matches": "View Matches"
   },
   "dashboard": {
     "welcome": "Welcome, {name}",
@@ -325,7 +329,9 @@
     "basketball": "Basketball",
     "tennis": "Tennis",
     "volleyball": "Volleyball",
-    "baseball": "Baseball"
+    "baseball": "Baseball",
+    "golf": "Golf",
+    "padel": "Padel"
   },
   "leagues_page": {
     "title": "Active",
@@ -371,6 +377,83 @@
     },
     "tbd": "TBD"
   },
+  "tournament_details": {
+    "back_to_league": "Back to League",
+    "edit": "Edit Tournament",
+    "new_match": "New Match",
+    "matches": "Matches",
+    "teams": "Teams",
+    "calendar": "Match Calendar",
+    "generate_playoffs": "Generate Playoffs",
+    "generate_calendar": "Generate Calendar",
+    "round": "Round",
+    "no_matches": "No Matches",
+    "no_matches_desc": "No matches scheduled for this tournament.",
+    "generate_auto": "Generate Automatically",
+    "create_manual": "Create Manually",
+    "standings": "Standings",
+    "initialize_standings": "Initialize Standings",
+    "table_unavailable": "Standings Unavailable",
+    "table_unavailable_desc": "The standings table has not been generated yet.",
+    "generate_table": "Generate Table",
+    "stats": "Tournament Stats",
+    "top_scorers": "Top Scorers",
+    "top_assists": "Top Assists",
+    "cards": "Cards",
+    "goals_label": "Goals",
+    "assists_label": "Assists",
+    "cards_label": "Red/Yellow",
+    "participating_teams": "Participating Teams",
+    "manage_teams": "Manage Teams",
+    "no_teams": "No Teams",
+    "no_teams_desc": "No teams enrolled in this tournament.",
+    "details": "Details",
+    "no_description": "No description available.",
+    "format": "Format",
+    "start": "Start",
+    "end": "End",
+    "tabs": {
+      "matches": "Matches",
+      "standings": "Table",
+      "stats": "Stats",
+      "teams": "Teams",
+      "info": "Info"
+    },
+    "formats": {
+      "league": "League (Round Robin)",
+      "knockout": "Knockout",
+      "group_knockout": "Group + Knockout"
+    }
+  },
+  "league_details": {
+    "tournaments": "Tournaments",
+    "teams": "Teams",
+    "active_tournaments": "Active Tournaments",
+    "new_tournament": "New Tournament",
+    "no_tournaments": "No Tournaments",
+    "no_tournaments_desc": "No tournaments created in this league yet.",
+    "create_first_tournament": "Create the first tournament",
+    "registered_teams": "Registered Teams",
+    "register_team": "Register Team",
+    "no_teams": "No Teams",
+    "no_teams_desc": "No teams registered in this league yet.",
+    "register_first_team": "Register a team",
+    "about": "About the League",
+    "no_description": "No description available.",
+    "created": "Created",
+    "rules": "Rules",
+    "match_duration": "Match Duration",
+    "players_per_team": "Players per Team",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "finished": "Finished"
+    },
+    "tabs": {
+      "tournaments": "Tournaments",
+      "teams": "Teams"
+    }
+  },
   "matches_page": {
     "title": "Match",
     "title_highlight": "Schedule",
@@ -380,5 +463,68 @@
       "calendar": "Calendar"
     },
     "view_table": "View Table ->"
+  },
+  "match_details": {
+    "title": "Match Details",
+    "edit_match": "Edit Match",
+    "manage_stats": "Stats",
+    "local": "Home",
+    "visitor": "Away",
+    "date": "Date",
+    "time": "Time",
+    "stadium": "Stadium",
+    "referee": "Referee",
+    "tbd": "To be defined",
+    "to_be_assigned": "To be assigned",
+    "match_events": "Match Events",
+    "no_events": "No events recorded",
+    "no_lineup": "No lineup available",
+    "player": "Player",
+    "tabs": {
+      "summary": "Summary",
+      "lineups": "Lineups",
+      "stats": "Stats"
+    },
+    "stats": {
+      "goals": "Goals",
+      "yellow_cards": "Yellow Cards",
+      "red_cards": "Red Cards",
+      "assists": "Assists"
+    },
+    "events": {
+      "goal": "Goal",
+      "yellow_card": "Yellow Card",
+      "red_card": "Red Card"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "live": "Live",
+      "finished": "Finished",
+      "postponed": "Postponed",
+      "cancelled": "Cancelled"
+    },
+    "modals": {
+      "edit_match": {
+        "title": "Edit Match",
+        "tab_score": "Score",
+        "tab_details": "Details",
+        "info_status": "Status will change to \"Finished\" and standings will be recalculated upon saving.",
+        "location": "Location",
+        "location_placeholder": "Ex: National Stadium",
+        "status": "Status",
+        "cancel": "Cancel",
+        "save": "Save Changes",
+        "success": "Changes saved successfully",
+        "error": "Error saving changes"
+      },
+      "stats": {
+        "title": "Match Stats",
+        "no_players": "This team has no registered players.",
+        "total_goals": "Total Goals",
+        "save_stats": "Save Stats",
+        "success": "Stats updated successfully",
+        "error_loading": "Error loading players"
+      }
+    }
   }
 }

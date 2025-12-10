@@ -14,22 +14,24 @@
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
                     <div
                         class="flex items-center gap-2 text-sm text-text-secondary-light dark:text-text-secondary-dark animate-fade-in">
-                        <NuxtLink :to="localePath('/matches')" class="hover:text-primary-500 transition-colors">Partidos
+                        <NuxtLink :to="localePath('/matches')" class="hover:text-primary-500 transition-colors">
+                            {{ $t('nav.matches') }}
                         </NuxtLink>
                         <span class="material-symbols-outlined text-sm">chevron_right</span>
-                        <span class="text-text-primary-light dark:text-white font-medium">Detalles del Partido</span>
+                        <span
+                            class="text-text-primary-light dark:text-white font-medium">{{ $t('match_details.title') }}</span>
                     </div>
 
                     <div v-if="canManage" class="flex gap-2 animate-fade-in">
                         <button @click="openManageStats"
                             class="btn-secondary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                             <span class="material-symbols-outlined">leaderboard</span>
-                            Estadísticas
+                            {{ $t('match_details.manage_stats') }}
                         </button>
                         <button @click="openEditModal"
                             class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                             <span class="material-symbols-outlined">edit</span>
-                            Editar Partido
+                            {{ $t('match_details.edit_match') }}
                         </button>
                     </div>
                 </div>
@@ -72,7 +74,8 @@
                                     {{ match.home_team_name }}
                                 </h2>
                                 <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
-                                    Local</p>
+                                    {{ $t('match_details.local') }}
+                                </p>
                             </div>
                         </NuxtLink>
 
@@ -120,7 +123,8 @@
                                     {{ match.away_team_name }}
                                 </h2>
                                 <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
-                                    Visitante</p>
+                                    {{ $t('match_details.visitor') }}
+                                </p>
                             </div>
                         </NuxtLink>
                     </div>
@@ -132,28 +136,32 @@
                             <span class="material-symbols-outlined text-primary-500">calendar_today</span>
                             <span
                                 class="text-sm font-bold text-text-primary-light dark:text-white">{{ formatDate(match.match_date) }}</span>
-                            <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Fecha</span>
+                            <span
+                                class="text-xs text-text-secondary-light dark:text-text-secondary-dark">{{ $t('match_details.date') }}</span>
                         </div>
                         <div
                             class="flex flex-col items-center gap-1 p-4 rounded-xl bg-background-light dark:bg-white/5 border border-border-light dark:border-border-dark">
                             <span class="material-symbols-outlined text-primary-500">schedule</span>
                             <span
                                 class="text-sm font-bold text-text-primary-light dark:text-white">{{ formatTime(match.match_date) }}</span>
-                            <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Hora</span>
+                            <span
+                                class="text-xs text-text-secondary-light dark:text-text-secondary-dark">{{ $t('match_details.time') }}</span>
                         </div>
                         <div
                             class="flex flex-col items-center gap-1 p-4 rounded-xl bg-background-light dark:bg-white/5 border border-border-light dark:border-border-dark">
                             <span class="material-symbols-outlined text-primary-500">stadium</span>
                             <span
-                                class="text-sm font-bold text-text-primary-light dark:text-white truncate w-full text-center">{{ match.location || 'Por definir' }}</span>
-                            <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Estadio</span>
+                                class="text-sm font-bold text-text-primary-light dark:text-white truncate w-full text-center">{{ match.location || $t('match_details.tbd') }}</span>
+                            <span
+                                class="text-xs text-text-secondary-light dark:text-text-secondary-dark">{{ $t('match_details.stadium') }}</span>
                         </div>
                         <div
                             class="flex flex-col items-center gap-1 p-4 rounded-xl bg-background-light dark:bg-white/5 border border-border-light dark:border-border-dark">
                             <span class="material-symbols-outlined text-primary-500">sports</span>
                             <span
-                                class="text-sm font-bold text-text-primary-light dark:text-white truncate w-full text-center">{{ match.referee || 'Por asignar' }}</span>
-                            <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Árbitro</span>
+                                class="text-sm font-bold text-text-primary-light dark:text-white truncate w-full text-center">{{ match.referee || $t('match_details.to_be_assigned') }}</span>
+                            <span
+                                class="text-xs text-text-secondary-light dark:text-text-secondary-dark">{{ $t('match_details.referee') }}</span>
                         </div>
                     </div>
                 </div>
@@ -177,7 +185,7 @@
                     class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-6">
                     <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-6 flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary-500">timeline</span>
-                        Eventos del Partido
+                        {{ $t('match_details.match_events') }}
                     </h3>
 
                     <div v-if="matchEvents.length > 0" class="space-y-4">
@@ -204,7 +212,7 @@
                     </div>
                     <div v-else class="text-center py-12 text-text-secondary-light dark:text-text-secondary-dark">
                         <span class="material-symbols-outlined text-4xl mb-2 opacity-50">timer_off</span>
-                        <p>No hay eventos registrados</p>
+                        <p>{{ $t('match_details.no_events') }}</p>
                     </div>
                 </div>
 
@@ -213,7 +221,7 @@
                     class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-6">
                     <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-6 flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary-500">analytics</span>
-                        Estadísticas
+                        {{ $t('match_details.manage_stats') }}
                     </h3>
 
                     <div class="space-y-6">
@@ -257,7 +265,7 @@
                                         {{ player.player_name }}
                                     </p>
                                     <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
-                                        {{ player.position || 'Jugador' }}
+                                        {{ player.position || $t('match_details.player') }}
                                     </p>
                                 </div>
                             </div>
@@ -273,7 +281,7 @@
                         </div>
                         <div v-if="homePlayers.length === 0"
                             class="text-center py-8 text-text-secondary-light dark:text-text-secondary-dark">
-                            No hay alineación disponible
+                            {{ $t('match_details.no_lineup') }}
                         </div>
                     </div>
                 </div>
@@ -299,7 +307,7 @@
                                         {{ player.player_name }}
                                     </p>
                                     <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
-                                        {{ player.position || 'Jugador' }}
+                                        {{ player.position || $t('match_details.player') }}
                                     </p>
                                 </div>
                             </div>
@@ -315,7 +323,7 @@
                         </div>
                         <div v-if="awayPlayers.length === 0"
                             class="text-center py-8 text-text-secondary-light dark:text-text-secondary-dark">
-                            No hay alineación disponible
+                            {{ $t('match_details.no_lineup') }}
                         </div>
                     </div>
                 </div>
@@ -338,10 +346,12 @@ import { useAuthStore } from '@/stores/auth'
 import UpdateScoreModal from '@/components/modals/UpdateScoreModal.vue'
 import UpdateMatchStatsModal from '@/components/modals/UpdateMatchStatsModal.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const { $api } = useNuxtApp()
 const authStore = useAuthStore()
 const localePath = useLocalePath()
+const { locale } = useI18n()
 
 const match = ref<any>(null)
 const loading = ref(true)
@@ -349,11 +359,11 @@ const activeTab = ref('summary')
 const showEditModal = ref(false)
 const showStatsModal = ref(false)
 
-const tabs = [
-    { id: 'summary', label: 'Resumen' },
-    { id: 'lineups', label: 'Alineaciones' },
-    { id: 'stats', label: 'Estadísticas' }
-]
+const tabs = computed(() => [
+    { id: 'summary', label: t('match_details.tabs.summary') },
+    { id: 'lineups', label: t('match_details.tabs.lineups') },
+    { id: 'stats', label: t('match_details.tabs.stats') }
+])
 
 const canManage = computed(() => {
     return authStore.isAdmin || authStore.isOrganizer
@@ -441,10 +451,10 @@ const teamStats = computed(() => {
     const sum = (arr: any[], key: string) => arr.reduce((acc, curr) => acc + (curr[key] || 0), 0)
 
     return [
-        { label: 'Goles', homeValue: match.value.home_score || 0, awayValue: match.value.away_score || 0 },
-        { label: 'Tarjetas Amarillas', homeValue: sum(homeStats, 'yellow_cards'), awayValue: sum(awayStats, 'yellow_cards') },
-        { label: 'Tarjetas Rojas', homeValue: sum(homeStats, 'red_cards'), awayValue: sum(awayStats, 'red_cards') },
-        { label: 'Asistencias', homeValue: sum(homeStats, 'assists'), awayValue: sum(awayStats, 'assists') }
+        { label: t('match_details.stats.goals'), homeValue: match.value.home_score || 0, awayValue: match.value.away_score || 0 },
+        { label: t('match_details.stats.yellow_cards'), homeValue: sum(homeStats, 'yellow_cards'), awayValue: sum(awayStats, 'yellow_cards') },
+        { label: t('match_details.stats.red_cards'), homeValue: sum(homeStats, 'red_cards'), awayValue: sum(awayStats, 'red_cards') },
+        { label: t('match_details.stats.assists'), homeValue: sum(homeStats, 'assists'), awayValue: sum(awayStats, 'assists') }
     ]
 })
 
@@ -455,7 +465,7 @@ const getStatPercentage = (val1: number, val2: number) => {
 }
 
 const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
+    return new Date(dateString).toLocaleDateString(locale.value, {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
@@ -463,21 +473,14 @@ const formatDate = (dateString: string) => {
 }
 
 const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('es-ES', {
+    return new Date(dateString).toLocaleTimeString(locale.value, {
         hour: '2-digit',
         minute: '2-digit'
     })
 }
 
 const getStatusText = (status: string) => {
-    const map: Record<string, string> = {
-        'scheduled': 'Programado',
-        'live': 'En Vivo',
-        'finished': 'Finalizado',
-        'postponed': 'Postergado',
-        'cancelled': 'Cancelado'
-    }
-    return map[status] || status
+    return t(`match_details.status.${status}`)
 }
 
 const getStatusClass = (status: string) => {
@@ -510,12 +513,7 @@ const getEventColor = (type: string) => {
 }
 
 const getEventText = (type: string) => {
-    const map: Record<string, string> = {
-        'goal': 'Gol',
-        'yellow_card': 'Tarjeta Amarilla',
-        'red_card': 'Tarjeta Roja'
-    }
-    return map[type] || type
+    return t(`match_details.events.${type}`)
 }
 
 definePageMeta({

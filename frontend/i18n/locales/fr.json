@@ -1,5 +1,8 @@
 {
   "welcome": "Bienvenue",
+  "common": {
+    "unknown_tournament": "Tournoi Inconnu"
+  },
   "login": {
     "title": "Connexion",
     "email": "Email",
@@ -64,7 +67,8 @@
     "no_matches_date": "Aucun match prévu pour cette date.",
     "list": "Liste",
     "calendar": "Calendrier",
-    "view_table": "Voir le classement"
+    "view_table": "Voir le classement",
+    "view_matches": "Voir les matchs"
   },
   "dashboard": {
     "welcome": "Bienvenue, {name}",
@@ -325,7 +329,9 @@
     "basketball": "Basketball",
     "tennis": "Tennis",
     "volleyball": "Volley-ball",
-    "baseball": "Baseball"
+    "baseball": "Baseball",
+    "golf": "Golf",
+    "padel": "Padel"
   },
   "leagues_page": {
     "title": "Ligues",
@@ -371,6 +377,83 @@
     },
     "tbd": "À définir"
   },
+  "tournament_details": {
+    "back_to_league": "Retour à la Ligue",
+    "edit": "Modifier le tournoi",
+    "new_match": "Nouveau Match",
+    "matches": "Matchs",
+    "teams": "Équipes",
+    "calendar": "Calendrier des Matchs",
+    "generate_playoffs": "Générer Playoffs",
+    "generate_calendar": "Générer Calendrier",
+    "round": "Journée",
+    "no_matches": "Aucun Match",
+    "no_matches_desc": "Aucun match prévu pour ce tournoi.",
+    "generate_auto": "Générer Automatiquement",
+    "create_manual": "Créer Manuellement",
+    "standings": "Classement",
+    "initialize_standings": "Initialiser Classement",
+    "table_unavailable": "Classement Indisponible",
+    "table_unavailable_desc": "Le classement n'a pas encore été généré.",
+    "generate_table": "Générer Classement",
+    "stats": "Statistiques du Tournoi",
+    "top_scorers": "Meilleurs Buteurs",
+    "top_assists": "Meilleurs Passeurs",
+    "cards": "Cartons",
+    "goals_label": "Buts",
+    "assists_label": "Passes",
+    "cards_label": "Rouges/Jaunes",
+    "participating_teams": "Équipes Participantes",
+    "manage_teams": "Gérer les Équipes",
+    "no_teams": "Aucune Équipe",
+    "no_teams_desc": "Aucune équipe inscrite dans ce tournoi.",
+    "details": "Détails",
+    "no_description": "Aucune description disponible.",
+    "format": "Format",
+    "start": "Début",
+    "end": "Fin",
+    "tabs": {
+      "matches": "Matchs",
+      "standings": "Classement",
+      "stats": "Statistiques",
+      "teams": "Équipes",
+      "info": "Info"
+    },
+    "formats": {
+      "league": "Ligue (Toutes rondes)",
+      "knockout": "Élimination Directe",
+      "group_knockout": "Groupes + Élimination"
+    }
+  },
+  "league_details": {
+    "tournaments": "Tournois",
+    "teams": "Équipes",
+    "active_tournaments": "Tournois Actifs",
+    "new_tournament": "Nouveau Tournoi",
+    "no_tournaments": "Aucun Tournoi",
+    "no_tournaments_desc": "Aucun tournoi créé dans cette ligue pour le moment.",
+    "create_first_tournament": "Créer le premier tournoi",
+    "registered_teams": "Équipes Inscrites",
+    "register_team": "Inscrire une Équipe",
+    "no_teams": "Aucune Équipe",
+    "no_teams_desc": "Aucune équipe inscrite dans cette ligue pour le moment.",
+    "register_first_team": "Inscrire une équipe",
+    "about": "À propos de la Ligue",
+    "no_description": "Aucune description disponible.",
+    "created": "Créée",
+    "rules": "Règles",
+    "match_duration": "Durée du Match",
+    "players_per_team": "Joueurs par Équipe",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "finished": "Terminée"
+    },
+    "tabs": {
+      "tournaments": "Tournois",
+      "teams": "Équipes"
+    }
+  },
   "matches_page": {
     "title": "Calendrier des",
     "title_highlight": "Matchs",
@@ -380,5 +463,68 @@
       "calendar": "Calendrier"
     },
     "view_table": "Voir Classement ->"
+  },
+  "match_details": {
+    "title": "Détails du Match",
+    "edit_match": "Modifier le Match",
+    "manage_stats": "Statistiques",
+    "local": "Domicile",
+    "visitor": "Extérieur",
+    "date": "Date",
+    "time": "Heure",
+    "stadium": "Stade",
+    "referee": "Arbitre",
+    "tbd": "À définir",
+    "to_be_assigned": "À assigner",
+    "match_events": "Événements du Match",
+    "no_events": "Aucun événement enregistré",
+    "no_lineup": "Aucune composition disponible",
+    "player": "Joueur",
+    "tabs": {
+      "summary": "Résumé",
+      "lineups": "Compositions",
+      "stats": "Statistiques"
+    },
+    "stats": {
+      "goals": "Buts",
+      "yellow_cards": "Cartons Jaunes",
+      "red_cards": "Cartons Rouges",
+      "assists": "Passes Décisives"
+    },
+    "events": {
+      "goal": "But",
+      "yellow_card": "Carton Jaune",
+      "red_card": "Carton Rouge"
+    },
+    "status": {
+      "scheduled": "Prévu",
+      "live": "En Direct",
+      "finished": "Terminé",
+      "postponed": "Reporté",
+      "cancelled": "Annulé"
+    },
+    "modals": {
+      "edit_match": {
+        "title": "Modifier le Match",
+        "tab_score": "Score",
+        "tab_details": "Détails",
+        "info_status": "En enregistrant, le statut passera à \"Terminé\" et le classement sera recalculé.",
+        "location": "Lieu",
+        "location_placeholder": "Ex: Stade National",
+        "status": "Statut",
+        "cancel": "Annuler",
+        "save": "Enregistrer",
+        "success": "Modifications enregistrées avec succès",
+        "error": "Erreur lors de l'enregistrement des modifications"
+      },
+      "stats": {
+        "title": "Statistiques du Match",
+        "no_players": "Cette équipe n'a aucun joueur enregistré.",
+        "total_goals": "Total Buts",
+        "save_stats": "Enregistrer Statistiques",
+        "success": "Statistiques mises à jour avec succès",
+        "error_loading": "Erreur lors du chargement des joueurs"
+      }
+    }
   }
 }

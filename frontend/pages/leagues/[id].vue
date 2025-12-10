@@ -91,14 +91,16 @@
                 </div>
                 <div
                   class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                  Torneos</div>
+                  {{ $t('league_details.tournaments') }}
+                </div>
               </div>
               <div class="w-px bg-border-light dark:border-border-dark"></div>
               <div class="text-center">
                 <div class="text-2xl font-black text-text-primary-light dark:text-white">{{ teams?.length || 0 }}</div>
                 <div
                   class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                  Equipos</div>
+                  {{ $t('league_details.teams') }}
+                </div>
               </div>
             </div>
           </div>
@@ -124,11 +126,13 @@
             <!-- Tournaments -->
             <div v-if="activeTab === 'tournaments'" class="space-y-6">
               <div class="flex justify-between items-center">
-                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Torneos Activos</h3>
+                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                  {{ $t('league_details.active_tournaments') }}
+                </h3>
                 <button v-if="canManage" @click="showCreateTournamentModal = true"
                   class="btn-primary flex items-center gap-2">
                   <span class="material-symbols-outlined text-lg">add</span>
-                  Nuevo Torneo
+                  {{ $t('league_details.new_tournament') }}
                 </button>
               </div>
 
@@ -143,13 +147,15 @@
                   <span
                     class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">emoji_events</span>
                 </div>
-                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Torneos</h3>
+                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">
+                  {{ $t('league_details.no_tournaments') }}
+                </h3>
                 <p class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
-                  No hay torneos creados en esta liga aún.
+                  {{ $t('league_details.no_tournaments_desc') }}
                 </p>
                 <button v-if="canManage" @click="showCreateTournamentModal = true"
                   class="font-bold hover:underline text-primary-500 hover:text-primary-600">
-                  Crear el primer torneo
+                  {{ $t('league_details.create_first_tournament') }}
                 </button>
               </div>
             </div>
@@ -157,11 +163,13 @@
             <!-- Teams -->
             <div v-if="activeTab === 'teams'" class="space-y-6">
               <div class="flex justify-between items-center">
-                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Equipos Registrados</h3>
+                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                  {{ $t('league_details.registered_teams') }}
+                </h3>
                 <button v-if="authStore.isAuthenticated" @click="showCreateTeamModal = true"
                   class="btn-primary flex items-center gap-2">
                   <span class="material-symbols-outlined text-lg">group_add</span>
-                  Registrar Equipo
+                  {{ $t('league_details.register_team') }}
                 </button>
               </div>
 
@@ -175,13 +183,15 @@
                   <span
                     class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">groups</span>
                 </div>
-                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Equipos</h3>
+                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">
+                  {{ $t('league_details.no_teams') }}
+                </h3>
                 <p class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
-                  Aún no hay equipos registrados en esta liga.
+                  {{ $t('league_details.no_teams_desc') }}
                 </p>
                 <button v-if="authStore.isAuthenticated" @click="showCreateTeamModal = true"
                   class="font-bold hover:underline text-primary-500 hover:text-primary-600">
-                  Registrar un equipo
+                  {{ $t('league_details.register_first_team') }}
                 </button>
               </div>
             </div>
@@ -195,15 +205,16 @@
             class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6">
             <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined text-primary-500">info</span>
-              Sobre la Liga
+              {{ $t('league_details.about') }}
             </h3>
             <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm leading-relaxed mb-6">
-              {{ league.description || 'Sin descripción disponible.' }}
+              {{ league.description || $t('league_details.no_description') }}
             </p>
 
             <div class="space-y-4">
               <div class="flex items-center justify-between text-sm">
-                <span class="text-text-secondary-light dark:text-text-secondary-dark">Creada</span>
+                <span
+                  class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('league_details.created') }}</span>
                 <span
                   class="font-bold text-text-primary-light dark:text-white">{{ formatDate(league.created_at) }}</span>
               </div>
@@ -215,7 +226,7 @@
             class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6">
             <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined text-primary-500">gavel</span>
-              Reglas
+              {{ $t('league_details.rules') }}
             </h3>
             <div class="space-y-3">
               <div v-if="league.settings.match_duration" class="flex items-center gap-3 text-sm">
@@ -226,7 +237,9 @@
                 <div>
                   <div class="font-bold text-text-primary-light dark:text-white">{{ league.settings.match_duration }}
                     min</div>
-                  <div class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Duración Partido</div>
+                  <div class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
+                    {{ $t('league_details.match_duration') }}
+                  </div>
                 </div>
               </div>
               <div v-if="league.settings.players_per_team" class="flex items-center gap-3 text-sm">
@@ -237,7 +250,8 @@
                 <div>
                   <div class="font-bold text-text-primary-light dark:text-white">{{ league.settings.players_per_team }}
                   </div>
-                  <div class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Jugadores por Equipo
+                  <div class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
+                    {{ $t('league_details.players_per_team') }}
                   </div>
                 </div>
               </div>
@@ -268,6 +282,7 @@ import EditLeagueModal from '@/components/modals/EditLeagueModal.vue'
 import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
@@ -280,10 +295,10 @@ const showCreateTeamModal = ref(false)
 const showEditModal = ref(false)
 const showDeleteConfirmModal = ref(false)
 
-const tabs = [
-  { value: 'tournaments', label: 'Torneos' },
-  { value: 'teams', label: 'Equipos' }
-]
+const tabs = computed(() => [
+  { value: 'tournaments', label: t('league_details.tabs.tournaments') },
+  { value: 'teams', label: t('league_details.tabs.teams') }
+])
 
 const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
@@ -295,12 +310,7 @@ const getStatusColor = (status: string) => {
 }
 
 const getStatusText = (status: string) => {
-  const texts: Record<string, string> = {
-    'active': 'Activa',
-    'inactive': 'Inactiva',
-    'finished': 'Finalizada'
-  }
-  return texts[status] || status
+  return t(`league_details.status.${status}`)
 }
 
 // Fetch league

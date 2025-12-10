@@ -5,7 +5,8 @@
       <!-- Header -->
       <div
         class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between rounded-t-lg">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Editar Partido</h2>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ $t('match_details.modals.edit_match.title') }}
+        </h2>
         <button @click="$emit('close')"
           class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
           <span class="material-symbols-outlined">close</span>
@@ -30,7 +31,7 @@
         <button v-for="tab in ['resultado', 'detalles']" :key="tab" @click="activeTab = tab"
           class="flex-1 py-3 text-sm font-medium capitalize border-b-2 transition-colors relative"
           :class="activeTab === tab ? 'border-primary-500 text-primary-600 dark:text-primary-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'">
-          {{ tab }}
+          {{ tab === 'resultado' ? $t('match_details.modals.edit_match.tab_score') : $t('match_details.modals.edit_match.tab_details') }}
         </button>
       </div>
 
@@ -64,7 +65,7 @@
           <div
             class="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-sm text-blue-700 dark:text-blue-300">
             <span class="material-symbols-outlined text-lg">info</span>
-            <p>Al guardar, el estado cambiará a "Finalizado" y se calculará la tabla.</p>
+            <p>{{ $t('match_details.modals.edit_match.info_status') }}</p>
           </div>
         </div>
 
@@ -72,35 +73,35 @@
         <div v-if="activeTab === 'detalles'" class="space-y-4">
           <div>
             <label
-              class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">Fecha</label>
+              class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">{{ $t('match_details.date') }}</label>
             <input v-model="formData.date" type="date"
               class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none"
               required />
           </div>
           <div>
             <label
-              class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">Hora</label>
+              class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">{{ $t('match_details.time') }}</label>
             <input v-model="formData.time" type="time"
               class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none"
               required />
           </div>
           <div>
             <label
-              class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">Ubicación</label>
+              class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">{{ $t('match_details.modals.edit_match.location') }}</label>
             <input v-model="formData.location" type="text"
               class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none"
-              placeholder="Ej: Estadio Nacional" />
+              :placeholder="$t('match_details.modals.edit_match.location_placeholder')" />
           </div>
           <div>
             <label
-              class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">Estado</label>
+              class="block text-xs font-bold text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wide">{{ $t('match_details.modals.edit_match.status') }}</label>
             <select v-model="formData.status"
               class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-4 py-2 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 outline-none">
-              <option value="scheduled">Programado</option>
-              <option value="live">En Vivo</option>
-              <option value="finished">Finalizado</option>
-              <option value="postponed">Pospuesto</option>
-              <option value="cancelled">Cancelado</option>
+              <option value="scheduled">{{ $t('match_details.status.scheduled') }}</option>
+              <option value="live">{{ $t('match_details.status.live') }}</option>
+              <option value="finished">{{ $t('match_details.status.finished') }}</option>
+              <option value="postponed">{{ $t('match_details.status.postponed') }}</option>
+              <option value="cancelled">{{ $t('match_details.status.cancelled') }}</option>
             </select>
           </div>
         </div>
@@ -120,13 +121,13 @@
           <button type="button" @click="$emit('close')"
             class="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-bold"
             :disabled="loading">
-            Cancelar
+            {{ $t('match_details.modals.edit_match.cancel') }}
           </button>
           <button type="submit"
             class="flex-1 btn-primary text-white px-4 py-2.5 rounded-xl font-bold flex items-center justify-center gap-2"
             :disabled="loading">
             <span v-if="loading" class="animate-spin material-symbols-outlined text-lg">progress_activity</span>
-            <span>Guardar Cambios</span>
+            <span>{{ $t('match_details.modals.edit_match.save') }}</span>
           </button>
         </div>
       </form>
@@ -139,6 +140,7 @@ import { ref, onMounted } from 'vue'
 
 const { $api } = useNuxtApp()
 const toastStore = useToastStore()
+const { t } = useI18n()
 
 const props = defineProps<{
   match: any
@@ -207,15 +209,15 @@ const handleSubmit = async () => {
 
     await Promise.all(promises)
 
-    success.value = 'Cambios guardados correctamente'
-    toastStore.success('✅ Partido actualizado')
+    success.value = t('match_details.modals.edit_match.success')
+    toastStore.success(`✅ ${t('match_details.modals.edit_match.success')}`)
     setTimeout(() => {
       emit('updated')
       emit('close')
     }, 1500)
 
   } catch (err: any) {
-    error.value = err.response?.data?.message || 'Error al guardar cambios'
+    error.value = err.response?.data?.message || t('match_details.modals.edit_match.error')
     toastStore.error(error.value)
   } finally {
     loading.value = false

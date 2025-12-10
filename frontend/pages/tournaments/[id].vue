@@ -31,7 +31,7 @@
                         <button @click="navigateTo(localePath(`/leagues/${tournament.league_id}`))"
                             class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
                             <span class="material-symbols-outlined">arrow_back</span>
-                            <span class="text-sm font-bold">Volver a la Liga</span>
+                            <span class="text-sm font-bold">{{ $t('tournament_details.back_to_league') }}</span>
                         </button>
                     </div>
 
@@ -39,12 +39,12 @@
                     <div v-if="canManage" class="absolute top-4 right-4 flex gap-2 z-10">
                         <button @click="showEditTournamentModal = true"
                             class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white"
-                            title="Editar Torneo">
+                            :title="$t('tournament_details.edit')">
                             <span class="material-symbols-outlined">edit</span>
                         </button>
                         <button @click="showCreateMatchModal = true"
                             class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white"
-                            title="Nuevo Partido">
+                            :title="$t('tournament_details.new_match')">
                             <span class="material-symbols-outlined">add_circle</span>
                         </button>
                     </div>
@@ -102,7 +102,8 @@
                                 </div>
                                 <div
                                     class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                                    Partidos</div>
+                                    {{ $t('tournament_details.matches') }}
+                                </div>
                             </div>
                             <div class="w-px bg-border-light dark:border-border-dark"></div>
                             <div class="text-center">
@@ -111,7 +112,8 @@
                                 </div>
                                 <div
                                     class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider">
-                                    Equipos</div>
+                                    {{ $t('tournament_details.teams') }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -141,23 +143,24 @@
                         <!-- Matches Tab -->
                         <div v-if="activeTab === 'matches'" class="space-y-8">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Calendario de
-                                    Partidos</h3>
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                                    {{ $t('tournament_details.calendar') }}
+                                </h3>
                                 <div v-if="canManage" class="flex gap-2">
                                     <button v-if="hasPlayoffSetting" @click="showGeneratePlayoffsModal = true"
                                         class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-500/20 transition-all">
                                         <span class="material-symbols-outlined text-lg">emoji_events</span>
-                                        Generar Playoffs
+                                        {{ $t('tournament_details.generate_playoffs') }}
                                     </button>
                                     <button @click="showGenerateFixtureModal = true"
                                         class="btn-secondary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
                                         <span class="material-symbols-outlined text-lg">calendar_month</span>
-                                        Generar Calendario
+                                        {{ $t('tournament_details.generate_calendar') }}
                                     </button>
                                     <button @click="showCreateMatchModal = true"
                                         class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                                         <span class="material-symbols-outlined text-lg">add</span>
-                                        Nuevo Partido
+                                        {{ $t('tournament_details.new_match') }}
                                     </button>
                                 </div>
                             </div>
@@ -171,7 +174,7 @@
                                                 class="w-8 h-8 rounded-lg bg-primary-500/10 flex items-center justify-center text-primary-500">
                                                 <span class="material-symbols-outlined text-sm">flag</span>
                                             </span>
-                                            Jornada {{ round }}
+                                            {{ $t('tournament_details.round') }} {{ round }}
                                         </h4>
                                         <div class="h-px flex-1 bg-border-light dark:border-border-dark"></div>
                                     </div>
@@ -199,21 +202,22 @@
                                     <span
                                         class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">calendar_today</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Partidos
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">
+                                    {{ $t('tournament_details.no_matches') }}
                                 </h3>
                                 <p
                                     class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
-                                    No hay partidos programados para este torneo.
+                                    {{ $t('tournament_details.no_matches_desc') }}
                                 </p>
                                 <div v-if="canManage" class="flex flex-col sm:flex-row gap-4 justify-center">
                                     <button @click="showGenerateFixtureModal = true"
                                         class="text-primary-500 font-bold hover:underline">
-                                        Generar Automáticamente
+                                        {{ $t('tournament_details.generate_auto') }}
                                     </button>
                                     <span class="text-gray-300 dark:text-gray-600">|</span>
                                     <button @click="showCreateMatchModal = true"
                                         class="text-primary-500 font-bold hover:underline">
-                                        Crear Manualmente
+                                        {{ $t('tournament_details.create_manual') }}
                                     </button>
                                 </div>
                             </div>
@@ -222,15 +226,16 @@
                         <!-- Standings Tab -->
                         <div v-if="activeTab === 'standings'" class="space-y-6">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Tabla de
-                                    Posiciones</h3>
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                                    {{ $t('tournament_details.standings') }}
+                                </h3>
                                 <button v-if="canManage && !standings?.length" @click="initializeStandings"
                                     class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2"
                                     :disabled="initializingStandings">
                                     <span v-if="initializingStandings"
                                         class="material-symbols-outlined animate-spin">progress_activity</span>
                                     <span v-else class="material-symbols-outlined">refresh</span>
-                                    Inicializar Tabla
+                                    {{ $t('tournament_details.initialize_standings') }}
                                 </button>
                             </div>
 
@@ -246,48 +251,54 @@
                                     <span
                                         class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">leaderboard</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Tabla no
-                                    Disponible</h3>
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">
+                                    {{ $t('tournament_details.table_unavailable') }}
+                                </h3>
                                 <p
                                     class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
-                                    La tabla de posiciones aún no ha sido generada.
+                                    {{ $t('tournament_details.table_unavailable_desc') }}
                                 </p>
                                 <button v-if="canManage" @click="initializeStandings"
                                     class="text-primary-500 font-bold hover:underline">
-                                    Generar Tabla
+                                    {{ $t('tournament_details.generate_table') }}
                                 </button>
                             </div>
                         </div>
 
                         <!-- Stats Tab -->
                         <div v-if="activeTab === 'stats'" class="space-y-8">
-                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Estadísticas del
-                                Torneo</h3>
+                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                                {{ $t('tournament_details.stats') }}
+                            </h3>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                                 <!-- Top Scorers -->
-                                <StatsTable title="Goleadores" icon="sports_soccer" :data="stats?.scorers || []"
-                                    statLabel="Goles" statKey="total_goals" />
+                                <StatsTable :title="$t('tournament_details.top_scorers')" icon="sports_soccer"
+                                    :data="stats?.scorers || []" :statLabel="$t('tournament_details.goals_label')"
+                                    statKey="total_goals" />
 
                                 <!-- Top Assists -->
-                                <StatsTable title="Asistencias" icon="handshake" :data="stats?.assists || []"
-                                    statLabel="Asistencias" statKey="total_assists" />
+                                <StatsTable :title="$t('tournament_details.top_assists')" icon="handshake"
+                                    :data="stats?.assists || []" :statLabel="$t('tournament_details.assists_label')"
+                                    statKey="total_assists" />
 
                                 <!-- Cards -->
-                                <StatsTable title="Tarjetas" icon="style" :data="stats?.cards || []"
-                                    statLabel="Rojas/Amarillas" statKey="yellow_cards" />
+                                <StatsTable :title="$t('tournament_details.cards')" icon="style"
+                                    :data="stats?.cards || []" :statLabel="$t('tournament_details.cards_label')"
+                                    statKey="yellow_cards" />
                             </div>
                         </div>
 
                         <!-- Teams Tab -->
                         <div v-if="activeTab === 'teams'" class="space-y-6">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Equipos
-                                    Participantes</h3>
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                                    {{ $t('tournament_details.participating_teams') }}
+                                </h3>
                                 <button v-if="canManage" @click="showAddTeamModal = true"
                                     class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                                     <span class="material-symbols-outlined">group_add</span>
-                                    Gestionar Equipos
+                                    {{ $t('tournament_details.manage_teams') }}
                                 </button>
                             </div>
 
@@ -302,11 +313,12 @@
                                     <span
                                         class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">groups</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Equipos
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">
+                                    {{ $t('tournament_details.no_teams') }}
                                 </h3>
                                 <p
                                     class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
-                                    No hay equipos inscritos en este torneo.
+                                    {{ $t('tournament_details.no_teams_desc') }}
                                 </p>
                             </div>
                         </div>
@@ -321,30 +333,34 @@
                         <h3
                             class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
                             <span class="material-symbols-outlined text-primary-500">info</span>
-                            Detalles
+                            {{ $t('tournament_details.details') }}
                         </h3>
                         <p class="text-text-secondary-light dark:text-text-secondary-dark text-sm leading-relaxed mb-6">
-                            {{ tournament.description || 'Sin descripción disponible.' }}
+                            {{ tournament.description || $t('tournament_details.no_description') }}
                         </p>
 
                         <div class="space-y-4">
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Formato</span>
+                                <span
+                                    class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('tournament_details.format') }}</span>
                                 <span
                                     class="font-bold text-text-primary-light dark:text-white">{{ formatType(tournament.format) }}</span>
                             </div>
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Equipos</span>
+                                <span
+                                    class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('tournament_details.teams') }}</span>
                                 <span class="font-bold text-text-primary-light dark:text-white">{{ teams?.length || 0 }}
                                     / {{ tournament.max_teams || '∞' }}</span>
                             </div>
                             <div v-if="tournament.start_date" class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Inicio</span>
+                                <span
+                                    class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('tournament_details.start') }}</span>
                                 <span
                                     class="font-bold text-text-primary-light dark:text-white">{{ formatDate(tournament.start_date) }}</span>
                             </div>
                             <div v-if="tournament.end_date" class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Fin</span>
+                                <span
+                                    class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('tournament_details.end') }}</span>
                                 <span
                                     class="font-bold text-text-primary-light dark:text-white">{{ formatDate(tournament.end_date) }}</span>
                             </div>
@@ -379,6 +395,7 @@ import CreateMatchModal from '@/components/modals/CreateMatchModal.vue'
 import GeneratePlayoffsModal from '@/components/modals/GeneratePlayoffsModal.vue'
 import StatsTable from '@/components/StatsTable.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 const authStore = useAuthStore()
 const { $api } = useNuxtApp()
@@ -395,13 +412,13 @@ const showAddTeamModal = ref(false)
 const selectedMatch = ref<any>(null)
 const initializingStandings = ref(false)
 
-const tabs = [
-    { value: 'matches', label: 'Partidos', icon: 'sports_soccer' },
-    { value: 'standings', label: 'Tabla', icon: 'leaderboard' },
-    { value: 'stats', label: 'Estadísticas', icon: 'bar_chart' },
-    { value: 'teams', label: 'Equipos', icon: 'group' },
-    { value: 'info', label: 'Información', icon: 'info' }
-]
+const tabs = computed(() => [
+    { value: 'matches', label: t('tournament_details.tabs.matches'), icon: 'sports_soccer' },
+    { value: 'standings', label: t('tournament_details.tabs.standings'), icon: 'leaderboard' },
+    { value: 'stats', label: t('tournament_details.tabs.stats'), icon: 'bar_chart' },
+    { value: 'teams', label: t('tournament_details.tabs.teams'), icon: 'group' },
+    { value: 'info', label: t('tournament_details.tabs.info'), icon: 'info' }
+])
 
 
 const { data: tournament, pending, refresh } = await useAsyncData(`tournament-${route.params.id}`, async () => {
@@ -460,12 +477,7 @@ const matchesByRound = computed(() => {
 
 
 const formatType = (format: string) => {
-    const formats: Record<string, string> = {
-        'league': 'Liga (todos contra todos)',
-        'knockout': 'Eliminación Directa',
-        'group_knockout': 'Grupos + Eliminación'
-    }
-    return formats[format] || format
+    return t(`tournament_details.formats.${format}`)
 }
 
 const formatDate = (dateString: string) => {

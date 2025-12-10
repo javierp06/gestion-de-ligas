@@ -139,7 +139,8 @@
           class="text-center py-12 bg-surface-light dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark border-dashed">
           <span
             class="material-symbols-outlined text-4xl text-text-secondary-light dark:text-text-secondary-dark mb-2">event_busy</span>
-          <p class="text-text-secondary-light dark:text-text-secondary-dark font-bold">No hay partidos para esta fecha
+          <p class="text-text-secondary-light dark:text-text-secondary-dark font-bold">
+            {{ $t('home.no_matches_date') }}
           </p>
         </div>
       </div>
