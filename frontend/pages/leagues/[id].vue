@@ -134,7 +134,7 @@
 
               <div v-if="tournaments?.length" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <TournamentCard v-for="tournament in tournaments" :key="tournament.id" :tournament="tournament"
-                  @click="navigateTo(`/tournaments/${tournament.id}`)" />
+                  @click="navigateTo(localePath(`/tournaments/${tournament.id}`))" />
               </div>
               <div v-else
                 class="bg-surface-light dark:bg-surface-dark rounded-3xl p-12 text-center border border-border-light dark:border-border-dark border-dashed">
@@ -253,6 +253,10 @@
     <CreateTeamModal v-if="showCreateTeamModal" :leagueId="parseInt(route.params.id as string)"
       @close="showCreateTeamModal = false" @created="handleTeamCreated" />
     <EditLeagueModal v-if="showEditModal" :league="league" @close="showEditModal = false" @updated="refresh" />
+    <ConfirmModal v-if="showDeleteConfirmModal" :isOpen="showDeleteConfirmModal"
+      :title="$t('confirm.delete_league_title')" :message="$t('confirm.delete_league_message')"
+      :confirmText="$t('confirm.delete_btn')" :cancelText="$t('confirm.cancel_btn')" :danger="true"
+      @close="showDeleteConfirmModal = false" @confirm="confirmDeleteLeague" />
 
   </div>
 </template>
@@ -261,6 +265,7 @@
 import CreateTournamentModal from '@/components/modals/CreateTournamentModal.vue'
 import CreateTeamModal from '@/components/modals/CreateTeamModal.vue'
 import EditLeagueModal from '@/components/modals/EditLeagueModal.vue'
+import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 
 const route = useRoute()
@@ -268,11 +273,12 @@ const router = useRouter()
 const authStore = useAuthStore()
 const toastStore = useToastStore()
 const { $api } = useNuxtApp()
-
+const localePath = useLocalePath()
 const activeTab = ref('tournaments')
 const showCreateTournamentModal = ref(false)
 const showCreateTeamModal = ref(false)
 const showEditModal = ref(false)
+const showDeleteConfirmModal = ref(false)
 
 const tabs = [
   { value: 'tournaments', label: 'Torneos' },
@@ -323,7 +329,7 @@ const canManage = computed(() => {
 const handleTournamentCreated = (tournamentId?: number) => {
   showCreateTournamentModal.value = false
   if (tournamentId) {
-    router.push(`/tournaments/${tournamentId}`)
+    router.push(localePath(`/tournaments/${tournamentId}`))
   } else {
     refreshTournaments()
   }
@@ -346,17 +352,20 @@ const editLeague = () => {
   showEditModal.value = true
 }
 
-const deleteLeague = async () => {
-  if (!confirm('¿Estás seguro de eliminar esta liga? Esta acción no se puede deshacer.')) return
+const deleteLeague = () => {
+  showDeleteConfirmModal.value = true
+}
 
+const confirmDeleteLeague = async () => {
   try {
     const response = await $api.delete(`/leagues/${route.params.id}`)
     if (response.data.success) {
       toastStore.success('Liga eliminada exitosamente')
-      router.push('/leagues')
+      router.push(localePath('/leagues'))
     }
   } catch (error: any) {
     toastStore.error(error.response?.data?.message || 'Error al eliminar la liga')
+    showDeleteConfirmModal.value = false
   }
 }
 

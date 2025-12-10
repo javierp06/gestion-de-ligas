@@ -313,8 +313,10 @@ import { useI18n } from 'vue-i18n';
 import { useLocalePath } from '#imports';
 import { navigateTo } from '#app';
 import { useAuthStore } from '@/stores/auth';
+import { useFavoritesStore } from '@/stores/favorites';
 
 const authStore = useAuthStore();
+const favoritesStore = useFavoritesStore();
 const router = useRouter();
 const localePath = useLocalePath();
 const { locale, locales, setLocale } = useI18n();
@@ -327,7 +329,7 @@ const availableLocales = computed(() => {
   return (locales.value as any[]).filter(i => i.code !== locale.value)
 });
 
-onMounted(() => {
+onMounted(async () => {
   if (typeof window !== 'undefined') {
     const storedTheme = localStorage.getItem('darkMode');
     const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -339,6 +341,23 @@ onMounted(() => {
       document.documentElement.classList.remove('dark');
       isDark.value = false;
     }
+  }
+
+  // Fetch favorites if authenticated
+  if (authStore.isAuthenticated) {
+    await favoritesStore.fetchFavorites();
+  }
+});
+
+// Watch for authentication changes
+watch(() => authStore.isAuthenticated, async (isAuthenticated) => {
+  if (isAuthenticated) {
+    await favoritesStore.fetchFavorites();
+  } else {
+    // Clear favorites
+    favoritesStore.leagues = [];
+    favoritesStore.teams = [];
+    favoritesStore.tournaments = [];
   }
 });
 

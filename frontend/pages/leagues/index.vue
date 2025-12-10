@@ -6,17 +6,18 @@
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
           <h1 class="text-3xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight">
-            Ligas <span class="text-primary-500">Activas</span>
+            {{ $t('leagues_page.title') }} <span class="text-primary-500">{{ $t('leagues_page.title_highlight')
+            }}</span>
           </h1>
           <p class="text-text-secondary-light dark:text-text-secondary-dark mt-1">
-            Explora y únete a las mejores competiciones.
+            {{ $t('leagues_page.subtitle') }}
           </p>
         </div>
 
-        <NuxtLink v-if="authStore.isOrganizer" to="/leagues/create"
+        <NuxtLink v-if="authStore.isOrganizer" :to="localePath('/leagues/create')"
           class="btn-primary self-start md:self-auto flex items-center gap-2">
           <span class="material-symbols-outlined">add</span>
-          Crear Liga
+          {{ $t('leagues_page.create') }}
         </NuxtLink>
       </div>
 
@@ -54,8 +55,9 @@
       <!-- Error State -->
       <div v-else-if="leagueStore.error" class="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
         <p class="text-red-500 font-bold">{{ leagueStore.error }}</p>
-        <button @click="fetchLeagues" class="mt-4 text-sm font-bold underline hover:text-red-400">Intentar de
-          nuevo</button>
+        <button @click="fetchLeagues" class="mt-4 text-sm font-bold underline hover:text-red-400">
+          {{ $t('leagues_page.try_again') }}
+        </button>
       </div>
 
       <!-- Grid -->
@@ -91,7 +93,7 @@
             <div class="mb-4">
               <span
                 class="text-xs font-bold text-primary-600 dark:text-primary-500 uppercase tracking-wider mb-1 block">
-                {{ league.sport_name }}
+                {{ getSportName(league.sport_name) }}
               </span>
               <h3
                 class="text-xl font-bold text-text-primary-light dark:text-white group-hover:text-primary-500 transition-colors line-clamp-1">
@@ -104,7 +106,7 @@
                 <div class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/5 flex items-center justify-center">
                   <span class="material-symbols-outlined text-lg">location_on</span>
                 </div>
-                <span class="font-medium">{{ league.location || 'Ubicación no especificada' }}</span>
+                <span class="font-medium">{{ league.location || $t('leagues_page.location_unknown') }}</span>
               </div>
               <div class="flex items-center gap-3 text-sm text-text-secondary-light dark:text-text-secondary-dark">
                 <div class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/5 flex items-center justify-center">
@@ -116,7 +118,7 @@
 
             <button
               class="w-full py-3 rounded-xl bg-surface-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-sm font-bold uppercase tracking-wide text-text-primary-light dark:text-white hover:bg-primary-500 hover:text-black hover:border-primary-500 transition-all duration-300 flex items-center justify-center gap-2">
-              <span>Ver Detalles</span>
+              <span>{{ $t('leagues_page.view_details') }}</span>
               <span class="material-symbols-outlined text-lg">arrow_forward</span>
             </button>
           </div>
@@ -131,13 +133,15 @@
           <span
             class="material-symbols-outlined text-5xl text-text-secondary-light dark:text-text-secondary-dark">emoji_events</span>
         </div>
-        <h3 class="text-2xl font-bold text-text-primary-light dark:text-white mb-2">No se encontraron ligas</h3>
+        <h3 class="text-2xl font-bold text-text-primary-light dark:text-white mb-2">{{ $t('leagues_page.empty_title') }}
+        </h3>
         <p class="text-text-secondary-light dark:text-text-secondary-dark mb-8 max-w-md mx-auto">
-          Intenta ajustar los filtros o crea una nueva liga para comenzar.
+          {{ $t('leagues_page.empty_desc') }}
         </p>
-        <NuxtLink v-if="authStore.isOrganizer" to="/leagues/create" class="btn-primary inline-flex items-center gap-2">
+        <NuxtLink v-if="authStore.isOrganizer" :to="localePath('/leagues/create')"
+          class="btn-primary inline-flex items-center gap-2">
           <span class="material-symbols-outlined">add</span>
-          Crear Liga
+          {{ $t('leagues_page.create') }}
         </NuxtLink>
       </div>
 
@@ -149,19 +153,32 @@
 const leagueStore = useLeagueStore();
 const authStore = useAuthStore();
 const router = useRouter();
+const { t } = useI18n();
+const localePath = useLocalePath();
 
 const filters = ref({
   status: '',
   sport_id: '' as string | number
 });
 
-const sports = [
-  { id: 1, name: 'Fútbol' },
-  { id: 2, name: 'Baloncesto' },
-  { id: 3, name: 'Tenis' },
-  { id: 4, name: 'Voleibol' },
-  { id: 5, name: 'Béisbol' }
-];
+const sports = computed(() => [
+  { id: 1, name: t('sports_list.football') },
+  { id: 2, name: t('sports_list.basketball') },
+  { id: 3, name: t('sports_list.tennis') },
+  { id: 4, name: t('sports_list.volleyball') },
+  { id: 5, name: t('sports_list.baseball') }
+]);
+
+const getSportName = (name: string) => {
+  const map: Record<string, string> = {
+    'Fútbol': t('sports_list.football'),
+    'Baloncesto': t('sports_list.basketball'),
+    'Tenis': t('sports_list.tennis'),
+    'Voleibol': t('sports_list.volleyball'),
+    'Béisbol': t('sports_list.baseball')
+  };
+  return map[name] || name;
+};
 
 const fetchLeagues = () => {
   const params: any = {};
@@ -172,16 +189,11 @@ const fetchLeagues = () => {
 };
 
 const goToLeague = (id: number) => {
-  router.push(`/leagues/${id}`);
+  router.push(localePath(`/leagues/${id}`));
 };
 
 const getStatusText = (status: string) => {
-  const statusMap: Record<string, string> = {
-    active: 'Activas',
-    inactive: 'Inactivas',
-    finished: 'Finalizadas'
-  };
-  return statusMap[status] || status;
+  return t(`leagues_page.filters.${status}`) || status;
 };
 
 // Watch filters to trigger fetch

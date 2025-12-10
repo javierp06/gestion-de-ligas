@@ -67,7 +67,7 @@ interface League {
     description?: string
     sport_name?: string
     sport?: { name: string }
-    status: string
+    status?: string // Optional to support partial data
     location?: string
     organizer_name?: string
     logo?: string

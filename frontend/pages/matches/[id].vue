@@ -14,7 +14,8 @@
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
                     <div
                         class="flex items-center gap-2 text-sm text-text-secondary-light dark:text-text-secondary-dark animate-fade-in">
-                        <NuxtLink to="/matches" class="hover:text-primary-500 transition-colors">Partidos</NuxtLink>
+                        <NuxtLink :to="localePath('/matches')" class="hover:text-primary-500 transition-colors">Partidos
+                        </NuxtLink>
                         <span class="material-symbols-outlined text-sm">chevron_right</span>
                         <span class="text-text-primary-light dark:text-white font-medium">Detalles del Partido</span>
                     </div>
@@ -51,7 +52,7 @@
                     <!-- Scoreboard -->
                     <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
                         <!-- Home Team -->
-                        <NuxtLink :to="`/teams/${match.home_team_id}`"
+                        <NuxtLink :to="localePath(`/teams/${match.home_team_id}`)"
                             class="flex flex-col items-center gap-4 flex-1 text-center group/team">
                             <div class="relative">
                                 <div
@@ -99,7 +100,7 @@
                         </div>
 
                         <!-- Away Team -->
-                        <NuxtLink :to="`/teams/${match.away_team_id}`"
+                        <NuxtLink :to="localePath(`/teams/${match.away_team_id}`)"
                             class="flex flex-col items-center gap-4 flex-1 text-center group/team">
                             <div class="relative">
                                 <div
@@ -340,6 +341,7 @@ import UpdateMatchStatsModal from '@/components/modals/UpdateMatchStatsModal.vue
 const route = useRoute()
 const { $api } = useNuxtApp()
 const authStore = useAuthStore()
+const localePath = useLocalePath()
 
 const match = ref<any>(null)
 const loading = ref(true)

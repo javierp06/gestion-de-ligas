@@ -8,6 +8,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   
   // Check if user is authenticated (only on client side for localStorage auth)
   if (process.client && !authStore.isAuthenticated) {
-    return navigateTo('/login')
+    const localePath = useLocalePath()
+    return navigateTo(localePath('/login'))
   }
 })

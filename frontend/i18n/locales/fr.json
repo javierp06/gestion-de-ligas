@@ -138,6 +138,18 @@
   },
   "table": {
     "pos": "Pos",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "close": "Fermer",
+    "success_profile_update": "Profil mis à jour avec succès",
+    "error_profile_update": "Erreur lors de la mise à jour du profil",
+    "success_password_update": "Mot de passe mis à jour avec succès",
+    "error_password_update": "Erreur lors de la mise à jour du mot de passe",
+    "passwords_mismatch": "Les mots de passe ne correspondent pas",
+    "error_unexpected": "Erreur inattendue",
     "team": "Équipe",
     "pj": "MJ",
     "g": "G",
@@ -244,5 +256,129 @@
       "generating": "Génération...",
       "cancel": "Annuler"
     }
+  },
+  "confirm": {
+    "delete_league_title": "Supprimer la ligue ?",
+    "delete_league_message": "Êtes-vous sûr de vouloir supprimer cette ligue ? Cette action est irréversible.",
+    "delete_btn": "Supprimer",
+    "cancel_btn": "Annuler"
+  },
+  "profile_page": {
+    "member_since": "Membre depuis {year}",
+    "settings": "Paramètres",
+    "nav": {
+      "personal_info": "Infos Personnelles",
+      "security": "Sécurité",
+      "activity": "Activité Récente"
+    },
+    "personal": {
+      "title": "Modifier Profil",
+      "select_avatar": "Choisir Avatar",
+      "full_name": "Nom Complet",
+      "phone": "Téléphone",
+      "location": "Localisation",
+      "location_placeholder": "Ville, Pays",
+      "bio": "Bio",
+      "bio_placeholder": "Parlez-nous un peu de vous...",
+      "email": "E-mail",
+      "not_editable": "Non modifiable",
+      "save": "Enregistrer",
+      "saving": "Enregistrement..."
+    },
+    "security_tab": {
+      "title": "Changer Mot de Passe",
+      "current_password": "Mot de passe actuel",
+      "new_password": "Nouveau mot de passe",
+      "confirm_password": "Confirmer mot de passe",
+      "update": "Mettre à jour mot de passe",
+      "updating": "Mise à jour..."
+    },
+    "activity_tab": {
+      "title": "Activité Récente",
+      "empty": "Aucune activité récente enregistrée"
+    },
+    "activity_logs": {
+      "login": "Connecté au système",
+      "logout": "Déconnecté du système",
+      "update_profile": "Informations de profil mises à jour",
+      "actions": {
+        "login": "Connexion",
+        "logout": "Déconnexion",
+        "create": "Création",
+        "update": "Mise à jour",
+        "delete": "Suppression",
+        "register": "Inscription",
+        "update_profile": "Mise à jour du profil"
+      },
+      "resources": {
+        "user": "utilisateur",
+        "league": "ligue",
+        "tournament": "tournoi",
+        "team": "équipe",
+        "match": "match",
+        "player": "joueur"
+      }
+    }
+  },
+  "sports_list": {
+    "football": "Football",
+    "basketball": "Basketball",
+    "tennis": "Tennis",
+    "volleyball": "Volley-ball",
+    "baseball": "Baseball"
+  },
+  "leagues_page": {
+    "title": "Ligues",
+    "title_highlight": "Actives",
+    "subtitle": "Explorez et rejoignez les meilleures compétitions.",
+    "create": "Créer une ligue",
+    "view_details": "Voir détails",
+    "empty_title": "Aucune ligue trouvée",
+    "empty_desc": "Essayez d'ajuster les filtres ou créez une nouvelle ligue.",
+    "location_unknown": "Lieu non spécifié",
+    "try_again": "Réessayer",
+    "filters": {
+      "active": "Actives",
+      "inactive": "Inactives",
+      "finished": "Terminées"
+    }
+  },
+  "tournaments_page": {
+    "title": "Tournois",
+    "title_highlight": "Officiels",
+    "subtitle": "Battez-vous pour la gloire dans nos tournois.",
+    "create": "Créer un tournoi",
+    "filters": {
+      "all": "Tous",
+      "open": "Inscriptions ouvertes",
+      "active": "En cours",
+      "finished": "Terminés"
+    },
+    "card": {
+      "teams": "Équipes",
+      "start": "Début",
+      "league": "Ligue",
+      "format": "Format",
+      "enrolled": "équipes inscrites"
+    },
+    "status": {
+      "upcoming": "Inscriptions",
+      "open": "Inscriptions",
+      "in_progress": "En cours",
+      "active": "En cours",
+      "finished": "Terminé",
+      "completed": "Terminé"
+    },
+    "tbd": "À définir"
+  },
+  "matches_page": {
+    "title": "Calendrier des",
+    "title_highlight": "Matchs",
+    "subtitle": "Ne manquez aucun match. Suivez les résultats en direct.",
+    "views": {
+      "list": "Liste",
+      "calendar": "Calendrier"
+    },
+    "view_table": "Voir Classement ->"
   }
 }

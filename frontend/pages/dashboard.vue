@@ -30,7 +30,7 @@
                 </div>
 
                 <!-- 1. Stats Grid (Universal) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
                     <!-- Show different stats based on what data is available -->
                     <div class="animate-slide-up stagger-1">
                         <StatsCard :title="$t('dashboard.organizer.my_leagues')" :value="myLeagues?.length || 0"
@@ -41,7 +41,7 @@
                             icon="sports" color="green" />
                     </div>
                     <div class="animate-slide-up stagger-3">
-                        <StatsCard :title="'Equipos Favoritos'" :value="favoritesStore.teams.length" icon="favorite"
+                        <StatsCard :title="'Favoritos'" :value="favoritesStore.teams.length" icon="favorite"
                             color="red" />
                     </div>
                     <div class="animate-slide-up stagger-4">
@@ -52,30 +52,35 @@
 
                 <!-- 2. My Leagues (If Any) -->
                 <div v-if="myLeagues && myLeagues.length > 0"
-                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-8 mb-8 animate-slide-up">
-                    <div class="flex items-center justify-between mb-6">
+                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-4 md:p-8 mb-6 md:mb-8 animate-slide-up">
+                    <div class="flex items-center justify-between mb-4 md:mb-6">
                         <h2
-                            class="text-2xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight flex items-center gap-3">
+                            class="text-xl md:text-2xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight flex items-center gap-2 md:gap-3">
                             <span class="material-symbols-outlined text-blue-500">emoji_events</span>
                             {{ $t('dashboard.organizer.my_leagues') }}
                         </h2>
                         <button @click="navigateTo(localePath('/admin/leagues/create'))"
                             class="text-sm font-bold text-primary-500 hover:text-primary-400 transition-colors flex items-center gap-1">
-                            Crear Nueva
+                            <span class="hidden sm:inline">Crear Nueva</span>
                             <span class="material-symbols-outlined text-lg">add</span>
                         </button>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <LeagueCard v-for="league in myLeagues" :key="league.id" :league="league"
-                            @click="navigateTo(`/leagues/${league.id}`)" />
+
+                    <!-- Horizontal Scroll Container on Mobile -->
+                    <div
+                        class="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x">
+                        <div v-for="league in myLeagues" :key="league.id" class="min-w-[280px] md:min-w-0 snap-center">
+                            <LeagueCard :league="league" @click="navigateTo(localePath(`/leagues/${league.id}`))"
+                                class="h-full" />
+                        </div>
                     </div>
                 </div>
 
                 <!-- 3. Favorites Section (New) -->
                 <div v-if="favoritesStore.leagues.length > 0 || favoritesStore.teams.length > 0"
-                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-8 mb-8 animate-slide-up">
+                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-4 md:p-8 mb-6 md:mb-8 animate-slide-up">
                     <h2
-                        class="text-2xl font-display font-bold text-text-primary-light dark:text-white mb-6 uppercase tracking-tight flex items-center gap-3">
+                        class="text-xl md:text-2xl font-display font-bold text-text-primary-light dark:text-white mb-4 md:mb-6 uppercase tracking-tight flex items-center gap-2 md:gap-3">
                         <span class="material-symbols-outlined text-red-500">favorite</span>
                         Mis Favoritos
                     </h2>
@@ -85,9 +90,15 @@
                         <h3
                             class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-3">
                             Ligas</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <LeagueCard v-for="league in favoritesStore.leagues" :key="league.id" :league="league"
-                                @click="navigateTo(`/leagues/${league.id}`)" />
+
+                        <!-- Horizontal Scroll Container on Mobile -->
+                        <div
+                            class="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x">
+                            <div v-for="league in favoritesStore.leagues" :key="league.id"
+                                class="min-w-[280px] md:min-w-0 snap-center">
+                                <LeagueCard :league="league" @click="navigateTo(localePath(`/leagues/${league.id}`))"
+                                    class="h-full" />
+                            </div>
                         </div>
                     </div>
 
@@ -96,18 +107,22 @@
                         <h3
                             class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-3">
                             Equipos</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <!-- Horizontal Scroll Container on Mobile -->
+                        <div
+                            class="flex md:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x">
                             <div v-for="team in favoritesStore.teams" :key="team.id"
-                                @click="navigateTo(`/teams/${team.id}`)"
-                                class="bg-background-light dark:bg-surface-dark-alt p-4 rounded-xl border border-border-light dark:border-border-dark flex items-center gap-4 cursor-pointer hover:border-primary-500 transition-colors group">
+                                @click="navigateTo(localePath(`/teams/${team.id}`))"
+                                class="min-w-[200px] md:min-w-0 snap-center bg-background-light dark:bg-surface-dark-alt p-4 rounded-xl border border-border-light dark:border-border-dark flex items-center gap-4 cursor-pointer hover:border-primary-500 transition-colors group h-full">
                                 <img :src="team.logo || 'https://ui-avatars.com/api/?name=' + team.name"
-                                    class="w-12 h-12 rounded-full object-cover shadow-sm" />
+                                    class="w-12 h-12 rounded-full object-cover shadow-sm shrink-0" />
                                 <div>
                                     <h4
-                                        class="font-bold text-text-primary-light dark:text-white group-hover:text-primary-500 transition-colors">
-                                        {{ team.name }}</h4>
+                                        class="font-bold text-text-primary-light dark:text-white group-hover:text-primary-500 transition-colors truncate max-w-[120px]">
+                                        {{ team.name }}
+                                    </h4>
                                     <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
-                                        {{ team.short_name || 'Team' }}</p>
+                                        {{ team.short_name || 'Team' }}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -115,73 +130,86 @@
                 </div>
 
                 <!-- 4. Quick Actions / Explore (Universal) -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div @click="navigateTo('/leagues')"
-                        class="group bg-surface-light dark:bg-surface-dark rounded-3xl p-6 cursor-pointer border border-border-light dark:border-border-dark hover:border-primary-500/50 hover:shadow-neon transition-all duration-300 animate-slide-up stagger-1 relative overflow-hidden">
+                <!-- Horizontal Scroll Container on Mobile -->
+                <div
+                    class="flex md:grid md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 snap-x">
+                    <div @click="navigateTo(localePath('/leagues'))"
+                        class="min-w-[260px] md:min-w-0 snap-center h-full">
                         <div
-                            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
-                            <span class="material-symbols-outlined text-8xl text-primary-500">emoji_events</span>
+                            class="group bg-surface-light dark:bg-surface-dark rounded-3xl p-4 md:p-6 cursor-pointer border border-border-light dark:border-border-dark hover:border-primary-500/50 hover:shadow-neon transition-all duration-300 animate-slide-up stagger-1 relative overflow-hidden h-full flex flex-col">
+                            <div
+                                class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
+                                <span class="material-symbols-outlined text-8xl text-primary-500">emoji_events</span>
+                            </div>
+                            <div
+                                class="w-14 h-14 bg-primary-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                                <span
+                                    class="material-symbols-outlined text-primary-600 dark:text-primary-500 text-3xl">emoji_events</span>
+                            </div>
+                            <h3
+                                class="text-lg md:text-xl font-bold text-text-primary-light dark:text-white mb-2 group-hover:text-primary-500 transition-colors">
+                                {{ $t('dashboard.user.explore_leagues') }}
+                            </h3>
+                            <p
+                                class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium mt-auto">
+                                Encuentra ligas para unirte.
+                            </p>
                         </div>
-                        <div
-                            class="w-14 h-14 bg-primary-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <span
-                                class="material-symbols-outlined text-primary-600 dark:text-primary-500 text-3xl">emoji_events</span>
-                        </div>
-                        <h3
-                            class="text-xl font-bold text-text-primary-light dark:text-white mb-2 group-hover:text-primary-500 transition-colors">
-                            {{ $t('dashboard.user.explore_leagues') }}
-                        </h3>
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
-                            Encuentra ligas para unirte.
-                        </p>
                     </div>
 
-                    <div @click="navigateTo('/tournaments')"
-                        class="group bg-surface-light dark:bg-surface-dark rounded-3xl p-6 cursor-pointer border border-border-light dark:border-border-dark hover:border-green-500/50 hover:shadow-lg transition-all duration-300 animate-slide-up stagger-2 relative overflow-hidden">
+                    <div @click="navigateTo(localePath('/tournaments'))"
+                        class="min-w-[260px] md:min-w-0 snap-center h-full">
                         <div
-                            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
-                            <span class="material-symbols-outlined text-8xl text-green-500">trophy</span>
+                            class="group bg-surface-light dark:bg-surface-dark rounded-3xl p-4 md:p-6 cursor-pointer border border-border-light dark:border-border-dark hover:border-green-500/50 hover:shadow-lg transition-all duration-300 animate-slide-up stagger-2 relative overflow-hidden h-full flex flex-col">
+                            <div
+                                class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
+                                <span class="material-symbols-outlined text-8xl text-green-500">trophy</span>
+                            </div>
+                            <div
+                                class="w-14 h-14 bg-green-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                                <span
+                                    class="material-symbols-outlined text-green-600 dark:text-green-500 text-3xl">trophy</span>
+                            </div>
+                            <h3
+                                class="text-lg md:text-xl font-bold text-text-primary-light dark:text-white mb-2 group-hover:text-green-500 transition-colors">
+                                {{ $t('dashboard.user.view_tournaments') }}
+                            </h3>
+                            <p
+                                class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium mt-auto">
+                                Ver torneos en curso.
+                            </p>
                         </div>
-                        <div
-                            class="w-14 h-14 bg-green-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <span
-                                class="material-symbols-outlined text-green-600 dark:text-green-500 text-3xl">trophy</span>
-                        </div>
-                        <h3
-                            class="text-xl font-bold text-text-primary-light dark:text-white mb-2 group-hover:text-green-500 transition-colors">
-                            {{ $t('dashboard.user.view_tournaments') }}
-                        </h3>
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
-                            Ver torneos en curso.
-                        </p>
                     </div>
 
-                    <div @click="showCreateTeamModal = true"
-                        class="group bg-surface-light dark:bg-surface-dark rounded-3xl p-6 cursor-pointer border border-border-light dark:border-border-dark hover:border-purple-500/50 hover:shadow-lg transition-all duration-300 animate-slide-up stagger-3 relative overflow-hidden">
+                    <div @click="showCreateTeamModal = true" class="min-w-[260px] md:min-w-0 snap-center h-full">
                         <div
-                            class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
-                            <span class="material-symbols-outlined text-8xl text-purple-500">group_add</span>
+                            class="group bg-surface-light dark:bg-surface-dark rounded-3xl p-4 md:p-6 cursor-pointer border border-border-light dark:border-border-dark hover:border-purple-500/50 hover:shadow-lg transition-all duration-300 animate-slide-up stagger-3 relative overflow-hidden h-full flex flex-col">
+                            <div
+                                class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110 duration-500">
+                                <span class="material-symbols-outlined text-8xl text-purple-500">group_add</span>
+                            </div>
+                            <div
+                                class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shrink-0">
+                                <span
+                                    class="material-symbols-outlined text-purple-600 dark:text-purple-500 text-3xl">group_add</span>
+                            </div>
+                            <h3
+                                class="text-lg md:text-xl font-bold text-text-primary-light dark:text-white mb-2 group-hover:text-purple-500 transition-colors">
+                                {{ $t('dashboard.user.create_team') }}
+                            </h3>
+                            <p
+                                class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium mt-auto">
+                                Registra tu equipo ahora.
+                            </p>
                         </div>
-                        <div
-                            class="w-14 h-14 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                            <span
-                                class="material-symbols-outlined text-purple-600 dark:text-purple-500 text-3xl">group_add</span>
-                        </div>
-                        <h3
-                            class="text-xl font-bold text-text-primary-light dark:text-white mb-2 group-hover:text-purple-500 transition-colors">
-                            {{ $t('dashboard.user.create_team') }}
-                        </h3>
-                        <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">
-                            Registra tu equipo ahora.
-                        </p>
                     </div>
                 </div>
 
                 <!-- 5. Upcoming Matches (Universal) -->
                 <div v-if="upcomingMatches?.length"
-                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-8 animate-slide-up">
+                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-4 md:p-8 animate-slide-up">
                     <h2
-                        class="text-2xl font-display font-bold text-text-primary-light dark:text-white mb-6 uppercase tracking-tight">
+                        class="text-xl md:text-2xl font-display font-bold text-text-primary-light dark:text-white mb-4 md:mb-6 uppercase tracking-tight">
                         {{ $t('dashboard.upcoming_matches') }}
                     </h2>
                     <div class="space-y-4">
@@ -204,6 +232,21 @@
         <CreateTeamModal v-if="showCreateTeamModal" @close="showCreateTeamModal = false" />
     </div>
 </template>
+
+<style scoped>
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+</style>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'

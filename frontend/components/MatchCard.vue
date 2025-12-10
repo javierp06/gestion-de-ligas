@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink :to="`/matches/${match.id}`"
+  <NuxtLink :to="localePath(`/matches/${match.id}`)"
     class="block bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all p-4"
     :class="{ 'bg-blue-50 dark:bg-blue-900/20': match.status === 'live' }">
     <div class="flex items-center justify-between gap-4">
@@ -57,6 +57,7 @@
 
 <script setup lang="ts">
 const { getStatusColor, getStatusText, formatMatchDate, formatTime } = useSports()
+const localePath = useLocalePath()
 
 interface Match {
   id: number

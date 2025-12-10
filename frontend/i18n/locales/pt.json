@@ -147,6 +147,18 @@
     "gc": "GC",
     "dg": "SG",
     "pts": "Pts",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "success_profile_update": "Perfil atualizado com sucesso",
+    "error_profile_update": "Erro ao atualizar perfil",
+    "success_password_update": "Senha atualizada com sucesso",
+    "error_password_update": "Erro ao atualizar senha",
+    "passwords_mismatch": "As senhas não coincidem",
+    "error_unexpected": "Erro inesperado",
     "legend": {
       "qualification": "Zona de Classificação",
       "pj": "Jogos",
@@ -244,5 +256,129 @@
       "generating": "Gerando...",
       "cancel": "Cancelar"
     }
+  },
+  "confirm": {
+    "delete_league_title": "Excluir Liga?",
+    "delete_league_message": "Tem certeza que deseja excluir esta liga? Esta ação não pode ser desfeita.",
+    "delete_btn": "Excluir",
+    "cancel_btn": "Cancelar"
+  },
+  "profile_page": {
+    "member_since": "Membro desde {year}",
+    "settings": "Configurações",
+    "nav": {
+      "personal_info": "Informações Pessoais",
+      "security": "Segurança",
+      "activity": "Atividade Recente"
+    },
+    "personal": {
+      "title": "Editar Perfil",
+      "select_avatar": "Selecionar Avatar",
+      "full_name": "Nome Completo",
+      "phone": "Telefone",
+      "location": "Localização",
+      "location_placeholder": "Cidade, País",
+      "bio": "Biografia",
+      "bio_placeholder": "Conte-nos um pouco sobre você...",
+      "email": "E-mail",
+      "not_editable": "Não editável",
+      "save": "Salvar Alterações",
+      "saving": "Salvando..."
+    },
+    "security_tab": {
+      "title": "Alterar Senha",
+      "current_password": "Senha Atual",
+      "new_password": "Nova Senha",
+      "confirm_password": "Confirmar Senha",
+      "update": "Atualizar Senha",
+      "updating": "Atualizando..."
+    },
+    "activity_tab": {
+      "title": "Atividade Recente",
+      "empty": "Nenhuma atividade recente registrada"
+    },
+    "activity_logs": {
+      "login": "Entrou no sistema",
+      "logout": "Saiu do sistema",
+      "update_profile": "Atualizou suas informações de perfil",
+      "actions": {
+        "login": "Login",
+        "logout": "Logout",
+        "create": "Criação",
+        "update": "Atualização",
+        "delete": "Exclusão",
+        "register": "Registro",
+        "update_profile": "Atualização de perfil"
+      },
+      "resources": {
+        "user": "usuário",
+        "league": "liga",
+        "tournament": "torneio",
+        "team": "time",
+        "match": "partida",
+        "player": "jogador"
+      }
+    }
+  },
+  "sports_list": {
+    "football": "Futebol",
+    "basketball": "Basquete",
+    "tennis": "Tênis",
+    "volleyball": "Vôlei",
+    "baseball": "Beisebol"
+  },
+  "leagues_page": {
+    "title": "Ligas",
+    "title_highlight": "Ativas",
+    "subtitle": "Explore e participe das melhores competições.",
+    "create": "Criar Liga",
+    "view_details": "Ver Detalhes",
+    "empty_title": "Nenhuma liga encontrada",
+    "empty_desc": "Tente ajustar os filtros ou crie uma nova liga.",
+    "location_unknown": "Local não especificado",
+    "try_again": "Tentar novamente",
+    "filters": {
+      "active": "Ativas",
+      "inactive": "Inativas",
+      "finished": "Finalizadas"
+    }
+  },
+  "tournaments_page": {
+    "title": "Torneios",
+    "title_highlight": "Oficiais",
+    "subtitle": "Dispute a glória em nossos torneios.",
+    "create": "Criar Torneio",
+    "filters": {
+      "all": "Todos",
+      "open": "Inscrições Abertas",
+      "active": "Em Andamento",
+      "finished": "Finalizados"
+    },
+    "card": {
+      "teams": "Times",
+      "start": "Início",
+      "league": "Liga",
+      "format": "Formato",
+      "enrolled": "times inscritos"
+    },
+    "status": {
+      "upcoming": "Inscrições",
+      "open": "Inscrições",
+      "in_progress": "Em Andamento",
+      "active": "Em Andamento",
+      "finished": "Finalizado",
+      "completed": "Finalizado"
+    },
+    "tbd": "A definir"
+  },
+  "matches_page": {
+    "title": "Calendário de",
+    "title_highlight": "Jogos",
+    "subtitle": "Não perca nenhum jogo. Acompanhe os resultados ao vivo.",
+    "views": {
+      "list": "Lista",
+      "calendar": "Calendário"
+    },
+    "view_table": "Ver Tabela ->"
   }
 }

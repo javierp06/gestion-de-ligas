@@ -4,23 +4,43 @@ const { getPool } = require('../config/mysql');
 const addFavorite = async (req, res) => {
     try {
         const pool = getPool();
-        const { userId } = req.user; // From authMiddleware
+        const userId = req.user.id; // From authMiddleware
         const { entityType, entityId } = req.body;
+
+        console.log('Attempting to add favorite:', { userId, entityType, entityId });
 
         if (!['league', 'team', 'tournament'].includes(entityType)) {
             return res.status(400).json({ success: false, message: 'Invalid entity type' });
         }
 
-        // Insert ignore to handle duplicates gracefully
-        await pool.query(
-            `INSERT IGNORE INTO favorites (user_id, entity_type, entity_id) VALUES (?, ?, ?)`,
+        // Using simple INSERT to catch potential FK errors
+        // Check if exists first to avoid dup errors if we remove IGNORE
+        const [existing] = await pool.query(
+            'SELECT id FROM favorites WHERE user_id = ? AND entity_type = ? AND entity_id = ?',
             [userId, entityType, entityId]
         );
 
-        res.json({ success: true, message: 'Added to favorites' });
+        if (existing.length > 0) {
+            console.log('Favorite already exists');
+            return res.json({ success: true, message: 'Already in favorites' });
+        }
+
+        const [result] = await pool.query(
+            `INSERT INTO favorites (user_id, entity_type, entity_id) VALUES (?, ?, ?)`,
+            [userId, entityType, entityId]
+        );
+
+        console.log('Favorite added, result:', result);
+
+        if (result.affectedRows > 0) {
+            res.json({ success: true, message: 'Added to favorites' });
+        } else {
+            res.status(500).json({ success: false, message: 'Failed to insert favorite' });
+        }
+
     } catch (error) {
         console.error('Error adding favorite:', error);
-        res.status(500).json({ success: false, message: 'Error adding favorite' });
+        res.status(500).json({ success: false, message: 'Error adding favorite: ' + error.message });
     }
 };
 
@@ -28,7 +48,7 @@ const addFavorite = async (req, res) => {
 const removeFavorite = async (req, res) => {
     try {
         const pool = getPool();
-        const { userId } = req.user;
+        const userId = req.user.id;
         const { entityType, entityId } = req.body;
 
         await pool.query(
@@ -47,7 +67,7 @@ const removeFavorite = async (req, res) => {
 const getUserFavorites = async (req, res) => {
     try {
         const pool = getPool();
-        const { userId } = req.user;
+        const userId = req.user.id; // Corrected ID extraction
 
         // We need to join with different tables based on entity_type.
         // This can be done with separate queries or a complex UNION. separate queries might be cleaner for now.

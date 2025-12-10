@@ -43,7 +43,10 @@
                             <span v-if="authStore.user?.created_at"
                                 class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium">
                                 <span class="material-symbols-outlined text-lg">calendar_month</span>
-                                Miembro desde {{ new Date(authStore.user.created_at).getFullYear() }}
+                                {{ $t('profile_page.member_since', {
+                                    year: new
+                                        Date(authStore.user.created_at).getFullYear()
+                                }) }}
                             </span>
                         </div>
                     </div>
@@ -55,26 +58,27 @@
                 <div class="lg:col-span-1 space-y-6">
                     <div
                         class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-6 animate-slide-up">
-                        <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-4 px-2">Configuración
+                        <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-4 px-2">
+                            {{ $t('profile_page.settings') }}
                         </h3>
                         <nav class="space-y-2">
                             <button @click="activeTab = 'general'"
                                 :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-left',
                                     activeTab === 'general' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5']">
                                 <span class="material-symbols-outlined">person</span>
-                                Información Personal
+                                {{ $t('profile_page.nav.personal_info') }}
                             </button>
                             <button @click="activeTab = 'security'"
                                 :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-left',
                                     activeTab === 'security' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5']">
                                 <span class="material-symbols-outlined">lock</span>
-                                Seguridad
+                                {{ $t('profile_page.nav.security') }}
                             </button>
                             <button @click="activeTab = 'activity'"
                                 :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-left',
                                     activeTab === 'activity' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5']">
                                 <span class="material-symbols-outlined">history</span>
-                                Actividad Reciente
+                                {{ $t('profile_page.nav.activity') }}
                             </button>
                         </nav>
                     </div>
@@ -88,7 +92,7 @@
                         <h2
                             class="text-2xl font-display font-bold text-text-primary-light dark:text-white mb-6 flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary-500">manage_accounts</span>
-                            Editar Perfil
+                            {{ $t('profile_page.personal.title') }}
                         </h2>
 
                         <form @submit.prevent="handleUpdateProfile" class="space-y-6">
@@ -96,7 +100,7 @@
                             <div class="mb-8">
                                 <label
                                     class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-4">
-                                    Seleccionar Avatar
+                                    {{ $t('profile_page.personal.select_avatar') }}
                                 </label>
                                 <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-4">
                                     <button v-for="avatar in availableAvatars" :key="avatar"
@@ -115,7 +119,7 @@
                                 <div>
                                     <label
                                         class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Nombre Completo
+                                        {{ $t('profile_page.personal.full_name') }}
                                     </label>
                                     <div class="relative group">
                                         <span
@@ -128,7 +132,21 @@
                                 <div>
                                     <label
                                         class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Teléfono
+                                        {{ $t('profile_page.personal.location') }}
+                                    </label>
+                                    <div class="relative group">
+                                        <span
+                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">location_on</span>
+                                        <input v-model="formData.location" type="text"
+                                            :placeholder="$t('profile_page.personal.location_placeholder')"
+                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium" />
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label
+                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                        {{ $t('profile_page.personal.phone') }}
                                     </label>
                                     <div class="flex gap-2">
                                         <div class="relative w-32">
@@ -151,29 +169,16 @@
                                     </div>
                                 </div>
 
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Ubicación
-                                    </label>
-                                    <div class="relative group">
-                                        <span
-                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">location_on</span>
-                                        <input v-model="formData.location" type="text" placeholder="Ciudad, País"
-                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium" />
-                                    </div>
-                                </div>
-
                                 <div class="md:col-span-2">
                                     <label
                                         class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Biografía
+                                        {{ $t('profile_page.personal.bio') }}
                                     </label>
                                     <div class="relative group">
                                         <span
                                             class="material-symbols-outlined absolute left-4 top-4 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">edit_note</span>
                                         <textarea v-model="formData.bio" rows="3"
-                                            placeholder="Cuéntanos un poco sobre ti..."
+                                            :placeholder="$t('profile_page.personal.bio_placeholder')"
                                             class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium resize-none"></textarea>
                                     </div>
                                 </div>
@@ -181,7 +186,7 @@
                                 <div class="md:col-span-2">
                                     <label
                                         class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Correo Electrónico
+                                        {{ $t('profile_page.personal.email') }}
                                     </label>
                                     <div class="relative">
                                         <span
@@ -190,7 +195,7 @@
                                             class="w-full bg-background-light/50 dark:bg-surface-dark-alt/50 border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark rounded-xl py-3 pl-12 pr-4 outline-none cursor-not-allowed font-medium" />
                                         <span
                                             class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark bg-background-light dark:bg-surface-dark px-2 py-1 rounded-md border border-border-light dark:border-border-dark">
-                                            No editable
+                                            {{ $t('profile_page.personal.not_editable') }}
                                         </span>
                                     </div>
                                 </div>
@@ -202,7 +207,8 @@
                                     <span v-if="loading"
                                         class="material-symbols-outlined animate-spin">progress_activity</span>
                                     <span v-else class="material-symbols-outlined">save</span>
-                                    {{ loading ? 'Guardando...' : 'Guardar Cambios' }}
+                                    {{ loading ? $t('profile_page.personal.saving') : $t('profile_page.personal.save')
+                                    }}
                                 </button>
                             </div>
                         </form>
@@ -214,14 +220,14 @@
                         <h2
                             class="text-2xl font-display font-bold text-text-primary-light dark:text-white mb-6 flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary-500">lock_reset</span>
-                            Cambiar Contraseña
+                            {{ $t('profile_page.security_tab.title') }}
                         </h2>
 
                         <form @submit.prevent="handleUpdatePassword" class="space-y-6">
                             <div>
                                 <label
                                     class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                    Contraseña Actual
+                                    {{ $t('profile_page.security_tab.current_password') }}
                                 </label>
                                 <div class="relative group">
                                     <span
@@ -235,7 +241,7 @@
                                 <div>
                                     <label
                                         class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Nueva Contraseña
+                                        {{ $t('profile_page.security_tab.new_password') }}
                                     </label>
                                     <div class="relative group">
                                         <span
@@ -248,7 +254,7 @@
                                 <div>
                                     <label
                                         class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        Confirmar Contraseña
+                                        {{ $t('profile_page.security_tab.confirm_password') }}
                                     </label>
                                     <div class="relative group">
                                         <span
@@ -266,7 +272,8 @@
                                     <span v-if="loading"
                                         class="material-symbols-outlined animate-spin">progress_activity</span>
                                     <span v-else class="material-symbols-outlined">update</span>
-                                    {{ loading ? 'Actualizando...' : 'Actualizar Contraseña' }}
+                                    {{ loading ? $t('profile_page.security_tab.updating') :
+                                        $t('profile_page.security_tab.update') }}
                                 </button>
                             </div>
                         </form>
@@ -278,7 +285,7 @@
                         <h2
                             class="text-2xl font-display font-bold text-text-primary-light dark:text-white mb-6 flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary-500">history</span>
-                            Actividad Reciente
+                            {{ $t('profile_page.activity_tab.title') }}
                         </h2>
 
                         <div v-if="activityLogs.length > 0" class="space-y-6">
@@ -308,7 +315,7 @@
                         <div v-else
                             class="text-center py-12 text-text-secondary-light dark:text-text-secondary-dark border-2 border-dashed border-border-light dark:border-border-dark rounded-2xl">
                             <span class="material-symbols-outlined text-4xl mb-2 opacity-50">history_toggle_off</span>
-                            <p>No hay actividad reciente registrada</p>
+                            <p>{{ $t('profile_page.activity_tab.empty') }}</p>
                         </div>
                     </div>
                 </div>
@@ -326,7 +333,7 @@ import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()
 const toastStore = useToastStore()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { $api } = useNuxtApp()
 
 const activeTab = ref('general')
@@ -426,37 +433,27 @@ const getActivityIcon = (action: string) => {
 }
 
 const getActivityText = (log: any) => {
-    const actionMap: Record<string, string> = {
-        'login': 'Inicio de sesión',
-        'logout': 'Cierre de sesión',
-        'create': 'Creación',
-        'update': 'Actualización',
-        'delete': 'Eliminación',
-        'register': 'Registro',
-        'update_profile': 'Actualización de perfil'
-    }
+    if (log.action === 'login') return t('profile_page.activity_logs.login');
+    if (log.action === 'logout') return t('profile_page.activity_logs.logout');
+    if (log.action === 'update_profile') return t('profile_page.activity_logs.update_profile');
 
-    const resourceMap: Record<string, string> = {
-        'user': 'usuario',
-        'league': 'liga',
-        'tournament': 'torneo',
-        'team': 'equipo',
-        'match': 'partido',
-        'player': 'jugador'
-    }
+    const action = t(`profile_page.activity_logs.actions.${log.action}`) || log.action;
+    const resource = t(`profile_page.activity_logs.resources.${log.resource}`) || log.resource;
 
-    const action = actionMap[log.action] || log.action
-    const resource = resourceMap[log.resource] || log.resource
-
-    if (log.action === 'login') return 'Iniciaste sesión en el sistema'
-    if (log.action === 'logout') return 'Cerraste sesión del sistema'
-    if (log.action === 'update_profile') return 'Actualizaste tu información de perfil'
-
-    return `${action} de ${resource}`
+    // Use a simple concatenation with a translation key for structure if preferred,
+    // but typically "Action of Resource" works in many languages, or "Resource Action".
+    // For now, let's stick to simple concatenation or just "$t('action_of', {action, resource})"
+    // Since I didn't add a generic key, I'll construct it in Spanish/English logic or add it.
+    // Actually, I should probably add a key for "{action} of {resource}" but for now
+    // let's assume "Action de Resource" format or similar.
+    // Ideally: t('profile_page.activity_logs.action_description', { action, resource })
+    // Let's check my JSON update... I didn't add a generic pattern.
+    // I'll just return `${action} - ${resource}` which is neutral.
+    return `${action} - ${resource}`
 }
 
 const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
+    return new Date(dateString).toLocaleDateString(locale.value, {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
@@ -485,12 +482,12 @@ const handleUpdateProfile = async () => {
         })
 
         if (result?.success) {
-            toastStore.success('Perfil actualizado correctamente')
+            toastStore.success(t('common.success_profile_update') || 'Perfil actualizado correctamente')
         } else {
-            toastStore.error(result?.message || 'Error al actualizar perfil')
+            toastStore.error(result?.message || t('common.error_profile_update') || 'Error al actualizar perfil')
         }
     } catch (error) {
-        toastStore.error('Error al actualizar perfil')
+        toastStore.error(t('common.error_profile_update') || 'Error al actualizar perfil')
     } finally {
         loading.value = false
     }
@@ -498,7 +495,7 @@ const handleUpdateProfile = async () => {
 
 const handleUpdatePassword = async () => {
     if (passwordData.value.newPassword !== passwordData.value.confirmPassword) {
-        toastStore.error('Las contraseñas no coinciden')
+        toastStore.error(t('common.passwords_mismatch') || 'Las contraseñas no coinciden')
         return
     }
 
@@ -510,17 +507,17 @@ const handleUpdatePassword = async () => {
         })
 
         if (result?.success) {
-            toastStore.success('Contraseña actualizada correctamente')
+            toastStore.success(t('common.success_password_update') || 'Contraseña actualizada correctamente')
             passwordData.value = {
                 currentPassword: '',
                 newPassword: '',
                 confirmPassword: ''
             }
         } else {
-            toastStore.error(result?.message || 'Error al actualizar contraseña')
+            toastStore.error(result?.message || t('common.error_password_update') || 'Error al actualizar contraseña')
         }
     } catch (error) {
-        toastStore.error('Error inesperado')
+        toastStore.error(t('common.error_unexpected') || 'Error inesperado')
     } finally {
         loading.value = false
     }

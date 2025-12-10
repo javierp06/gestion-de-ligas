@@ -28,7 +28,7 @@
 
                     <!-- Back Button -->
                     <div class="absolute top-4 left-4 z-10">
-                        <button @click="navigateTo('/teams')"
+                        <button @click="navigateTo(localePath('/teams'))"
                             class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
                             <span class="material-symbols-outlined">arrow_back</span>
                             <span class="text-sm font-bold">Volver a Equipos</span>
@@ -248,6 +248,7 @@ const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const toastStore = useToastStore()
+const localePath = useLocalePath()
 const { $api } = useNuxtApp()
 
 const activeTab = ref('squad')
@@ -308,9 +309,9 @@ const deleteTeam = async () => {
             toastStore.success('Equipo eliminado exitosamente')
             // Redirect to the league page if available, otherwise teams list
             if (team.value.league_id) {
-                router.push(`/leagues/${team.value.league_id}`)
+                router.push(localePath(`/leagues/${team.value.league_id}`))
             } else {
-                router.push('/teams')
+                router.push(localePath('/teams'))
             }
         }
     } catch (error: any) {

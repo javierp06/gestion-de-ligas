@@ -147,6 +147,18 @@
     "gc": "GA",
     "dg": "GD",
     "pts": "Pts",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "success_profile_update": "Profile updated successfully",
+    "error_profile_update": "Error updating profile",
+    "success_password_update": "Password updated successfully",
+    "error_password_update": "Error updating password",
+    "passwords_mismatch": "Passwords do not match",
+    "error_unexpected": "Unexpected error",
     "legend": {
       "qualification": "Qualification Zone",
       "pj": "Matches Played",
@@ -244,5 +256,129 @@
       "generating": "Generating...",
       "cancel": "Cancel"
     }
+  },
+  "confirm": {
+    "delete_league_title": "Delete League?",
+    "delete_league_message": "Are you sure you want to delete this league? This action cannot be undone.",
+    "delete_btn": "Delete",
+    "cancel_btn": "Cancel"
+  },
+  "profile_page": {
+    "member_since": "Member since {year}",
+    "settings": "Settings",
+    "nav": {
+      "personal_info": "Personal Info",
+      "security": "Security",
+      "activity": "Recent Activity"
+    },
+    "personal": {
+      "title": "Edit Profile",
+      "select_avatar": "Select Avatar",
+      "full_name": "Full Name",
+      "phone": "Phone",
+      "location": "Location",
+      "location_placeholder": "City, Country",
+      "bio": "Bio",
+      "bio_placeholder": "Tell us a bit about yourself...",
+      "email": "Email",
+      "not_editable": "Not editable",
+      "save": "Save Changes",
+      "saving": "Saving..."
+    },
+    "security_tab": {
+      "title": "Change Password",
+      "current_password": "Current Password",
+      "new_password": "New Password",
+      "confirm_password": "Confirm Password",
+      "update": "Update Password",
+      "updating": "Updating..."
+    },
+    "activity_tab": {
+      "title": "Recent Activity",
+      "empty": "No recent activity recorded"
+    },
+    "activity_logs": {
+      "login": "Logged in to the system",
+      "logout": "Logged out of the system",
+      "update_profile": "Updated your profile information",
+      "actions": {
+        "login": "Login",
+        "logout": "Logout",
+        "create": "Creation",
+        "update": "Update",
+        "delete": "Deletion",
+        "register": "Registration",
+        "update_profile": "Profile update"
+      },
+      "resources": {
+        "user": "user",
+        "league": "league",
+        "tournament": "tournament",
+        "team": "team",
+        "match": "match",
+        "player": "player"
+      }
+    }
+  },
+  "sports_list": {
+    "football": "Soccer",
+    "basketball": "Basketball",
+    "tennis": "Tennis",
+    "volleyball": "Volleyball",
+    "baseball": "Baseball"
+  },
+  "leagues_page": {
+    "title": "Active",
+    "title_highlight": "Leagues",
+    "subtitle": "Explore and join the best competitions.",
+    "create": "Create League",
+    "view_details": "View Details",
+    "empty_title": "No leagues found",
+    "empty_desc": "Try adjusting filters or create a new league to start.",
+    "location_unknown": "Location not specified",
+    "try_again": "Try again",
+    "filters": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "finished": "Finished"
+    }
+  },
+  "tournaments_page": {
+    "title": "Official",
+    "title_highlight": "Tournaments",
+    "subtitle": "Compete for glory in our featured tournaments.",
+    "create": "Create Tournament",
+    "filters": {
+      "all": "All",
+      "open": "Open Registration",
+      "active": "In Progress",
+      "finished": "Finished"
+    },
+    "card": {
+      "teams": "Teams",
+      "start": "Start",
+      "league": "League",
+      "format": "Format",
+      "enrolled": "teams enrolled"
+    },
+    "status": {
+      "upcoming": "Registration",
+      "open": "Registration",
+      "in_progress": "In Progress",
+      "active": "In Progress",
+      "finished": "Finished",
+      "completed": "Finished"
+    },
+    "tbd": "TBD"
+  },
+  "matches_page": {
+    "title": "Match",
+    "title_highlight": "Schedule",
+    "subtitle": "Don't miss any match. Follow live results.",
+    "views": {
+      "list": "List",
+      "calendar": "Calendar"
+    },
+    "view_table": "View Table ->"
   }
 }

@@ -6,42 +6,44 @@
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
           <h1 class="text-3xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight">
-            Torneos <span class="text-primary-500">Oficiales</span>
+            {{ $t('tournaments_page.title') }} <span class="text-primary-500">{{ $t('tournaments_page.title_highlight')
+            }}</span>
           </h1>
           <p class="text-text-secondary-light dark:text-text-secondary-dark mt-1">
-            Compite por la gloria en nuestros torneos destacados.
+            {{ $t('tournaments_page.subtitle') }}
           </p>
         </div>
 
         <button class="btn-primary self-start md:self-auto flex items-center gap-2">
           <span class="material-symbols-outlined">add</span>
-          Crear Torneo
+          {{ $t('tournaments_page.create') }}
         </button>
       </div>
 
 
       <div class="flex items-center gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-        <button class="px-4 py-2 rounded-lg bg-primary-500 text-black font-bold text-sm shadow-neon">
-          Todos
+        <button @click="filter = 'all'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
+          :class="filter === 'all' ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
+          {{ $t('tournaments_page.filters.all') }}
         </button>
-        <button
-          class="px-4 py-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark font-bold text-sm hover:text-text-primary-light dark:hover:text-white transition-colors">
-          Inscripciones Abiertas
+        <button @click="filter = 'open'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
+          :class="filter === 'open' ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
+          {{ $t('tournaments_page.filters.open') }}
         </button>
-        <button
-          class="px-4 py-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark font-bold text-sm hover:text-text-primary-light dark:hover:text-white transition-colors">
-          En Curso
+        <button @click="filter = 'active'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
+          :class="filter === 'active' ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
+          {{ $t('tournaments_page.filters.active') }}
         </button>
-        <button
-          class="px-4 py-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark font-bold text-sm hover:text-text-primary-light dark:hover:text-white transition-colors">
-          Finalizados
+        <button @click="filter = 'finished'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
+          :class="filter === 'finished' ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
+          {{ $t('tournaments_page.filters.finished') }}
         </button>
       </div>
 
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="tournament in filteredTournaments" :key="tournament.id"
-          @click="navigateTo(`/tournaments/${tournament.id}`)"
+          @click="navigateTo(localePath(`/tournaments/${tournament.id}`))"
           class="group bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-border-light dark:border-border-dark hover:border-primary-500/50 transition-all duration-300 hover:shadow-neon cursor-pointer">
 
           <div class="h-40 bg-surface-light dark:bg-surface-dark-alt relative overflow-hidden">
@@ -51,7 +53,7 @@
 
             <div class="absolute bottom-4 left-4 z-20">
               <span
-                class="text-xs font-bold text-primary-500 uppercase tracking-wider mb-1 block">{{ tournament.sport_name }}</span>
+                class="text-xs font-bold text-primary-500 uppercase tracking-wider mb-1 block">{{ getSportName(tournament.sport_name) }}</span>
               <h3 class="text-xl font-bold text-white leading-tight">{{ tournament.name }}</h3>
             </div>
 
@@ -67,25 +69,33 @@
           <div class="p-6">
             <div class="grid grid-cols-2 gap-4 mb-6">
               <div>
-                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">Equipos</span>
-                <span
-                  class="text-lg font-bold text-text-primary-light dark:text-white">{{ tournament.teams_count || 0 }}/{{
-                    tournament.max_teams || '∞' }}</span>
+                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
+                  {{ $t('tournaments_page.card.teams') }}
+                </span>
+                <span class="text-lg font-bold text-text-primary-light dark:text-white">{{ tournament.teams_count || 0
+                }}/{{
+                  tournament.max_teams || '∞' }}</span>
               </div>
               <div>
-                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">Inicio</span>
-                <span
-                  class="text-lg font-bold text-text-primary-light dark:text-white">{{ formatDate(tournament.start_date) }}</span>
+                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
+                  {{ $t('tournaments_page.card.start') }}
+                </span>
+                <span class="text-lg font-bold text-text-primary-light dark:text-white">{{
+                  formatDate(tournament.start_date) }}</span>
               </div>
               <div>
-                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">Liga</span>
-                <span
-                  class="text-lg font-bold text-primary-600 dark:text-primary-500 truncate block">{{ tournament.league_name }}</span>
+                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
+                  {{ $t('tournaments_page.card.league') }}
+                </span>
+                <span class="text-lg font-bold text-primary-600 dark:text-primary-500 truncate block">{{
+                  tournament.league_name }}</span>
               </div>
               <div>
-                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">Formato</span>
-                <span
-                  class="text-lg font-bold text-text-primary-light dark:text-white capitalize">{{ tournament.format }}</span>
+                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
+                  {{ $t('tournaments_page.card.format') }}
+                </span>
+                <span class="text-lg font-bold text-text-primary-light dark:text-white capitalize">{{ tournament.format
+                }}</span>
               </div>
             </div>
 
@@ -97,7 +107,7 @@
                 </div>
               </div>
               <span class="text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark">
-                {{ tournament.teams_count || 0 }} equipos inscritos
+                {{ tournament.teams_count || 0 }} {{ $t('tournaments_page.card.enrolled') }}
               </span>
             </div>
           </div>
@@ -113,6 +123,8 @@ import { ref, computed } from 'vue'
 import { useNuxtApp, useAsyncData, navigateTo } from '#app'
 
 const { $api } = useNuxtApp()
+const { t } = useI18n()
+const localePath = useLocalePath()
 
 const filter = ref('all') // all, open, active, finished
 
@@ -141,16 +153,19 @@ const filteredTournaments = computed(() => {
   return tournaments.value
 })
 
-const getTournamentStatusText = (status: string) => {
+const getSportName = (name: string) => {
   const map: Record<string, string> = {
-    'upcoming': 'Inscripciones',
-    'open': 'Inscripciones',
-    'in_progress': 'En Curso',
-    'active': 'En Curso',
-    'finished': 'Finalizado',
-    'completed': 'Finalizado'
-  }
-  return map[status] || status
+    'Fútbol': t('sports_list.football'),
+    'Baloncesto': t('sports_list.basketball'),
+    'Tenis': t('sports_list.tennis'),
+    'Voleibol': t('sports_list.volleyball'),
+    'Béisbol': t('sports_list.baseball')
+  };
+  return map[name] || name;
+};
+
+const getTournamentStatusText = (status: string) => {
+  return t(`tournaments_page.status.${status}`) || status
 }
 
 const getTournamentStatusClass = (status: string) => {
@@ -167,7 +182,7 @@ const getTournamentStatusClass = (status: string) => {
 }
 
 const formatDate = (dateString: string) => {
-  if (!dateString) return 'Por definir'
+  if (!dateString) return t('tournaments_page.tbd')
   return new Date(dateString).toLocaleDateString('es-HN', {
     day: 'numeric',
     month: 'short'

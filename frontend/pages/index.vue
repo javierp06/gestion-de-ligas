@@ -3,6 +3,8 @@
     <div class="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
 
+
+
       <div class="lg:hidden mb-6 overflow-x-auto pb-2 scrollbar-hide">
         <div class="flex gap-3">
           <button v-for="league in leagues" :key="league.id"
@@ -26,7 +28,7 @@
               </h3>
             </div>
             <div class="p-2">
-              <NuxtLink v-for="league in leagues" :key="league.id" :to="`/leagues/${league.id}`"
+              <NuxtLink v-for="league in leagues" :key="league.id" :to="localePath(`/leagues/${league.id}`)"
                 class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group">
                 <div
                   class="w-8 h-8 shrink-0 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-lg group-hover:bg-primary-500 group-hover:text-black transition-colors">
@@ -58,11 +60,13 @@
               </h3>
             </div>
             <div class="p-2">
-              <div v-for="sport in sports" :key="sport.name"
-                class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors cursor-pointer">
-                <span class="material-symbols-outlined text-lg w-8 text-center shrink-0">{{ sport.icon }}</span>
+              <div v-for="sport in sports" :key="sport.id" @click="selectSport(sport.id)"
+                class="flex items-center gap-3 p-2 rounded-lg transition-colors cursor-pointer" :class="selectedSport === sport.id
+                  ? 'bg-primary-500 text-black font-bold shadow-neon'
+                  : 'hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark'">
                 <span
-                  class="text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">{{ sport.name }}</span>
+                  class="material-symbols-outlined text-lg w-8 text-center shrink-0">{{ sport.icon || getSportIcon(sport.name) }}</span>
+                <span class="text-sm font-medium">{{ sport.name }}</span>
               </div>
             </div>
           </div>
@@ -91,6 +95,46 @@
             </button>
           </div>
 
+          <!-- Sports Filter Cards -->
+          <!-- Sports Filter Horizontal Scroll -->
+          <!-- Sports Filter Horizontal Scroll with Arrows -->
+          <div class="relative group/scroll">
+            <!-- Left Arrow -->
+            <button @click="scrollSports('left')"
+              class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-primary-light dark:text-white shadow-lg opacity-0 group-hover/scroll:opacity-100 transition-opacity disabled:opacity-0"
+              :class="{ 'hidden': !canScrollLeft }">
+              <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </button>
+
+            <!-- Scroll Container -->
+            <div ref="sportsContainer" @scroll="checkScroll"
+              class="flex overflow-x-auto gap-3 pb-2 scrollbar-hide -mx-2 px-2 scroll-smooth">
+              <button v-for="sport in sports" :key="sport.id" @click="selectSport(sport.id)"
+                class="flex items-center gap-3 px-6 py-3 rounded-xl border transition-all duration-300 flex-shrink-0 group relative overflow-hidden"
+                :class="selectedSport === sport.id
+                  ? 'bg-primary-500 border-primary-500 shadow-neon'
+                  : 'bg-surface-light dark:bg-surface-dark border-border-light dark:border-border-dark hover:border-primary-500'">
+
+                <!-- Background Glow for Active -->
+                <div v-if="selectedSport === sport.id" class="absolute inset-0 bg-white/20"></div>
+
+                <div class="flex flex-col items-center justify-center w-full">
+                  <span class="text-xs font-bold uppercase tracking-wider text-center"
+                    :class="selectedSport === sport.id ? 'text-black' : 'text-text-primary-light dark:text-white'">
+                    {{ getSportName(sport.name) }}
+                  </span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Right Arrow -->
+            <button @click="scrollSports('right')"
+              class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-primary-light dark:text-white shadow-lg opacity-0 group-hover/scroll:opacity-100 transition-opacity disabled:opacity-0"
+              :class="{ 'hidden': !canScrollRight }">
+              <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+          </div>
+
           <div class="space-y-4">
             <!-- Loading State -->
             <div v-if="loadingMatches" class="space-y-4">
@@ -103,7 +147,8 @@
               <span
                 class="material-symbols-outlined text-4xl text-text-secondary-light dark:text-text-secondary-dark mb-2">event_busy</span>
               <p class="text-text-secondary-light dark:text-text-secondary-dark font-medium">
-                {{ $t('home.no_matches_date') }}</p>
+                {{ $t('home.no_matches_date') }}
+              </p>
             </div>
 
             <!-- Live Matches -->
@@ -117,7 +162,7 @@
               <div class="divide-y divide-border-light dark:divide-border-dark">
                 <div v-for="match in liveMatches" :key="match.id"
                   class="p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group"
-                  @click="$router.push(`/matches/${match.id}`)">
+                  @click="$router.push(localePath(`/matches/${match.id}`))">
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-4 flex-1">
                       <div class="flex flex-col items-center min-w-[60px]">
@@ -163,12 +208,13 @@
               <div
                 class="px-4 py-3 bg-surface-light dark:bg-surface-dark-alt border-b border-border-light dark:border-border-dark">
                 <h3 class="font-bold text-text-primary-light dark:text-white text-sm uppercase tracking-wider">
-                  {{ $t('home.upcoming_matches') }}</h3>
+                  {{ $t('home.upcoming_matches') }}
+                </h3>
               </div>
               <div class="divide-y divide-border-light dark:divide-border-dark">
                 <div v-for="match in upcomingMatches" :key="match.id"
                   class="p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group"
-                  @click="$router.push(`/matches/${match.id}`)">
+                  @click="$router.push(localePath(`/matches/${match.id}`))">
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-4 flex-1">
                       <div class="flex flex-col items-center min-w-[60px]">
@@ -225,7 +271,7 @@
                 <span
                   class="text-xs text-text-secondary-light dark:text-text-secondary-dark">{{ featuredTournament.name }}</span>
               </div>
-              <NuxtLink :to="`/tournaments/${featuredTournament.id}`"
+              <NuxtLink :to="localePath(`/tournaments/${featuredTournament.id}`)"
                 class="text-primary-600 dark:text-primary-500 text-xs font-bold hover:underline">
                 {{ $t('home.view_all') }}
               </NuxtLink>
@@ -263,7 +309,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import { useNuxtApp } from '#app';
 import { useI18n } from 'vue-i18n';
 
@@ -273,15 +319,69 @@ definePageMeta({
 
 const { $api } = useNuxtApp();
 const { t } = useI18n();
+const localePath = useLocalePath();
 const leagues = ref<any[]>([]);
+const sports = ref<any[]>([]);
 const liveMatches = ref<any[]>([]);
 const upcomingMatches = ref<any[]>([]);
 const featuredStandings = ref<any[]>([]);
 const featuredTournament = ref<any>(null);
 const loading = ref(true);
 const loadingMatches = ref(false);
+const selectedSport = ref<number | null>(null);
 
-const selectedDate = ref(new Date().toISOString().split('T')[0]);
+const { locale } = useI18n();
+
+const getSportIcon = (sportName: string): string => {
+  const map: Record<string, string> = {
+    'fútbol': 'sports_soccer',
+    'baloncesto': 'sports_basketball',
+    'tenis': 'sports_tennis',
+    'voleibol': 'sports_volleyball',
+    'béisbol': 'sports_baseball',
+    'football': 'sports_soccer',
+    'basketball': 'sports_basketball',
+    'tennis': 'sports_tennis',
+    'volleyball': 'sports_volleyball',
+    'baseball': 'sports_baseball'
+  };
+  return map[sportName?.toLowerCase()] || 'emoji_events';
+};
+
+const getSportName = (sportName: string): string => {
+  const map: Record<string, string> = {
+    'fútbol': 'football',
+    'baloncesto': 'basketball',
+    'tenis': 'tennis',
+    'voleibol': 'volleyball',
+    'béisbol': 'baseball',
+    'football': 'football',
+    'basketball': 'basketball',
+    'tennis': 'tennis',
+    'volleyball': 'volleyball',
+    'baseball': 'baseball',
+    'golf': 'golf',
+    'pádel': 'padel',
+    'padel': 'padel'
+  };
+
+  const key = map[sportName?.toLowerCase()];
+  // If we have a translation key, return the translated string
+  // Otherwise try to find it in sports_list directly, or fallback to original name
+  if (key) return t(`sports_list.${key}`);
+
+  return sportName;
+};
+
+const getLocalDateString = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+const selectedDate = ref(getLocalDateString());
 
 const dateOptions = computed(() => {
   const dates = [];
@@ -305,7 +405,7 @@ const dateOptions = computed(() => {
 
     if (date.toDateString() === today.toDateString()) label = t('home.today');
     else if (date.toDateString() === tomorrow.toDateString()) label = t('home.tomorrow');
-    else label = date.toLocaleDateString('es-HN', { weekday: 'short', day: 'numeric' });
+    else label = date.toLocaleDateString(locale.value, { weekday: 'short', day: 'numeric' });
 
     dates.push({ label, value });
   }
@@ -326,30 +426,28 @@ const handleNextDate = () => {
   selectedDate.value = new Date(date.getTime() - offset).toISOString().split('T')[0];
 };
 
-const sports = [
-  { name: 'Fútbol', icon: 'sports_soccer' },
-  { name: 'Baloncesto', icon: 'sports_basketball' },
-  { name: 'Tenis', icon: 'sports_tennis' },
-  { name: 'Voleibol', icon: 'sports_volleyball' },
-  { name: 'Béisbol', icon: 'sports_baseball' }
-];
-
-const getSportIcon = (sportName: string): string => {
-  const sport = sports.find(s => s.name.toLowerCase() === sportName?.toLowerCase());
-  return sport?.icon || 'emoji_events';
+const selectSport = (sportId: number | null) => {
+  selectedSport.value = selectedSport.value === sportId ? null : sportId;
+  loadMatches();
 };
 
 const loadMatches = async () => {
   try {
     loadingMatches.value = true;
+    let query = `?status=live`;
+    if (selectedSport.value) query += `&sport_id=${selectedSport.value}`;
+
     // Load Live Matches
-    const liveMatchesRes = await $api.get('/matches?status=live');
+    const liveMatchesRes = await $api.get(`/matches${query}`);
     if (liveMatchesRes.data.success) {
       liveMatches.value = liveMatchesRes.data.data;
     }
 
     // Load Scheduled Matches for selected date
-    const upcomingMatchesRes = await $api.get(`/matches?status=scheduled&date=${selectedDate.value}`);
+    query = `?status=scheduled&date=${selectedDate.value}`;
+    if (selectedSport.value) query += `&sport_id=${selectedSport.value}`;
+
+    const upcomingMatchesRes = await $api.get(`/matches${query}`);
     if (upcomingMatchesRes.data.success) {
       upcomingMatches.value = upcomingMatchesRes.data.data;
     }
@@ -360,8 +458,22 @@ const loadMatches = async () => {
   }
 };
 
+const loadSports = async () => {
+  try {
+    const response = await $api.get('/sports');
+    if (response.data.success) {
+      sports.value = response.data.data;
+    }
+  } catch (error) {
+    console.error('Error loading sports:', error);
+  }
+};
+
 const loadSidebarData = async () => {
   try {
+    // Load Sports
+    await loadSports();
+
     // Load Leagues
     const leaguesRes = await $api.get('/leagues');
     if (leaguesRes.data.success) {
@@ -390,15 +502,43 @@ const loadData = async () => {
   loading.value = true;
   await Promise.all([loadMatches(), loadSidebarData()]);
   loading.value = false;
+  nextTick(() => {
+    checkScroll();
+  });
 };
 
 watch(selectedDate, () => {
   loadMatches();
 });
 
+// Scroll Logic
+const sportsContainer = ref<HTMLElement | null>(null);
+const canScrollLeft = ref(false);
+const canScrollRight = ref(false);
+
+const checkScroll = () => {
+  if (!sportsContainer.value) return;
+  const { scrollLeft, scrollWidth, clientWidth } = sportsContainer.value;
+  canScrollLeft.value = scrollLeft > 0;
+  // Use a small buffer (1px) for float precision issues
+  canScrollRight.value = scrollLeft + clientWidth < scrollWidth - 1;
+};
+
+const scrollSports = (direction: 'left' | 'right') => {
+  if (!sportsContainer.value) return;
+  const scrollAmount = 300; // Adjust scroll distance as needed
+  if (direction === 'left') {
+    sportsContainer.value.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  } else {
+    sportsContainer.value.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+};
+
 onMounted(() => {
   loadData();
+  window.addEventListener('resize', checkScroll);
 });
+
 </script>
 
 <style scoped>

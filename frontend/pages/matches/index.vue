@@ -6,10 +6,11 @@
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
           <h1 class="text-3xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight">
-            Calendario de <span class="text-primary-500">Partidos</span>
+            {{ $t('matches_page.title') }} <span class="text-primary-500">{{ $t('matches_page.title_highlight')
+            }}</span>
           </h1>
           <p class="text-text-secondary-light dark:text-text-secondary-dark mt-1">
-            No te pierdas ningún encuentro. Sigue los resultados en vivo.
+            {{ $t('matches_page.subtitle') }}
           </p>
         </div>
 
@@ -17,12 +18,12 @@
           class="flex items-center gap-3 bg-surface-light dark:bg-surface-dark p-1 rounded-xl border border-border-light dark:border-border-dark">
           <button @click="viewMode = 'list'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
             :class="viewMode === 'list' ? 'bg-primary-500 text-black shadow-neon' : 'text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
-            Lista
+            {{ $t('matches_page.views.list') }}
           </button>
           <button @click="viewMode = 'calendar'"
             class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
             :class="viewMode === 'calendar' ? 'bg-primary-500 text-black shadow-neon' : 'text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
-            Calendario
+            {{ $t('matches_page.views.calendar') }}
           </button>
         </div>
       </div>
@@ -72,14 +73,14 @@
               <span class="material-symbols-outlined text-2xl">emoji_events</span>
               <h3 class="font-bold text-text-primary-light dark:text-white">{{ league.name }}</h3>
             </div>
-            <NuxtLink :to="`/leagues/${league.id}`"
+            <NuxtLink :to="localePath(`/leagues/${league.id}`)"
               class="text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-500 transition-colors uppercase tracking-wide">
-              Ver Tabla ->
+              {{ $t('matches_page.view_table') }}
             </NuxtLink>
           </div>
 
           <div class="divide-y divide-border-light dark:divide-border-dark">
-            <div v-for="match in league.matches" :key="match.id" @click="navigateTo(`/matches/${match.id}`)"
+            <div v-for="match in league.matches" :key="match.id" @click="navigateTo(localePath(`/matches/${match.id}`))"
               class="p-4 md:p-6 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group">
               <div class="flex flex-col md:flex-row items-center gap-6">
 
@@ -207,14 +208,28 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useMatchStore } from '@/stores/match';
 
 const matchStore = useMatchStore();
+const { t, locale } = useI18n();
+const localePath = useLocalePath();
 const viewMode = ref('list'); // 'list' | 'calendar'
 
 // Calendar State
 const currentMonth = ref(new Date());
-const weekDays = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
+
+const weekDays = computed(() => {
+  const days = [];
+  const curr = new Date();
+  // Set to a known Sunday
+  const first = curr.getDate() - curr.getDay();
+  for (let i = 0; i < 7; i++) {
+    const next = new Date(curr.getTime());
+    next.setDate(first + i);
+    days.push(next.toLocaleDateString(locale.value, { weekday: 'short' }).toUpperCase());
+  }
+  return days;
+});
 
 const currentMonthName = computed(() => {
-  return currentMonth.value.toLocaleDateString('es-HN', { month: 'long' });
+  return currentMonth.value.toLocaleDateString(locale.value, { month: 'long' });
 });
 
 const currentYear = computed(() => {
@@ -295,6 +310,10 @@ const isToday = (date: Date) => {
     date.getFullYear() === today.getFullYear();
 };
 
+const getMonthLabel = (date: Date) => {
+  return date.toLocaleDateString(locale.value, { month: 'long', year: 'numeric' });
+};
+
 const changeMonth = (delta: number) => {
   const newDate = new Date(currentMonth.value);
   newDate.setMonth(newDate.getMonth() + delta);
@@ -371,11 +390,10 @@ const getDayLabel = (date: Date) => {
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
 
-  if (date.toDateString() === today.toDateString()) return 'HOY';
-  if (date.toDateString() === tomorrow.toDateString()) return 'MAÑ';
+  if (date.toDateString() === today.toDateString()) return t('home.today').toUpperCase().slice(0, 3);
+  if (date.toDateString() === tomorrow.toDateString()) return t('home.tomorrow').toUpperCase().slice(0, 3);
 
-  const days = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
-  return days[date.getDay()];
+  return date.toLocaleDateString(locale.value, { weekday: 'short' }).toUpperCase();
 };
 
 watch(selectedDate, () => {
@@ -399,7 +417,7 @@ const filteredLeagues = computed(() => {
   const groups: Record<string, any> = {};
 
   matchStore.matches.forEach(match => {
-    const tournamentName = match.tournament_name || 'Torneo Desconocido';
+    const tournamentName = match.tournament_name || t('common.unknown_tournament');
 
     if (!groups[tournamentName]) {
       groups[tournamentName] = {
@@ -411,12 +429,17 @@ const filteredLeagues = computed(() => {
 
     // Format time and status
     const matchDate = new Date(match.match_date);
-    const time = matchDate.toLocaleTimeString('es-HN', { hour: '2-digit', minute: '2-digit' });
+    const time = matchDate.toLocaleTimeString(locale.value, { hour: '2-digit', minute: '2-digit' });
+
+    let statusText = '';
+    if (match.status === 'live') statusText = t('home.live');
+    else if (match.status === 'finished') statusText = t('tournaments_page.status.finished');
+    else statusText = t('tournaments_page.status.upcoming');
 
     groups[tournamentName].matches.push({
       ...match,
       time: match.status === 'live' ? 'LIVE' : (match.status === 'finished' ? 'FT' : time),
-      date: match.status === 'live' ? 'En Vivo' : (match.status === 'finished' ? 'Finalizado' : 'Programado'),
+      date: statusText,
       home_team: match.home_team_name,
       away_team: match.away_team_name,
       home_score: match.home_score !== null ? match.home_score : '-',

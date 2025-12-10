@@ -16,6 +16,22 @@
     "stats": "Statistiken",
     "login": "Anmelden",
     "register": "Registrieren",
+    "search_placeholder": "Suchen...",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "close": "Schließen",
+    "success_profile_update": "Profil erfolgreich aktualisiert",
+    "error_profile_update": "Fehler beim Aktualisieren des Profils",
+    "success_password_update": "Passwort erfolgreich aktualisiert",
+    "error_password_update": "Fehler beim Aktualisieren des Passworts",
+    "passwords_mismatch": "Passwörter stimmen nicht überein",
+    "error_unexpected": "Unerwarteter Fehler"
+  },
+  "auth": {
+    "register": "Registrieren",
     "search_placeholder": "Suchen..."
   },
   "footer": {
@@ -244,5 +260,130 @@
       "generating": "Generiere...",
       "cancel": "Abbrechen"
     }
+  },
+  "confirm": {
+    "delete_league_title": "Liga löschen?",
+    "delete_league_message": "Möchten Sie diese Liga wirklich löschen? Dies kann nicht rückgängig gemacht werden.",
+    "delete_btn": "Löschen",
+    "cancel_btn": "Abbrechen"
+  },
+  "profile_page": {
+    "member_since": "Mitglied seit {year}",
+    "settings": "Einstellungen",
+    "nav": {
+      "personal_info": "Persönliche Infos",
+      "security": "Sicherheit",
+      "activity": "Letzte Aktivität"
+    },
+    "personal": {
+      "title": "Profil bearbeiten",
+      "select_avatar": "Avatar auswählen",
+      "full_name": "Vollständiger Name",
+      "phone": "Telefon",
+      "location": "Standort",
+      "location_placeholder": "Stadt, Land",
+      "bio": "Biografie",
+      "bio_placeholder": "Erzähl uns etwas über dich...",
+      "email": "E-Mail",
+      "not_editable": "Nicht bearbeitbar",
+      "save": "Änderungen speichern",
+      "saving": "Speichern..."
+    },
+    "security_tab": {
+      "title": "Passwort ändern",
+      "current_password": "Aktuelles Passwort",
+      "new_password": "Neues Passwort",
+      "confirm_password": "Passwort bestätigen",
+      "update": "Passwort aktualisieren",
+      "updating": "Aktualisierung..."
+    },
+    "activity_tab": {
+      "title": "Letzte Aktivität",
+      "empty": "Keine letzten Aktivitäten aufgezeichnet"
+    },
+    "activity_logs": {
+      "login": "Im System angemeldet",
+      "logout": "Vom System abgemeldet",
+      "update_profile": "Profilinformationen aktualisiert",
+      "actions": {
+        "login": "Anmeldung",
+        "logout": "Abmeldung",
+        "create": "Erstellung",
+        "update": "Aktualisierung",
+        "delete": "Löschung",
+        "register": "Registrierung",
+        "update_profile": "Profilaktualisierung"
+      },
+      "resources": {
+        "user": "Benutzer",
+        "league": "Liga",
+        "tournament": "Turnier",
+        "team": "Team",
+        "match": "Spiel",
+        "player": "Spieler"
+      }
+    }
+  },
+  "sports_list": {
+    "football": "Fußball",
+    "basketball": "Basketball",
+    "tennis": "Tennis",
+    "volleyball": "Volleyball",
+    "baseball": "Baseball"
+  },
+  "leagues_page": {
+    "title": "Aktive",
+    "title_highlight": "Ligen",
+    "subtitle": "Entdecken Sie die besten Wettbewerbe und treten Sie bei.",
+    "create": "Liga erstellen",
+    "view_details": "Details anzeigen",
+    "empty_title": "Keine Ligen gefunden",
+    "empty_desc": "Versuchen Sie, die Filter anzupassen oder erstellen Sie eine neue Liga.",
+    "location_unknown": "Ort nicht angegeben",
+    "try_again": "Erneut versuchen",
+    "filters": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "finished": "Beendet"
+    }
+  },
+  "tournaments_page": {
+    "title": "Offizielle",
+    "title_highlight": "Turniere",
+    "subtitle": "Kämpfen Sie in unseren Turnieren um Ruhm.",
+    "create": "Turnier erstellen",
+    "filters": {
+      "all": "Alle",
+      "open": "Anmeldung offen",
+      "active": "Laufend",
+      "finished": "Beendet"
+    },
+    "card": {
+      "teams": "Teams",
+      "start": "Start",
+      "league": "Liga",
+      "format": "Format",
+      "enrolled": "Teams",
+      "enrolled_suffix": "angemeldet"
+    },
+    "status": {
+      "upcoming": "Anmeldung",
+      "open": "Anmeldung",
+      "in_progress": "Laufend",
+      "active": "Laufend",
+      "finished": "Beendet",
+      "completed": "Beendet"
+    },
+    "tbd": "TBA"
+  },
+  "matches_page": {
+    "title": "Spiel",
+    "title_highlight": "plan",
+    "subtitle": "Verpassen Sie kein Spiel. Verfolgen Sie Live-Ergebnisse.",
+    "views": {
+      "list": "Liste",
+      "calendar": "Kalender"
+    },
+    "view_table": "Tabelle ->"
   }
 }

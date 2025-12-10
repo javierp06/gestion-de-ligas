@@ -232,6 +232,21 @@ const createTables = async () => {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     `);
 
+    // Tabla de Favoritos
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS favorites (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        entity_type ENUM('league', 'team', 'tournament') NOT NULL,
+        entity_id INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+        UNIQUE KEY unique_favorite (user_id, entity_type, entity_id),
+        INDEX idx_user (user_id),
+        INDEX idx_entity (entity_type, entity_id)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    `);
+
     console.log('Tablas MySQL creadas/verificadas correctamente');
     connection.release();
   } catch (error) {

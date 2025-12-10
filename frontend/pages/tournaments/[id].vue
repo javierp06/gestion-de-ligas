@@ -28,7 +28,7 @@
 
                     <!-- Back Button (Top Left) -->
                     <div class="absolute top-4 left-4 z-10">
-                        <button @click="navigateTo(`/leagues/${tournament.league_id}`)"
+                        <button @click="navigateTo(localePath(`/leagues/${tournament.league_id}`))"
                             class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
                             <span class="material-symbols-outlined">arrow_back</span>
                             <span class="text-sm font-bold">Volver a la Liga</span>
@@ -178,7 +178,8 @@
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div v-for="match in roundMatches" :key="match.id" class="relative group">
-                                            <MatchCard :match="match" @click="navigateTo(`/matches/${match.id}`)" />
+                                            <MatchCard :match="match"
+                                                @click="navigateTo(localePath(`/matches/${match.id}`))" />
 
                                             <!-- Quick Edit Button -->
                                             <button v-if="canManage && match.status !== 'finished'"
@@ -382,6 +383,7 @@ const route = useRoute()
 const authStore = useAuthStore()
 const { $api } = useNuxtApp()
 const { getStatusColor, getStatusText } = useSports()
+const localePath = useLocalePath()
 
 const activeTab = ref('matches')
 const showScoreModal = ref(false)

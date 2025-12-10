@@ -121,7 +121,7 @@ const createMatch = async (req, res) => {
 const getMatches = async (req, res) => {
   try {
     const pool = getPool();
-    const { tournament_id, status, date, team_id } = req.query;
+    const { tournament_id, status, date, team_id, sport_id } = req.query;
 
     let query = `
       SELECT 
@@ -150,6 +150,11 @@ const getMatches = async (req, res) => {
     if (team_id) {
       query += ' AND (m.home_team_id = ? OR m.away_team_id = ?)';
       params.push(team_id, team_id);
+    }
+
+    if (sport_id) {
+      query += ' AND s.id = ?';
+      params.push(sport_id);
     }
 
     if (status) {
