@@ -34,7 +34,7 @@
         <div class="flex items-center gap-2">
           <label class="btn-secondary px-4 py-2 rounded-lg text-sm font-bold cursor-pointer flex items-center gap-2 max-w-fit">
             <span class="material-symbols-outlined text-lg">upload</span>
-            <span>{{ uploading ? 'Subiendo...' : 'Subir Imagen' }}</span>
+            <span>{{ uploading ? $t('components.image_upload.uploading') : $t('components.image_upload.upload') }}</span>
             <input 
               type="file" 
               accept="image/png, image/jpeg, image/jpg, image/webp" 
@@ -49,14 +49,14 @@
             type="button"
             @click="removeImage"
             class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-            title="Eliminar imagen"
+            :title="$t('components.image_upload.delete')"
           >
             <span class="material-symbols-outlined">delete</span>
           </button>
         </div>
         
         <p class="text-xs text-gray-500 dark:text-gray-400">
-          JPG, PNG o WEBP. Máx 5MB.
+          {{ $t('components.image_upload.help_text') }}
         </p>
         <p v-if="error" class="text-xs text-red-500 font-medium">
           {{ error }}
@@ -78,9 +78,11 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [value: string | null]
   'file-selected': [file: File]
+  'preview': [url: string | null]
 }>()
 
 const { $api } = useNuxtApp()
+const { t } = useI18n()
 const uploading = ref(false)
 const error = ref('')
 const pendingFile = ref<File | null>(null)
@@ -88,6 +90,24 @@ const localPreview = ref<string | null>(null)
 
 // Initialize with prop value
 const imageUrl = computed(() => localPreview.value || props.modelValue)
+
+// Watch for external changes to modelValue
+watch(() => props.modelValue, (newVal) => {
+  // If the parent updates the modelValue (e.g. selecting a default logo),
+  // and it's different from our local preview, we should clear our local state
+  // to reflect the parent's change.
+  if (newVal !== localPreview.value) {
+    if (pendingFile.value) {
+      pendingFile.value = null
+      if (localPreview.value) {
+        URL.revokeObjectURL(localPreview.value)
+        localPreview.value = null
+      }
+      // Emit null preview to indicate we are back to modelValue
+      emit('preview', null)
+    }
+  }
+})
 
 const handleFileChange = (event: Event) => {
   const input = event.target as HTMLInputElement
@@ -97,7 +117,7 @@ const handleFileChange = (event: Event) => {
   
   // Basic validation
   if (file.size > 5 * 1024 * 1024) {
-    error.value = 'El archivo es demasiado grande (Máx 5MB)'
+    error.value = t('components.image_upload.error_size')
     return
   }
   
@@ -108,8 +128,9 @@ const handleFileChange = (event: Event) => {
   if (localPreview.value) URL.revokeObjectURL(localPreview.value)
   localPreview.value = URL.createObjectURL(file)
   
-  // Notify parent that a file is ready to be uploaded (optional, for validation msg)
+  // Notify parent
   emit('file-selected', file)
+  emit('preview', localPreview.value)
   
   // Reset input so same file can be selected again
   input.value = '' 
@@ -121,6 +142,7 @@ const removeImage = () => {
     URL.revokeObjectURL(localPreview.value)
     localPreview.value = null
   }
+  emit('preview', null)
   emit('update:modelValue', null)
 }
 

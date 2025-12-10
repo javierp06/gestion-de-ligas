@@ -19,7 +19,7 @@
                     <tr
                         class="bg-gray-50 dark:bg-gray-800/50 text-left text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                         <th class="px-6 py-3 w-12 text-center">#</th>
-                        <th class="px-6 py-3">Jugador</th>
+                        <th class="px-6 py-3">{{ $t('common.player') }}</th>
                         <th class="px-6 py-3 text-center w-24">{{ statLabel }}</th>
                     </tr>
                 </thead>
@@ -79,7 +79,7 @@
                                 </span>
                             </div>
                             <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">
-                                No hay datos disponibles
+                                {{ $t('common.no_data') }}
                             </p>
                         </td>
                     </tr>

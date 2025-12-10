@@ -1,7 +1,15 @@
 {
   "welcome": "Bem-vindo",
   "common": {
-    "unknown_tournament": "Torneio Desconhecido"
+    "unknown_tournament": "Torneio Desconhecido",
+    "player": "Jogador",
+    "no_data": "Sem dados disponíveis",
+    "positions": {
+      "goalkeeper": "Goleiro",
+      "defender": "Defensor",
+      "midfielder": "Meio-campista",
+      "forward": "Atacante"
+    }
   },
   "login": {
     "title": "Entrar",
@@ -171,6 +179,13 @@
     }
   },
   "components": {
+    "image_upload": {
+      "uploading": "Enviando...",
+      "upload": "Enviar Imagem",
+      "delete": "Excluir imagem",
+      "help_text": "JPG, PNG ou WEBP. Máx 5MB.",
+      "error_size": "O arquivo é muito grande (Máx 5MB)"
+    },
     "league_card": {
       "sport_fallback": "Esporte"
     },
@@ -193,6 +208,59 @@
         "knockout": "Mata-mata",
         "group_knockout": "Grupos + Mata-mata"
       }
+    }
+  },
+  "create_league": {
+    "title": "Criar Nova Liga",
+    "subtitle": "Configure os detalhes e personalize a aparência da sua liga.",
+    "form": {
+      "name_label": "Nome da Liga",
+      "name_placeholder": "Ex: Liga Premier de Futebol",
+      "sport_label": "Esporte",
+      "select_sport": "Selecione um esporte",
+      "location_label": "Localização",
+      "location_placeholder": "Ex: Cidade Esportiva",
+      "description_label": "Descrição",
+      "description_placeholder": "Descreva o propósito e as regras gerais da sua liga...",
+      "logo_label": "Logo da Liga",
+      "cover_label": "Capa da Liga",
+      "logo_placeholder": "https://exemplo.com/logo.png",
+      "select_default_logo": "Ou selecione um logo padrão:",
+      "rules_title": "Configuração de Regras (Opcional)",
+      "duration_label": "Duração (Min)",
+      "players_per_team_label": "Jogadores / Time",
+      "points_table_label": "Pontos na Tabela",
+      "points_win": "Vitória",
+      "points_draw": "Empate",
+      "points_loss": "Derrota",
+      "sets_to_win_label": "Sets para Vencer",
+      "sets_options": {
+        "1": "1 Set (Rápido)",
+        "2": "Melhor de 3 (2 Sets)",
+        "3": "Melhor de 5 (3 Sets)"
+      },
+      "golden_point_label": "Ponto de Ouro",
+      "golden_point_active": "Ativar Ponto de Ouro",
+      "period_length_label": "Duração do Quarto (Min)",
+      "foul_limit_label": "Limite de Faltas",
+      "points_per_set_label": "Pontos por Set",
+      "cancel": "Cancelar",
+      "submit": "Criar Liga",
+      "creating": "Criando...",
+      "error_loading_sports": "Erro ao carregar esportes",
+      "error_creating": "Erro ao criar a liga"
+    },
+    "preview": {
+      "title": "Pré-visualização",
+      "name_placeholder": "Nome da Liga",
+      "location_placeholder": "Localização",
+      "status_active": "Ativa",
+      "description_placeholder": "Descrição da liga...",
+      "teams": "Times"
+    },
+    "tips": {
+      "title": "Dica Profissional",
+      "message": "Uma boa descrição e um logo atraente aumentam a participação na sua liga."
     }
   },
   "create_tournament": {
@@ -526,5 +594,61 @@
         "error_loading": "Erro ao carregar jogadores"
       }
     }
+  },
+  "modals": {
+    "add_player": {
+      "title": "Adicionar Jogador",
+      "name_label": "Nome Completo",
+      "name_placeholder": "Ex. Lionel Messi",
+      "number_label": "Número",
+      "position_label": "Posição",
+      "select_position": "Selecionar",
+      "birth_date_label": "Data de Nascimento",
+      "cancel": "Cancelar",
+      "submit": "Adicionar",
+      "saving": "Salvando...",
+      "success": "Jogador adicionado com sucesso",
+      "error": "Erro ao adicionar jogador"
+    },
+    "edit_team": {
+      "title": "Editar Time",
+      "name_label": "Nome do Time",
+      "short_name_label": "Nome Curto (Abreviação)",
+      "short_name_placeholder": "Ex: FCB",
+      "stadium_label": "Estádio",
+      "images_title": "Imagens",
+      "logo_label": "Logo do Time",
+      "cover_label": "Capa / Foto do Time",
+      "cancel": "Cancelar",
+      "save": "Salvar Alterações",
+      "saving": "Salvando...",
+      "success": "Time atualizado com sucesso",
+      "error": "Erro ao atualizar o time"
+    }
+  },
+  "teams": {
+    "back_to_teams": "Voltar para Times",
+    "edit_team": "Editar Time",
+    "delete_team": "Excluir Time",
+    "squad": "Elenco",
+    "add_player": "Adicionar Jogador",
+    "no_players_title": "Sem Jogadores",
+    "no_players_desc": "Nenhum jogador registrado neste time ainda.",
+    "matches": "Partidas",
+    "no_matches_title": "Sem Partidas",
+    "no_matches_desc": "Nenhuma partida agendada para este time.",
+    "team_stats": "Estatísticas do Time",
+    "scorers": "Artilheiros",
+    "goals": "Gols",
+    "assists": "Assistências",
+    "stats": "Estatísticas",
+    "info": "Informações",
+    "details": "Detalhes",
+    "coach": "Treinador",
+    "not_assigned": "Não atribuído",
+    "stadium": "Estádio",
+    "delete_confirm": "Tem certeza que deseja excluir este time? Esta ação não pode ser desfeita.",
+    "delete_success": "Time excluído com sucesso",
+    "delete_error": "Erro ao excluir o time"
   }
 }

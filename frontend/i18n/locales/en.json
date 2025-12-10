@@ -1,7 +1,15 @@
 {
   "welcome": "Welcome",
   "common": {
-    "unknown_tournament": "Unknown Tournament"
+    "unknown_tournament": "Unknown Tournament",
+    "player": "Player",
+    "no_data": "No data available",
+    "positions": {
+      "goalkeeper": "Goalkeeper",
+      "defender": "Defender",
+      "midfielder": "Midfielder",
+      "forward": "Forward"
+    }
   },
   "login": {
     "title": "Login",
@@ -171,6 +179,13 @@
     }
   },
   "components": {
+    "image_upload": {
+      "uploading": "Uploading...",
+      "upload": "Upload Image",
+      "delete": "Delete image",
+      "help_text": "JPG, PNG or WEBP. Max 5MB.",
+      "error_size": "File is too large (Max 5MB)"
+    },
     "league_card": {
       "sport_fallback": "Sport"
     },
@@ -193,6 +208,59 @@
         "knockout": "Knockout",
         "group_knockout": "Group + Knockout"
       }
+    }
+  },
+  "create_league": {
+    "title": "Create New League",
+    "subtitle": "Configure details and customize your league appearance.",
+    "form": {
+      "name_label": "League Name",
+      "name_placeholder": "Ex: Premier Soccer League",
+      "sport_label": "Sport",
+      "select_sport": "Select a sport",
+      "location_label": "Location",
+      "location_placeholder": "Ex: Sports City",
+      "description_label": "Description",
+      "description_placeholder": "Describe the purpose and general rules of your league...",
+      "logo_label": "League Logo",
+      "cover_label": "League Cover",
+      "logo_placeholder": "https://example.com/logo.png",
+      "select_default_logo": "Or select a default one:",
+      "rules_title": "Rules Configuration (Optional)",
+      "duration_label": "Duration (min)",
+      "players_per_team_label": "Players / Team",
+      "points_table_label": "Table Points",
+      "points_win": "Win",
+      "points_draw": "Draw",
+      "points_loss": "Loss",
+      "sets_to_win_label": "Sets to Win",
+      "sets_options": {
+        "1": "1 Set (Quick)",
+        "2": "Best of 3 (2 Sets)",
+        "3": "Best of 5 (3 Sets)"
+      },
+      "golden_point_label": "Golden Point",
+      "golden_point_active": "Enable Golden Point",
+      "period_length_label": "Quarter Length (min)",
+      "foul_limit_label": "Foul Limit",
+      "points_per_set_label": "Points per Set",
+      "cancel": "Cancel",
+      "submit": "Create League",
+      "creating": "Creating...",
+      "error_loading_sports": "Error loading sports",
+      "error_creating": "Error creating league"
+    },
+    "preview": {
+      "title": "Preview",
+      "name_placeholder": "League Name",
+      "location_placeholder": "Location",
+      "status_active": "Active",
+      "description_placeholder": "League description...",
+      "teams": "Teams"
+    },
+    "tips": {
+      "title": "Pro Tip",
+      "message": "A good description and an attractive logo increase participation in your league."
     }
   },
   "create_tournament": {
@@ -526,5 +594,61 @@
         "error_loading": "Error loading players"
       }
     }
+  },
+  "modals": {
+    "add_player": {
+      "title": "Add Player",
+      "name_label": "Full Name",
+      "name_placeholder": "Ex. Lionel Messi",
+      "number_label": "Number",
+      "position_label": "Position",
+      "select_position": "Select",
+      "birth_date_label": "Birth Date",
+      "cancel": "Cancel",
+      "submit": "Add Player",
+      "saving": "Saving...",
+      "success": "Player added successfully",
+      "error": "Error adding player"
+    },
+    "edit_team": {
+      "title": "Edit Team",
+      "name_label": "Team Name",
+      "short_name_label": "Short Name (Abbreviation)",
+      "short_name_placeholder": "Ex: FCB",
+      "stadium_label": "Stadium",
+      "images_title": "Images",
+      "logo_label": "Team Logo",
+      "cover_label": "Cover / Team Photo",
+      "cancel": "Cancel",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "success": "Team updated successfully",
+      "error": "Error updating team"
+    }
+  },
+  "teams": {
+    "back_to_teams": "Back to Teams",
+    "edit_team": "Edit Team",
+    "delete_team": "Delete Team",
+    "squad": "Squad",
+    "add_player": "Add Player",
+    "no_players_title": "No Players",
+    "no_players_desc": "No players registered in this team yet.",
+    "matches": "Matches",
+    "no_matches_title": "No Matches",
+    "no_matches_desc": "No matches scheduled for this team.",
+    "team_stats": "Team Stats",
+    "scorers": "Top Scorers",
+    "goals": "Goals",
+    "assists": "Assists",
+    "stats": "Stats",
+    "info": "Info",
+    "details": "Details",
+    "coach": "Coach",
+    "not_assigned": "Not assigned",
+    "stadium": "Stadium",
+    "delete_confirm": "Are you sure you want to delete this team? This action cannot be undone.",
+    "delete_success": "Team deleted successfully",
+    "delete_error": "Error deleting team"
   }
 }

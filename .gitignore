@@ -42,3 +42,7 @@ Thumbs.db
 
 # Documentation
 docs/
+
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md

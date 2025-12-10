@@ -31,7 +31,7 @@
                         <button @click="navigateTo(localePath('/teams'))"
                             class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
                             <span class="material-symbols-outlined">arrow_back</span>
-                            <span class="text-sm font-bold">Volver a Equipos</span>
+                            <span class="text-sm font-bold">{{ $t('teams.back_to_teams') }}</span>
                         </button>
                     </div>
 
@@ -46,12 +46,12 @@
                         <template v-if="canManage">
                             <button @click="showEditModal = true"
                                 class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-black/70 transition-colors text-white shadow-lg border border-white/10"
-                                title="Editar Equipo">
+                                :title="$t('teams.edit_team')">
                                 <span class="material-symbols-outlined">edit</span>
                             </button>
-                            <button @click="deleteTeam"
+                            <button @click="handleDeleteClick"
                                 class="p-2 bg-black/50 backdrop-blur-md rounded-xl hover:bg-red-500/80 transition-colors text-red-400 hover:text-white shadow-lg border border-white/10"
-                                title="Eliminar Equipo">
+                                :title="$t('teams.delete_team')">
                                 <span class="material-symbols-outlined">delete</span>
                             </button>
                         </template>
@@ -115,11 +115,11 @@
                         <!-- Squad Tab -->
                         <div v-if="activeTab === 'squad'" class="space-y-6">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Plantilla</h3>
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">{{ $t('teams.squad') }}</h3>
                                 <button v-if="canManage" @click="showAddPlayerModal = true"
                                     class="btn-primary flex items-center gap-2">
                                     <span class="material-symbols-outlined">person_add</span>
-                                    Agregar Jugador
+                                    {{ $t('teams.add_player') }}
                                 </button>
                             </div>
 
@@ -153,18 +153,18 @@
                                     <span
                                         class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">groups</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Jugadores
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">{{ $t('teams.no_players_title') }}
                                 </h3>
                                 <p
                                     class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
-                                    No hay jugadores registrados en este equipo aún.
+                                    {{ $t('teams.no_players_desc') }}
                                 </p>
                             </div>
                         </div>
 
                         <!-- Matches Tab -->
                         <div v-if="activeTab === 'matches'" class="space-y-6">
-                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Partidos</h3>
+                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">{{ $t('teams.matches') }}</h3>
                             <div v-if="matches?.length" class="space-y-4">
                                 <MatchCard v-for="match in matches" :key="match.id" :match="match" />
                             </div>
@@ -175,26 +175,25 @@
                                     <span
                                         class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">sports_soccer</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">Sin Partidos
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">{{ $t('teams.no_matches_title') }}
                                 </h3>
                                 <p
                                     class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
-                                    No hay partidos programados para este equipo.
+                                    {{ $t('teams.no_matches_desc') }}
                                 </p>
                             </div>
                         </div>
 
                         <!-- Stats Tab -->
                         <div v-if="activeTab === 'stats'" class="space-y-6">
-                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">Estadísticas del
-                                Equipo</h3>
+                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">{{ $t('teams.team_stats') }}</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Team Top Scorers -->
-                                <StatsTable title="Goleadores" icon="sports_soccer" :data="stats?.scorers || []"
-                                    statLabel="Goles" statKey="total_goals" />
+                                <StatsTable :title="$t('teams.scorers')" icon="sports_soccer" :data="stats?.scorers || []"
+                                    :statLabel="$t('teams.goals')" statKey="total_goals" />
                                 <!-- Team Top Assists -->
-                                <StatsTable title="Asistencias" icon="handshake" :data="stats?.assists || []"
-                                    statLabel="Asistencias" statKey="total_assists" />
+                                <StatsTable :title="$t('teams.assists')" icon="handshake" :data="stats?.assists || []"
+                                    :statLabel="$t('teams.assists')" statKey="total_assists" />
                             </div>
                         </div>
                     </div>
@@ -207,18 +206,18 @@
                         <h3
                             class="text-lg font-bold text-text-primary-light dark:text-white mb-4 flex items-center gap-2">
                             <span class="material-symbols-outlined text-primary-500">info</span>
-                            Detalles
+                            {{ $t('teams.details') }}
                         </h3>
                         <div class="space-y-4">
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Entrenador</span>
+                                <span class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('teams.coach') }}</span>
                                 <span
-                                    class="font-bold text-text-primary-light dark:text-white">{{ team.coach || 'No asignado' }}</span>
+                                    class="font-bold text-text-primary-light dark:text-white">{{ team.coach || $t('teams.not_assigned') }}</span>
                             </div>
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">Estadio</span>
+                                <span class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('teams.stadium') }}</span>
                                 <span
-                                    class="font-bold text-text-primary-light dark:text-white">{{ team.stadium || 'No asignado' }}</span>
+                                    class="font-bold text-text-primary-light dark:text-white">{{ team.stadium || $t('teams.not_assigned') }}</span>
                             </div>
 
                         </div>
@@ -230,6 +229,9 @@
         <EditTeamModal v-if="showEditModal" :team="team" @close="showEditModal = false" @updated="refresh" />
         <AddPlayerModal v-if="showAddPlayerModal" :teamId="team.id" @close="showAddPlayerModal = false"
             @created="refreshPlayers" />
+        <ConfirmModal :isOpen="showDeleteModal" :title="$t('teams.delete_team')" :message="$t('teams.delete_confirm')"
+            :confirmText="$t('table.delete')" :cancelText="$t('table.cancel')" danger @close="showDeleteModal = false"
+            @confirm="confirmDeleteTeam" />
     </div>
 </template>
 
@@ -242,6 +244,7 @@ import MatchCard from '@/components/MatchCard.vue'
 import StatsTable from '@/components/StatsTable.vue'
 import EditTeamModal from '@/components/modals/EditTeamModal.vue'
 import AddPlayerModal from '@/components/modals/AddPlayerModal.vue'
+import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 import FavoriteButton from '@/components/FavoriteButton.vue'
 
 const route = useRoute()
@@ -250,17 +253,19 @@ const authStore = useAuthStore()
 const toastStore = useToastStore()
 const localePath = useLocalePath()
 const { $api } = useNuxtApp()
+const { t } = useI18n()
 
 const activeTab = ref('squad')
 const showAddPlayerModal = ref(false)
 const showEditModal = ref(false)
+const showDeleteModal = ref(false)
 
-const tabs = [
-    { value: 'squad', label: 'Plantilla', icon: 'groups' },
-    { value: 'matches', label: 'Partidos', icon: 'sports_soccer' },
-    { value: 'stats', label: 'Estadísticas', icon: 'bar_chart' },
-    { value: 'info', label: 'Información', icon: 'info' }
-]
+const tabs = computed(() => [
+    { value: 'squad', label: t('teams.squad'), icon: 'groups' },
+    { value: 'matches', label: t('teams.matches'), icon: 'sports_soccer' },
+    { value: 'stats', label: t('teams.stats'), icon: 'bar_chart' },
+    { value: 'info', label: t('teams.info'), icon: 'info' }
+])
 
 // Fetch Team Details
 const { data: team, pending, refresh } = await useAsyncData(`team-${route.params.id}`, async () => {
@@ -300,13 +305,16 @@ const canManage = computed(() => {
         authStore.user.id === team.value.league_organizer_id
 })
 
-const deleteTeam = async () => {
-    if (!confirm('¿Estás seguro de eliminar este equipo? Esta acción no se puede deshacer.')) return
+const handleDeleteClick = () => {
+    showDeleteModal.value = true
+}
 
+const confirmDeleteTeam = async () => {
+    showDeleteModal.value = false
     try {
         const response = await $api.delete(`/teams/${route.params.id}`)
         if (response.data.success) {
-            toastStore.success('Equipo eliminado exitosamente')
+            toastStore.success(t('teams.delete_success'))
             // Redirect to the league page if available, otherwise teams list
             if (team.value.league_id) {
                 router.push(localePath(`/leagues/${team.value.league_id}`))
@@ -315,7 +323,7 @@ const deleteTeam = async () => {
             }
         }
     } catch (error: any) {
-        toastStore.error(error.response?.data?.message || 'Error al eliminar el equipo')
+        toastStore.error(error.response?.data?.message || t('teams.delete_error'))
     }
 }
 

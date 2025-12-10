@@ -1,7 +1,15 @@
 {
   "welcome": "Bienvenue",
   "common": {
-    "unknown_tournament": "Tournoi Inconnu"
+    "unknown_tournament": "Tournoi Inconnu",
+    "player": "Joueur",
+    "no_data": "Aucune donnée disponible",
+    "positions": {
+      "goalkeeper": "Gardien",
+      "defender": "Défenseur",
+      "midfielder": "Milieu",
+      "forward": "Attaquant"
+    }
   },
   "login": {
     "title": "Connexion",
@@ -171,6 +179,13 @@
     }
   },
   "components": {
+    "image_upload": {
+      "uploading": "Téléchargement...",
+      "upload": "Télécharger l'image",
+      "delete": "Supprimer l'image",
+      "help_text": "JPG, PNG ou WEBP. Max 5MB.",
+      "error_size": "Le fichier est trop volumineux (Max 5MB)"
+    },
     "league_card": {
       "sport_fallback": "Sport"
     },
@@ -193,6 +208,59 @@
         "knockout": "Élimination directe",
         "group_knockout": "Groupes + Élimination"
       }
+    }
+  },
+  "create_league": {
+    "title": "Créer une Nouvelle Ligue",
+    "subtitle": "Configurez les détails et personnalisez l'apparence de votre ligue.",
+    "form": {
+      "name_label": "Nom de la Ligue",
+      "name_placeholder": "Ex: Ligue Premier de Football",
+      "sport_label": "Sport",
+      "select_sport": "Sélectionner un sport",
+      "location_label": "Lieu",
+      "location_placeholder": "Ex: Cité Sportive",
+      "description_label": "Description",
+      "description_placeholder": "Décrivez le but et les règles générales de votre ligue...",
+      "logo_label": "Logo de la Ligue",
+      "cover_label": "Couverture de la Ligue",
+      "logo_placeholder": "https://exemple.com/logo.png",
+      "select_default_logo": "Ou sélectionnez-en un par défaut :",
+      "rules_title": "Configuration des Règles (Optionnel)",
+      "duration_label": "Durée (min)",
+      "players_per_team_label": "Joueurs / Équipe",
+      "points_table_label": "Points au Classement",
+      "points_win": "Victoire",
+      "points_draw": "Nul",
+      "points_loss": "Défaite",
+      "sets_to_win_label": "Sets pour Gagner",
+      "sets_options": {
+        "1": "1 Set (Rapide)",
+        "2": "Meilleur des 3 (2 Sets)",
+        "3": "Meilleur des 5 (3 Sets)"
+      },
+      "golden_point_label": "Point en Or",
+      "golden_point_active": "Activer le Point en Or",
+      "period_length_label": "Durée Quart-temps (min)",
+      "foul_limit_label": "Limite de Fautes",
+      "points_per_set_label": "Points par Set",
+      "cancel": "Annuler",
+      "submit": "Créer la Ligue",
+      "creating": "Création...",
+      "error_loading_sports": "Erreur lors du chargement des sports",
+      "error_creating": "Erreur lors de la création de la ligue"
+    },
+    "preview": {
+      "title": "Aperçu",
+      "name_placeholder": "Nom de la Ligue",
+      "location_placeholder": "Lieu",
+      "status_active": "Active",
+      "description_placeholder": "Description de la ligue...",
+      "teams": "Équipes"
+    },
+    "tips": {
+      "title": "Conseil Pro",
+      "message": "Une bonne description et un logo attrayant augmentent la participation à votre ligue."
     }
   },
   "create_tournament": {
@@ -526,5 +594,61 @@
         "error_loading": "Erreur lors du chargement des joueurs"
       }
     }
+  },
+  "modals": {
+    "add_player": {
+      "title": "Ajouter un Joueur",
+      "name_label": "Nom Complet",
+      "name_placeholder": "Ex. Lionel Messi",
+      "number_label": "Numéro",
+      "position_label": "Position",
+      "select_position": "Sélectionner",
+      "birth_date_label": "Date de Naissance",
+      "cancel": "Annuler",
+      "submit": "Ajouter",
+      "saving": "Enregistrement...",
+      "success": "Joueur ajouté avec succès",
+      "error": "Erreur lors de l'ajout du joueur"
+    },
+    "edit_team": {
+      "title": "Modifier l'Équipe",
+      "name_label": "Nom de l'Équipe",
+      "short_name_label": "Nom Court (Abréviation)",
+      "short_name_placeholder": "Ex: FCB",
+      "stadium_label": "Stade",
+      "images_title": "Images",
+      "logo_label": "Logo de l'Équipe",
+      "cover_label": "Couverture / Photo d'Équipe",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
+      "success": "Équipe mise à jour avec succès",
+      "error": "Erreur lors de la mise à jour de l'équipe"
+    }
+  },
+  "teams": {
+    "back_to_teams": "Retour aux Équipes",
+    "edit_team": "Modifier l'Équipe",
+    "delete_team": "Supprimer l'Équipe",
+    "squad": "Effectif",
+    "add_player": "Ajouter un Joueur",
+    "no_players_title": "Aucun Joueur",
+    "no_players_desc": "Aucun joueur enregistré dans cette équipe pour le moment.",
+    "matches": "Matchs",
+    "no_matches_title": "Aucun Match",
+    "no_matches_desc": "Aucun match prévu pour cette équipe.",
+    "team_stats": "Statistiques de l'Équipe",
+    "scorers": "Meilleurs Buteurs",
+    "goals": "Buts",
+    "assists": "Passes Décisives",
+    "stats": "Statistiques",
+    "info": "Infos",
+    "details": "Détails",
+    "coach": "Entraîneur",
+    "not_assigned": "Non assigné",
+    "stadium": "Stade",
+    "delete_confirm": "Êtes-vous sûr de vouloir supprimer cette équipe ? Cette action est irréversible.",
+    "delete_success": "Équipe supprimée avec succès",
+    "delete_error": "Erreur lors de la suppression de l'équipe"
   }
 }
