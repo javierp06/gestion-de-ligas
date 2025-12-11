@@ -352,7 +352,27 @@ const updateMatchScore = async (req, res) => {
       [home_score, away_score, id]
     );
 
-    // 🎯 TRIGGER: Recalcular tabla de posiciones automáticamente
+    // 🏆 LOGICA DE BRACKET / KNOCKOUT
+    // Si este partido es parte de un bracket, avanzar al ganador
+    if (matches[0].next_match_id && matches[0].next_match_slot) {
+        let winnerId = null;
+        if (home_score > away_score) {
+            winnerId = matches[0].home_team_id;
+        } else if (away_score > home_score) {
+            winnerId = matches[0].away_team_id;
+        }
+        // TODO: Manejar empates (penales) si es necesario
+
+        if (winnerId) {
+            const updateField = matches[0].next_match_slot === 'home' ? 'home_team_id' : 'away_team_id';
+            await pool.query(
+                `UPDATE matches SET ${updateField} = ? WHERE id = ?`,
+                [winnerId, matches[0].next_match_id]
+            );
+        }
+    }
+
+    // Recalcular tabla de posiciones
     await calculateStandings(tournamentId);
 
     await logActivity({
@@ -590,135 +610,87 @@ const generatePlayoffs = async (req, res) => {
       });
     }
 
-    // 3. Generar Llaves
+    // 3. Generar Llaves (Full Bracket Tree)
+    // Nota: Esta implementación asume Single Leg para la generación automática del árbol completo.
+    
     const qualifiers = standings.slice(0, numQualifiers);
-    const matches = [];
     const date = new Date(start_date || new Date());
-
-    // Determinar la ronda actual para no solapar IDs de ronda
+    
+    // Determinar la ronda inicial
     const [lastMatch] = await pool.query('SELECT MAX(round) as max_round FROM matches WHERE tournament_id = ?', [tournament_id]);
-    let currentRound = (lastMatch[0].max_round || 0) + 1;
+    let startRound = (lastMatch[0].max_round || 0) + 1;
 
-    let stageName = '';
+    // Helper para crear partido
+    const createMatch = async (round, stage, nextMatchId = null, nextMatchSlot = null, homeId = null, awayId = null, matchDate) => {
+        const [result] = await pool.query(
+            `INSERT INTO matches (tournament_id, home_team_id, away_team_id, match_date, round, stage, status, next_match_id, next_match_slot)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [tournament_id, homeId, awayId, matchDate, round, stage, 'scheduled', nextMatchId, nextMatchSlot]
+        );
+        return result.insertId;
+    };
 
-    if (numQualifiers === 6) {
-      // REPECHAJE: 1 y 2 descansan. Juegan 3vs6 y 4vs5.
-      stageName = 'quarter_final';
-      const repechajeTeams = standings.slice(2, 6); // Indices 2, 3, 4, 5
-
-      const pairings = [
-        { high: repechajeTeams[0], low: repechajeTeams[3] }, // 3rd vs 6th
-        { high: repechajeTeams[1], low: repechajeTeams[2] }  // 4th vs 5th
-      ];
-
-      // Get number of legs from settings
-      let numLegs = 1;
-      if (settings.playoff_legs === 'double') numLegs = 2;
-      else if (settings.playoff_legs === 'single') numLegs = 1;
-      else numLegs = parseInt(settings.playoff_legs || 1);
-
-      for (const pair of pairings) {
-        for (let leg = 0; leg < numLegs; leg++) {
-          let homeTeamId, awayTeamId;
-
-          if (numLegs === 1) {
-            homeTeamId = pair.high.team_id;
-            awayTeamId = pair.low.team_id;
-          } else {
-            if (leg % 2 === 0) {
-              homeTeamId = pair.low.team_id;
-              awayTeamId = pair.high.team_id;
-            } else {
-              homeTeamId = pair.high.team_id;
-              awayTeamId = pair.low.team_id;
-            }
-          }
-
-          const matchDate = new Date(date);
-          if (leg > 0) {
-            matchDate.setDate(matchDate.getDate() + (leg * parseInt(interval_days)));
-          }
-
-          matches.push({
-            home_team_id: homeTeamId,
-            away_team_id: awayTeamId,
-            match_date: matchDate,
-            round: currentRound + leg,
-            stage: stageName,
-            status: 'scheduled'
-          });
-        }
-      }
-    } else {
-      if (numQualifiers === 8) stageName = 'quarter_final';
-      else if (numQualifiers === 4) stageName = 'semi_final';
-      else if (numQualifiers === 2) stageName = 'final';
-      else stageName = 'quarter_final'; // Default fallback
-
-      // Lógica básica 1 vs N, 2 vs N-1
-      const half = numQualifiers / 2;
-      // Get number of legs from settings (default to 1, maps 'double' to 2 if legacy string)
-      let numLegs = 1;
-      if (settings.playoff_legs === 'double') numLegs = 2;
-      else if (settings.playoff_legs === 'single') numLegs = 1;
-      else numLegs = parseInt(settings.playoff_legs || 1);
-
-      for (let i = 0; i < half; i++) {
-        const highSeed = qualifiers[i]; // 1st, 2nd...
-        const lowSeed = qualifiers[numQualifiers - 1 - i]; // 8th, 7th...
-
-        for (let leg = 0; leg < numLegs; leg++) {
-          // Logic: Low seed is home in first leg(s) (unless single leg match, then usually high seed or neutral)
-          // Common rule: In 2-leg, Leg 1 is at Low Seed. Leg 2 is at High Seed.
-          // If manual N legs, we alternate.
-          // Leg 0 (Odd): Low vs High
-          // Leg 1 (Even): High vs Low
-          // Leg 2 (Odd): Low vs High
-
-          let homeTeamId, awayTeamId;
-
-          if (numLegs === 1) {
-            // Single match: High seed home advantage
-            homeTeamId = highSeed.team_id;
-            awayTeamId = lowSeed.team_id;
-          } else {
-            if (leg % 2 === 0) {
-              // Even index (1st leg, 3rd leg) -> Low seed home
-              homeTeamId = lowSeed.team_id;
-              awayTeamId = highSeed.team_id;
-            } else {
-              // Odd index ((2nd leg, 4th leg) -> High seed home
-              homeTeamId = highSeed.team_id;
-              awayTeamId = lowSeed.team_id;
-            }
-          }
-
-          const matchDate = new Date(date);
-          if (leg > 0) {
-            matchDate.setDate(matchDate.getDate() + (leg * parseInt(interval_days)));
-          }
-
-          matches.push({
-            home_team_id: homeTeamId,
-            away_team_id: awayTeamId,
-            match_date: matchDate,
-            round: currentRound + leg,
-            stage: stageName,
-            status: 'scheduled'
-          });
-        }
-      }
-    }
-
-    // 4. Insertar
     let insertedCount = 0;
-    for (const match of matches) {
-      await pool.query(
-        `INSERT INTO matches (tournament_id, home_team_id, away_team_id, match_date, round, status, stage)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [tournament_id, match.home_team_id, match.away_team_id, match.match_date, match.round, match.status, match.stage]
-      );
-      insertedCount++;
+
+    if (numQualifiers === 4) {
+        // --- FINAL (Round + 1) ---
+        const finalDate = new Date(date);
+        finalDate.setDate(finalDate.getDate() + (parseInt(interval_days) * 2)); 
+        const finalId = await createMatch(startRound + 1, 'final', null, null, null, null, finalDate);
+        insertedCount++;
+
+        // --- SEMIS (Round) ---
+        const semiDate = new Date(date);
+        
+        // Semi 1 (Winner goes to Final Home) -> Seeds: 1 vs 4
+        await createMatch(startRound, 'semi_final', finalId, 'home', qualifiers[0].team_id, qualifiers[3].team_id, semiDate);
+        insertedCount++;
+
+        // Semi 2 (Winner goes to Final Away) -> Seeds: 2 vs 3
+        await createMatch(startRound, 'semi_final', finalId, 'away', qualifiers[1].team_id, qualifiers[2].team_id, semiDate);
+        insertedCount++;
+
+    } else if (numQualifiers === 8) {
+        // --- FINAL (Round + 2) ---
+        const finalDate = new Date(date);
+        finalDate.setDate(finalDate.getDate() + (parseInt(interval_days) * 3));
+        const finalId = await createMatch(startRound + 2, 'final', null, null, null, null, finalDate);
+        insertedCount++;
+
+        // --- SEMIS (Round + 1) ---
+        const semiDate = new Date(date);
+        semiDate.setDate(semiDate.getDate() + (parseInt(interval_days) * 2));
+        
+        const semi1Id = await createMatch(startRound + 1, 'semi_final', finalId, 'home', null, null, semiDate);
+        insertedCount++;
+        const semi2Id = await createMatch(startRound + 1, 'semi_final', finalId, 'away', null, null, semiDate);
+        insertedCount++;
+
+        // --- QUARTERS (Round) ---
+        const qDate = new Date(date);
+
+        // Bracket A (Feeds Semi 1)
+        // Q1: 1 vs 8 -> Semi 1 Home
+        await createMatch(startRound, 'quarter_final', semi1Id, 'home', qualifiers[0].team_id, qualifiers[7].team_id, qDate);
+        insertedCount++;
+        // Q2: 4 vs 5 -> Semi 1 Away
+        await createMatch(startRound, 'quarter_final', semi1Id, 'away', qualifiers[3].team_id, qualifiers[4].team_id, qDate);
+        insertedCount++;
+
+        // Bracket B (Feeds Semi 2)
+        // Q3: 2 vs 7 -> Semi 2 Home
+        await createMatch(startRound, 'quarter_final', semi2Id, 'home', qualifiers[1].team_id, qualifiers[6].team_id, qDate);
+        insertedCount++;
+        // Q4: 3 vs 6 -> Semi 2 Away
+        await createMatch(startRound, 'quarter_final', semi2Id, 'away', qualifiers[2].team_id, qualifiers[5].team_id, qDate);
+        insertedCount++;
+
+    } else if (numQualifiers === 2) {
+        // Solo Final
+        await createMatch(startRound, 'final', null, null, qualifiers[0].team_id, qualifiers[1].team_id, date);
+        insertedCount++;
+    } else {
+        return res.status(400).json({ success: false, message: 'Por ahora solo se soporta generación automática de brackets para 2, 4 u 8 equipos.' });
     }
 
     // Actualizar estado del torneo a in_progress si no lo estaba

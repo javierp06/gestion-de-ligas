@@ -55,7 +55,7 @@
                                                 <span class="font-bold">{{ configuredRounds }}</span>
                                                 {{ configuredRounds === 1 ? $t('generate_fixture.rounds_1') : $t('generate_fixture.rounds_n') }}
                                                 <span class="text-xs text-gray-500 ml-1">({{ roundsDescription
-                                                    }})</span>
+                                                }})</span>
                                             </p>
                                             <p class="text-xs text-blue-500 mt-1 flex items-center gap-1">
                                                 <span class="material-symbols-outlined text-[14px]">info</span>

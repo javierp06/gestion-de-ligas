@@ -10,7 +10,8 @@
       <div class="flex-1">
         <h3
           class="text-lg font-bold text-text-primary-light dark:text-white mb-1 group-hover:text-primary-500 transition-colors">
-          {{ title }}</h3>
+          {{ title }}
+        </h3>
         <p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">{{ description }}</p>
       </div>
       <span

@@ -1,10 +1,7 @@
 <template>
   <Transition name="fade">
-    <div
-      v-if="!isOnline"
-      class="fixed top-0 left-0 right-0 z-[9999] bg-red-600 text-white py-3 px-4 shadow-lg"
-      role="alert"
-    >
+    <div v-if="!isOnline" class="fixed top-0 left-0 right-0 z-[9999] bg-red-600 text-white py-3 px-4 shadow-lg"
+      role="alert">
       <div class="max-w-7xl mx-auto flex items-center justify-center gap-3">
         <span class="material-symbols-outlined animate-pulse">wifi_off</span>
         <span class="font-semibold">Sin conexión a internet</span>

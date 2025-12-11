@@ -1,16 +1,13 @@
 <template>
-  <button
-    :type="type"
-    :disabled="loading || disabled"
+  <button :type="type" :disabled="loading || disabled"
     class="inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-    :class="[variantClass, sizeClass, fullWidth ? 'w-full' : '']"
-  >
+    :class="[variantClass, sizeClass, fullWidth ? 'w-full' : '']">
     <!-- Loading Spinner -->
     <span v-if="loading" class="material-symbols-outlined animate-spin">progress_activity</span>
-    
+
     <!-- Icon (if not loading) -->
     <span v-else-if="icon" class="material-symbols-outlined">{{ icon }}</span>
-    
+
     <!-- Text -->
     <span>{{ loading ? loadingText : text }}</span>
   </button>

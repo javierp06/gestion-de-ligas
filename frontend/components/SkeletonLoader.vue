@@ -1,9 +1,7 @@
 <template>
   <div
     class="animate-pulse rounded-lg bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 dark:from-gray-700 dark:via-gray-600 dark:to-gray-700 bg-[length:200%_100%] skeleton-shimmer"
-    :class="[shapeClass, className]"
-    :style="customStyle"
-  ></div>
+    :class="[shapeClass, className]" :style="customStyle"></div>
 </template>
 
 <script setup lang="ts">
@@ -21,7 +19,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const shapeClass = computed(() => {
   if (props.circle) return 'rounded-full'
-  
+
   const shapes = {
     text: 'h-4 rounded',
     title: 'h-6 rounded',
@@ -50,6 +48,7 @@ const customStyle = computed(() => {
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }

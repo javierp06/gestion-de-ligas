@@ -20,6 +20,31 @@ async function calculateStandings(tournamentId) {
   const pool = getPool();
 
   try {
+    // 0. Obtener configuración de puntos (Torneo > Liga > Default)
+    const [settingsResult] = await pool.query(`
+      SELECT t.settings as tournament_settings, l.settings as league_settings
+      FROM tournaments t
+      JOIN leagues l ON t.league_id = l.id
+      WHERE t.id = ?
+    `, [tournamentId]);
+
+    let pointsWin = 3;
+    let pointsDraw = 1;
+    let pointsLoss = 0;
+
+    if (settingsResult.length > 0) {
+        const tSettings = settingsResult[0].tournament_settings || {};
+        const lSettings = settingsResult[0].league_settings || {};
+        
+        // Prioridad: Torneo > Liga
+        // Si el torneo tiene settings vacíos, usa los de la liga
+        const effectiveSettings = { ...lSettings, ...tSettings };
+        
+        if (effectiveSettings.points_win !== undefined) pointsWin = Number(effectiveSettings.points_win);
+        if (effectiveSettings.points_draw !== undefined) pointsDraw = Number(effectiveSettings.points_draw);
+        if (effectiveSettings.points_loss !== undefined) pointsLoss = Number(effectiveSettings.points_loss);
+    }
+
     // 1. Obtener todos los matches finalizados del torneo (Solo Regular Season)
     const [matches] = await pool.query(
       `SELECT home_team_id, away_team_id, home_score, away_score
@@ -81,18 +106,21 @@ async function calculateStandings(tournamentId) {
       if (homeScore > awayScore) {
         // Victoria local
         teamStats[homeId].wins++;
-        teamStats[homeId].points += 3;
+        teamStats[homeId].points += pointsWin;
         teamStats[awayId].losses++;
+        teamStats[awayId].points += pointsLoss;
       } else if (homeScore < awayScore) {
         // Victoria visitante
         teamStats[awayId].wins++;
-        teamStats[awayId].points += 3;
+        teamStats[awayId].points += pointsWin;
         teamStats[homeId].losses++;
+        teamStats[homeId].points += pointsLoss;
       } else {
         // Empate
         teamStats[homeId].draws++;
-        teamStats[homeId].points += 1;
+        teamStats[homeId].points += pointsDraw;
         teamStats[awayId].draws++;
+        teamStats[awayId].points += pointsDraw;
         teamStats[awayId].points += 1;
       }
 

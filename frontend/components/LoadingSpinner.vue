@@ -1,10 +1,7 @@
 <template>
   <div class="flex items-center justify-center" :class="containerClass">
-    <div
-      class="animate-spin rounded-full border-solid border-t-transparent"
-      :class="[sizeClass, colorClass]"
-      :style="{ borderWidth: borderWidth }"
-    ></div>
+    <div class="animate-spin rounded-full border-solid border-t-transparent" :class="[sizeClass, colorClass]"
+      :style="{ borderWidth: borderWidth }"></div>
   </div>
 </template>
 
@@ -55,8 +52,8 @@ const borderWidth = computed(() => {
 })
 
 const containerClass = computed(() => {
-  return props.fullscreen 
-    ? 'fixed inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50' 
+  return props.fullscreen
+    ? 'fixed inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm z-50'
     : ''
 })
 </script>

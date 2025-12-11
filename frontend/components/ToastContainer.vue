@@ -2,16 +2,10 @@
   <Teleport to="body">
     <div class="fixed top-4 right-4 z-[9999] flex flex-col gap-3 pointer-events-none max-w-md w-full px-4">
       <TransitionGroup name="toast">
-        <div
-          v-for="toast in toastStore.toasts"
-          :key="toast.id"
-          class="pointer-events-auto transform transition-all duration-300 ease-out"
-        >
-          <div
-            class="flex items-start gap-3 p-4 rounded-lg shadow-2xl border backdrop-blur-sm"
-            :class="getToastClasses(toast.type)"
-            role="alert"
-          >
+        <div v-for="toast in toastStore.toasts" :key="toast.id"
+          class="pointer-events-auto transform transition-all duration-300 ease-out">
+          <div class="flex items-start gap-3 p-4 rounded-lg shadow-2xl border backdrop-blur-sm"
+            :class="getToastClasses(toast.type)" role="alert">
             <!-- Icon -->
             <div class="flex-shrink-0 mt-0.5">
               <span class="material-symbols-outlined text-xl" :class="getIconClasses(toast.type)">
@@ -24,24 +18,18 @@
               <p class="text-sm font-medium" :class="getTextClasses(toast.type)">
                 {{ toast.message }}
               </p>
-              
+
               <!-- Action Button -->
-              <button
-                v-if="toast.action"
-                @click="toast.action.onClick"
-                class="mt-2 text-xs font-semibold underline hover:no-underline"
-                :class="getActionClasses(toast.type)"
-              >
+              <button v-if="toast.action" @click="toast.action.onClick"
+                class="mt-2 text-xs font-semibold underline hover:no-underline" :class="getActionClasses(toast.type)">
                 {{ toast.action.label }}
               </button>
             </div>
 
             <!-- Close Button -->
-            <button
-              @click="toastStore.remove(toast.id)"
+            <button @click="toastStore.remove(toast.id)"
               class="flex-shrink-0 -mt-1 -mr-1 p-1 rounded-md transition-colors"
-              :class="getCloseButtonClasses(toast.type)"
-            >
+              :class="getCloseButtonClasses(toast.type)">
               <span class="material-symbols-outlined text-lg">close</span>
             </button>
           </div>
@@ -133,6 +121,7 @@ const getCloseButtonClasses = (type: ToastType): string => {
     opacity: 0;
     transform: translateX(100%) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateX(0) scale(1);
@@ -144,6 +133,7 @@ const getCloseButtonClasses = (type: ToastType): string => {
     opacity: 1;
     transform: translateX(0) scale(1);
   }
+
   to {
     opacity: 0;
     transform: translateX(100%) scale(0.95);

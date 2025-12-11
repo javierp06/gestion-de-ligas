@@ -3,23 +3,14 @@
     <label v-if="label" class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
       {{ label }}
     </label>
-    
+
     <div class="flex items-start gap-4">
       <!-- Preview Area -->
-      <div 
+      <div
         class="relative flex-shrink-0 bg-gray-100 dark:bg-gray-700 overflow-hidden border border-gray-200 dark:border-gray-600 group"
-        :class="[circle ? 'rounded-full w-24 h-24' : 'rounded-lg w-32 h-24']"
-      >
-        <img 
-          v-if="imageUrl" 
-          :src="imageUrl" 
-          class="w-full h-full object-cover" 
-          alt="Preview" 
-        />
-        <div 
-          v-else 
-          class="w-full h-full flex items-center justify-center text-gray-400"
-        >
+        :class="[circle ? 'rounded-full w-24 h-24' : 'rounded-lg w-32 h-24']">
+        <img v-if="imageUrl" :src="imageUrl" class="w-full h-full object-cover" alt="Preview" />
+        <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
           <span class="material-symbols-outlined text-3xl">image</span>
         </div>
 
@@ -32,29 +23,21 @@
       <!-- Actions -->
       <div class="flex-1 space-y-2">
         <div class="flex items-center gap-2">
-          <label class="btn-secondary px-4 py-2 rounded-lg text-sm font-bold cursor-pointer flex items-center gap-2 max-w-fit">
+          <label
+            class="btn-secondary px-4 py-2 rounded-lg text-sm font-bold cursor-pointer flex items-center gap-2 max-w-fit">
             <span class="material-symbols-outlined text-lg">upload</span>
             <span>{{ uploading ? $t('components.image_upload.uploading') : $t('components.image_upload.upload') }}</span>
-            <input 
-              type="file" 
-              accept="image/png, image/jpeg, image/jpg, image/webp" 
-              class="hidden" 
-              @change="handleFileChange"
-              :disabled="uploading"
-            />
+            <input type="file" accept="image/png, image/jpeg, image/jpg, image/webp" class="hidden"
+              @change="handleFileChange" :disabled="uploading" />
           </label>
-          
-          <button 
-            v-if="imageUrl" 
-            type="button"
-            @click="removeImage"
+
+          <button v-if="imageUrl" type="button" @click="removeImage"
             class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-            :title="$t('components.image_upload.delete')"
-          >
+            :title="$t('components.image_upload.delete')">
             <span class="material-symbols-outlined">delete</span>
           </button>
         </div>
-        
+
         <p class="text-xs text-gray-500 dark:text-gray-400">
           {{ $t('components.image_upload.help_text') }}
         </p>
@@ -114,26 +97,26 @@ const handleFileChange = (event: Event) => {
   if (!input.files?.length) return
 
   const file = input.files[0]
-  
+
   // Basic validation
   if (file.size > 5 * 1024 * 1024) {
     error.value = t('components.image_upload.error_size')
     return
   }
-  
+
   error.value = ''
   pendingFile.value = file
-  
+
   // Create local preview
   if (localPreview.value) URL.revokeObjectURL(localPreview.value)
   localPreview.value = URL.createObjectURL(file)
-  
+
   // Notify parent
   emit('file-selected', file)
   emit('preview', localPreview.value)
-  
+
   // Reset input so same file can be selected again
-  input.value = '' 
+  input.value = ''
 }
 
 const removeImage = () => {
@@ -165,12 +148,12 @@ const upload = async (): Promise<string | null> => {
 
     if (data.success) {
       // Clear local state after success
-      pendingFile.value = null 
+      pendingFile.value = null
       if (localPreview.value) {
-         URL.revokeObjectURL(localPreview.value)
-         localPreview.value = null
+        URL.revokeObjectURL(localPreview.value)
+        localPreview.value = null
       }
-      
+
       emit('update:modelValue', data.data.url)
       return data.data.url
     }

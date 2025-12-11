@@ -140,6 +140,18 @@
                     <!-- Tab Content -->
                     <div class="animate-slide-up">
 
+                        <!-- Bracket Tab -->
+                        <div v-if="activeTab === 'bracket'" class="space-y-8">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                                    {{ $t('tournament_details.bracket') || 'Bracket' }}
+                                </h3>
+                            </div>
+                            <div class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6 overflow-x-auto">
+                                <TournamentBracket :matches="playoffMatches" />
+                            </div>
+                        </div>
+
                         <!-- Matches Tab -->
                         <div v-if="activeTab === 'matches'" class="space-y-8">
                             <div class="flex justify-between items-center">
@@ -147,7 +159,7 @@
                                     {{ $t('tournament_details.calendar') }}
                                 </h3>
                                 <div v-if="canManage" class="flex gap-2">
-                                    <button v-if="hasPlayoffSetting" @click="showGeneratePlayoffsModal = true"
+                                    <button v-if="hasPlayoffSetting && !playoffMatches.length" @click="showGeneratePlayoffsModal = true"
                                         class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-500/20 transition-all">
                                         <span class="material-symbols-outlined text-lg">emoji_events</span>
                                         {{ $t('tournament_details.generate_playoffs') }}
@@ -394,6 +406,7 @@ import EditTournamentModal from '@/components/modals/EditTournamentModal.vue'
 import CreateMatchModal from '@/components/modals/CreateMatchModal.vue'
 import GeneratePlayoffsModal from '@/components/modals/GeneratePlayoffsModal.vue'
 import StatsTable from '@/components/StatsTable.vue'
+import TournamentBracket from '@/components/TournamentBracket.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -412,13 +425,21 @@ const showAddTeamModal = ref(false)
 const selectedMatch = ref<any>(null)
 const initializingStandings = ref(false)
 
-const tabs = computed(() => [
-    { value: 'matches', label: t('tournament_details.tabs.matches'), icon: 'sports_soccer' },
-    { value: 'standings', label: t('tournament_details.tabs.standings'), icon: 'leaderboard' },
-    { value: 'stats', label: t('tournament_details.tabs.stats'), icon: 'bar_chart' },
-    { value: 'teams', label: t('tournament_details.tabs.teams'), icon: 'group' },
-    { value: 'info', label: t('tournament_details.tabs.info'), icon: 'info' }
-])
+const tabs = computed(() => {
+    const baseTabs = [
+        { value: 'matches', label: t('tournament_details.tabs.matches'), icon: 'sports_soccer' },
+        { value: 'standings', label: t('tournament_details.tabs.standings'), icon: 'leaderboard' },
+        { value: 'stats', label: t('tournament_details.tabs.stats'), icon: 'bar_chart' },
+        { value: 'teams', label: t('tournament_details.tabs.teams'), icon: 'group' },
+        { value: 'info', label: t('tournament_details.tabs.info'), icon: 'info' }
+    ]
+
+    if (tournament.value?.format === 'knockout' || tournament.value?.format === 'group_knockout') {
+        baseTabs.splice(1, 0, { value: 'bracket', label: 'Bracket', icon: 'account_tree' })
+    }
+
+    return baseTabs
+})
 
 
 const { data: tournament, pending, refresh } = await useAsyncData(`tournament-${route.params.id}`, async () => {
@@ -475,6 +496,19 @@ const matchesByRound = computed(() => {
     return grouped
 })
 
+const playoffMatches = computed(() => {
+    if (!matches.value) return []
+    return matches.value.filter((m: any) => m.stage && m.stage !== 'regular_season')
+})
+
+const hasPlayoffSetting = computed(() => {
+    if (!tournament.value?.settings) return false
+    const settings = typeof tournament.value.settings === 'string' 
+        ? JSON.parse(tournament.value.settings) 
+        : tournament.value.settings
+    return !!settings.has_playoff
+})
+
 
 const formatType = (format: string) => {
     return t(`tournament_details.formats.${format}`)
@@ -498,15 +532,6 @@ const handleScoreUpdated = () => {
     refreshMatches()
     refreshStandings()
 }
-
-// Helper checks
-const hasPlayoffSetting = computed(() => {
-    if (!tournament.value) return false
-    const settings = typeof tournament.value.settings === 'string'
-        ? JSON.parse(tournament.value.settings)
-        : tournament.value.settings
-    return settings?.has_playoff === true || settings?.has_playoff === 'true'
-})
 
 const handleFixtureCreated = () => {
     showGenerateFixtureModal.value = false
