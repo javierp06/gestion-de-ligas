@@ -42,10 +42,13 @@
                     </div>
 
                     <div v-else class="space-y-2">
-                        <!-- Header Row -->
+                        <!-- Header Row (Desktop Only) -->
                         <div
-                            class="grid grid-cols-12 gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide px-4 mb-2 text-center">
-                            <div class="col-span-4 text-left">{{ $t('match_details.player') }}</div>
+                            class="hidden md:grid grid-cols-12 gap-2 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide px-4 mb-2 text-center">
+                            <div class="col-span-1" :title="$t('match_details.stats.lineup')">
+                                <span class="material-symbols-outlined text-base">group_add</span>
+                            </div>
+                            <div class="col-span-3 text-left">{{ $t('match_details.player') }}</div>
                             <div class="col-span-2">{{ $t('match_details.stats.goals') }}</div>
                             <div class="col-span-2">{{ $t('match_details.stats.assists') }}</div>
                             <div class="col-span-2" :title="$t('match_details.stats.yellow_cards')">TA</div>
@@ -53,40 +56,78 @@
                         </div>
 
                         <div v-for="player in currentTeamPlayers" :key="player.id"
-                            class="grid grid-cols-12 gap-2 items-center bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                            class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-2 items-center bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:border-primary-500/30 transition-colors"
+                            :class="{ 'bg-primary-50/50 dark:bg-primary-900/10 border-primary-500/30': player.selected }">
 
-                            <!-- Player Name -->
-                            <div class="col-span-4 flex items-center gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400 shrink-0">
-                                    {{ player.jersey_number || '#' }}
+                            <!-- Identity (Checkbox + Name) -->
+                            <div class="w-full md:col-span-4 flex items-center gap-3">
+                                <!-- Selection Checkbox -->
+                                <div class="flex-shrink-0">
+                                    <input type="checkbox" v-model="player.selected"
+                                        class="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer">
                                 </div>
-                                <div class="min-w-0">
-                                    <p class="font-bold text-gray-900 dark:text-white truncate text-sm">
-                                        {{ player.player_name }}
-                                    </p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-                                        {{ player.position || $t('match_details.player') }}
-                                    </p>
+
+                                <!-- Player Info -->
+                                <div class="flex items-center gap-3 min-w-0 flex-1"
+                                    :class="{ 'opacity-50': !player.selected }">
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-bold text-gray-500 dark:text-gray-400 shrink-0">
+                                        {{ player.jersey_number || '#' }}
+                                    </div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="font-bold text-gray-900 dark:text-white truncate text-sm">
+                                            {{ player.player_name }}
+                                        </p>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                            {{ player.position || $t('match_details.player') }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Inputs -->
-                            <div class="col-span-2">
-                                <input type="number" min="0" v-model.number="player.stats.goals"
-                                    class="w-full text-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-1 text-sm font-bold focus:ring-2 focus:ring-primary-500">
-                            </div>
-                            <div class="col-span-2">
-                                <input type="number" min="0" v-model.number="player.stats.assists"
-                                    class="w-full text-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-1 text-sm font-bold focus:ring-2 focus:ring-primary-500">
-                            </div>
-                            <div class="col-span-2">
-                                <input type="number" min="0" v-model.number="player.stats.yellow_cards"
-                                    class="w-full text-center bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded p-1 text-sm font-bold text-yellow-700 dark:text-yellow-500 focus:ring-2 focus:ring-yellow-500">
-                            </div>
-                            <div class="col-span-2">
-                                <input type="number" min="0" v-model.number="player.stats.red_cards"
-                                    class="w-full text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded p-1 text-sm font-bold text-red-700 dark:text-red-500 focus:ring-2 focus:ring-red-500">
+                            <!-- Mobile Stats Labels (Hidden on Desktop) -->
+                            <!-- We will use a grid for the inputs area -->
+                            <div class="w-full md:col-span-8 grid grid-cols-4 md:grid-cols-8 gap-2">
+
+                                <!-- Goals -->
+                                <div class="md:col-span-2">
+                                    <label
+                                        class="block md:hidden text-[10px] text-gray-500 text-center uppercase font-bold mb-1">{{ $t('match_details.stats.goals_short') || 'G' }}</label>
+                                    <input type="number" min="0" v-model.number="player.stats.goals"
+                                        :disabled="!player.selected"
+                                        class="w-full text-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-1 text-sm font-bold focus:ring-2 focus:ring-primary-500 disabled:opacity-30"
+                                        placeholder="0">
+                                </div>
+
+                                <!-- Assists -->
+                                <div class="md:col-span-2">
+                                    <label
+                                        class="block md:hidden text-[10px] text-gray-500 text-center uppercase font-bold mb-1">{{ $t('match_details.stats.assists_short') || 'A' }}</label>
+                                    <input type="number" min="0" v-model.number="player.stats.assists"
+                                        :disabled="!player.selected"
+                                        class="w-full text-center bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded p-1 text-sm font-bold focus:ring-2 focus:ring-primary-500 disabled:opacity-30"
+                                        placeholder="0">
+                                </div>
+
+                                <!-- Yellow Cards -->
+                                <div class="md:col-span-2">
+                                    <label
+                                        class="block md:hidden text-[10px] text-gray-500 text-center uppercase font-bold mb-1">TA</label>
+                                    <input type="number" min="0" v-model.number="player.stats.yellow_cards"
+                                        :disabled="!player.selected"
+                                        class="w-full text-center bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded p-1 text-sm font-bold text-yellow-700 dark:text-yellow-500 focus:ring-2 focus:ring-yellow-500 disabled:opacity-30"
+                                        placeholder="0">
+                                </div>
+
+                                <!-- Red Cards -->
+                                <div class="md:col-span-2">
+                                    <label
+                                        class="block md:hidden text-[10px] text-gray-500 text-center uppercase font-bold mb-1">TR</label>
+                                    <input type="number" min="0" v-model.number="player.stats.red_cards"
+                                        :disabled="!player.selected"
+                                        class="w-full text-center bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded p-1 text-sm font-bold text-red-700 dark:text-red-500 focus:ring-2 focus:ring-red-500 disabled:opacity-30"
+                                        placeholder="0">
+                                </div>
                             </div>
                         </div>
 
@@ -150,6 +191,7 @@ const awayPlayers = ref<any[]>([])
 // Helper to initialize stats structure
 const initStats = (player: any) => ({
     ...player,
+    selected: false,
     stats: {
         goals: 0,
         assists: 0,
@@ -193,6 +235,7 @@ const applyExistingStats = (existingStats: any[]) => {
         // Find in home
         const hPlayer = homePlayers.value.find(p => p.id === stat.player_id)
         if (hPlayer) {
+            hPlayer.selected = true
             hPlayer.stats = {
                 goals: stat.goals,
                 assists: stat.assists,
@@ -204,6 +247,7 @@ const applyExistingStats = (existingStats: any[]) => {
         // Find in away
         const aPlayer = awayPlayers.value.find(p => p.id === stat.player_id)
         if (aPlayer) {
+            aPlayer.selected = true
             aPlayer.stats = {
                 goals: stat.goals,
                 assists: stat.assists,
@@ -235,20 +279,9 @@ const saveStats = async () => {
         // Combine all players that have at least one stat > 0
         const allPlayers = [...homePlayers.value, ...awayPlayers.value]
 
-        // Filter players who have any stat entry (optional, or just save everyone who played)
-        // For now, let's save stats where at least one value is > 0 OR if we want to track minutes played for everyone.
-        // Let's safe filter: only send stats if they have non-zero goals, assists, cards. 
-        // OR better: send everyone but maybe backend filters? 
-        // Backend replaces all stats for the match, so we should send EVERYONE who has relevant data.
-
-        // Let's send entries that have at least one non-zero value
+        // Filter players who are selected
         const statsPayload = allPlayers
-            .filter(p =>
-                p.stats.goals > 0 ||
-                p.stats.assists > 0 ||
-                p.stats.yellow_cards > 0 ||
-                p.stats.red_cards > 0
-            )
+            .filter(p => p.selected)
             .map(p => ({
                 player_id: p.id,
                 goals: p.stats.goals,

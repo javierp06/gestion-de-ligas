@@ -98,22 +98,7 @@
                                 </div>
                             </div>
 
-                            <!-- Default Logos Grid -->
-                            <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-3">O selecciona
-                                uno predeterminado:</p>
-                            <div class="grid grid-cols-4 sm:grid-cols-6 gap-3">
-                                <button v-for="logo in defaultLogos" :key="logo" type="button"
-                                    @click="formData.logo = logo"
-                                    class="relative aspect-square rounded-xl overflow-hidden border-2 transition-all duration-300 group"
-                                    :class="formData.logo === logo ? 'border-primary-500 shadow-neon scale-105' : 'border-transparent hover:border-primary-300 hover:scale-105'">
-                                    <img :src="logo" class="w-full h-full object-cover" />
-                                    <div v-if="formData.logo === logo"
-                                        class="absolute inset-0 bg-primary-500/20 flex items-center justify-center">
-                                        <span
-                                            class="material-symbols-outlined text-white font-bold drop-shadow-md">check</span>
-                                    </div>
-                                </button>
-                            </div>
+
                         </div>
 
                         <!-- Advanced Settings -->
@@ -312,14 +297,7 @@ const formData = ref({
     }
 })
 
-const defaultLogos = [
-    'https://cdn-icons-png.flaticon.com/512/33/33736.png', // Soccer
-    'https://cdn-icons-png.flaticon.com/512/29/29587.png', // Basketball
-    'https://cdn-icons-png.flaticon.com/512/1099/1099672.png', // Trophy
-    'https://cdn-icons-png.flaticon.com/512/2528/2528023.png', // Shield
-    'https://cdn-icons-png.flaticon.com/512/1165/1165187.png', // Badge
-    'https://cdn-icons-png.flaticon.com/512/1656/1656850.png'  // Star
-]
+
 
 // Fetch sports on mount
 onMounted(async () => {

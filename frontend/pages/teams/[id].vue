@@ -28,10 +28,10 @@
 
                     <!-- Back Button -->
                     <div class="absolute top-4 left-4 z-10">
-                        <button @click="navigateTo(localePath('/teams'))"
-                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
+                        <button @click="goBack"
+                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-2 md:pr-4">
                             <span class="material-symbols-outlined">arrow_back</span>
-                            <span class="text-sm font-bold">{{ $t('teams.back_to_teams') }}</span>
+                            <span class="text-sm font-bold hidden md:inline">{{ $t('teams.back_to_teams') }}</span>
                         </button>
                     </div>
 
@@ -115,7 +115,8 @@
                         <!-- Squad Tab -->
                         <div v-if="activeTab === 'squad'" class="space-y-6">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">{{ $t('teams.squad') }}</h3>
+                                <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                                    {{ $t('teams.squad') }}</h3>
                                 <button v-if="canManage" @click="showAddPlayerModal = true"
                                     class="btn-primary flex items-center gap-2">
                                     <span class="material-symbols-outlined">person_add</span>
@@ -153,7 +154,8 @@
                                     <span
                                         class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">groups</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">{{ $t('teams.no_players_title') }}
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">
+                                    {{ $t('teams.no_players_title') }}
                                 </h3>
                                 <p
                                     class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
@@ -164,7 +166,8 @@
 
                         <!-- Matches Tab -->
                         <div v-if="activeTab === 'matches'" class="space-y-6">
-                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">{{ $t('teams.matches') }}</h3>
+                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                                {{ $t('teams.matches') }}</h3>
                             <div v-if="matches?.length" class="space-y-4">
                                 <MatchCard v-for="match in matches" :key="match.id" :match="match" />
                             </div>
@@ -175,7 +178,8 @@
                                     <span
                                         class="material-symbols-outlined text-3xl text-text-secondary-light dark:text-text-secondary-dark">sports_soccer</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">{{ $t('teams.no_matches_title') }}
+                                <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-2">
+                                    {{ $t('teams.no_matches_title') }}
                                 </h3>
                                 <p
                                     class="text-text-secondary-light dark:text-text-secondary-dark mb-6 max-w-xs mx-auto">
@@ -186,11 +190,12 @@
 
                         <!-- Stats Tab -->
                         <div v-if="activeTab === 'stats'" class="space-y-6">
-                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">{{ $t('teams.team_stats') }}</h3>
+                            <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
+                                {{ $t('teams.team_stats') }}</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Team Top Scorers -->
-                                <StatsTable :title="$t('teams.scorers')" icon="sports_soccer" :data="stats?.scorers || []"
-                                    :statLabel="$t('teams.goals')" statKey="total_goals" />
+                                <StatsTable :title="$t('teams.scorers')" icon="sports_soccer"
+                                    :data="stats?.scorers || []" :statLabel="$t('teams.goals')" statKey="total_goals" />
                                 <!-- Team Top Assists -->
                                 <StatsTable :title="$t('teams.assists')" icon="handshake" :data="stats?.assists || []"
                                     :statLabel="$t('teams.assists')" statKey="total_assists" />
@@ -210,12 +215,14 @@
                         </h3>
                         <div class="space-y-4">
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('teams.coach') }}</span>
+                                <span
+                                    class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('teams.coach') }}</span>
                                 <span
                                     class="font-bold text-text-primary-light dark:text-white">{{ team.coach || $t('teams.not_assigned') }}</span>
                             </div>
                             <div class="flex items-center justify-between text-sm">
-                                <span class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('teams.stadium') }}</span>
+                                <span
+                                    class="text-text-secondary-light dark:text-text-secondary-dark">{{ $t('teams.stadium') }}</span>
                                 <span
                                     class="font-bold text-text-primary-light dark:text-white">{{ team.stadium || $t('teams.not_assigned') }}</span>
                             </div>
@@ -307,6 +314,14 @@ const canManage = computed(() => {
 
 const handleDeleteClick = () => {
     showDeleteModal.value = true
+}
+
+const goBack = () => {
+    if (team.value?.league_id) {
+        router.push(localePath(`/leagues/${team.value.league_id}`))
+    } else {
+        router.push(localePath('/dashboard'))
+    }
 }
 
 const confirmDeleteTeam = async () => {

@@ -16,7 +16,7 @@
       <div
         class="relative bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden mb-8 animate-fade-in">
         <!-- Cover Image / Pattern -->
-        <div class="h-64 relative overflow-hidden" :style="headerStyle">
+        <div class="h-40 md:h-64 relative overflow-hidden" :style="headerStyle">
           <div v-if="!league.cover_photo" class="absolute inset-0 opacity-10 dark:opacity-20"
             style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;">
           </div>
@@ -25,6 +25,15 @@
           <!-- Gradient Overlay for text readability if cover photo exists -->
           <div v-if="league.cover_photo"
             class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+
+          <!-- Back Button -->
+          <div class="absolute top-4 left-4 z-10">
+            <button @click="goBack"
+              class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-2 md:pr-4">
+              <span class="material-symbols-outlined">arrow_back</span>
+              <span class="text-sm font-bold hidden md:inline">{{ $t('nav.leagues') }}</span>
+            </button>
+          </div>
 
           <!-- Actions (Top Right) -->
           <div class="absolute top-4 right-4 flex gap-2 z-10">
@@ -48,20 +57,20 @@
         </div>
 
         <!-- Profile Info -->
-        <div class="px-8 pb-8">
-          <div class="relative flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
+        <div class="px-4 md:px-8 pb-4 md:pb-8">
+          <div class="relative flex flex-col md:flex-row items-start md:items-end gap-3 md:gap-6 -mt-10 md:-mt-16">
             <!-- Logo -->
             <div
-              class="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl relative z-10 transition-all duration-300">
+              class="w-20 h-20 md:w-32 md:h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl relative z-10 transition-all duration-300 mx-auto md:mx-0">
               <img :src="league.logo || `https://ui-avatars.com/api/?name=${league.name}&background=random`"
                 class="w-full h-full object-cover rounded-xl bg-gray-50 dark:bg-white/5" alt="League Logo" />
             </div>
 
             <!-- Info -->
-            <div class="flex-1 pt-2 md:pt-0 relative z-10">
-              <div class="flex flex-wrap items-center gap-3 mb-2">
+            <div class="flex-1 pt-1 md:pt-0 relative z-10 w-full text-center md:text-left">
+              <div class="flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-3 mb-2">
                 <h1
-                  class="text-2xl md:text-3xl font-display font-black text-text-primary-light dark:text-white drop-shadow-md md:drop-shadow-none">
+                  class="text-xl md:text-3xl font-display font-black text-text-primary-light dark:text-white drop-shadow-md md:drop-shadow-none">
                   {{ league.name }}
                 </h1>
                 <span :class="getStatusColor(league.status)"
@@ -71,7 +80,7 @@
               </div>
 
               <div
-                class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">
+                class="flex flex-wrap justify-center md:justify-start items-center gap-x-4 md:gap-x-6 gap-y-2 text-xs md:text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark">
                 <span class="flex items-center gap-1.5">
                   <span class="material-symbols-outlined text-primary-600 dark:text-primary-500">sports_soccer</span>
                   {{ league.sport?.name }}
@@ -113,9 +122,9 @@
         <div class="lg:col-span-2 space-y-6">
           <!-- Custom Tabs -->
           <div
-            class="flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-fit">
+            class="grid grid-cols-2 md:flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-full md:w-fit">
             <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
-              class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300"
+              class="px-4 md:px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 text-center"
               :class="activeTab === tab.value ? 'bg-primary-500 text-black shadow-lg shadow-neon' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'">
               {{ tab.label }}
             </button>
@@ -364,6 +373,10 @@ const editLeague = () => {
 
 const deleteLeague = () => {
   showDeleteConfirmModal.value = true
+}
+
+const goBack = () => {
+  router.push(localePath('/leagues'))
 }
 
 const confirmDeleteLeague = async () => {

@@ -16,7 +16,7 @@
             <div
                 class="relative bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden mb-8 animate-fade-in">
                 <!-- Cover Image / Pattern -->
-                <div class="h-48 relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700">
+                <div class="h-32 relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700">
                     <!-- Abstract Pattern (Only if no cover photo) -->
                     <div v-if="!tournament.cover_photo" class="absolute inset-0 opacity-20"
                         style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;">
@@ -28,10 +28,11 @@
 
                     <!-- Back Button (Top Left) -->
                     <div class="absolute top-4 left-4 z-10">
-                        <button @click="navigateTo(localePath(`/leagues/${tournament.league_id}`))"
-                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-4">
+                        <button @click="goBack"
+                            class="p-2 bg-white/20 backdrop-blur-md rounded-xl hover:bg-white/30 transition-colors text-white flex items-center gap-2 pr-2 md:pr-4">
                             <span class="material-symbols-outlined">arrow_back</span>
-                            <span class="text-sm font-bold">{{ $t('tournament_details.back_to_league') }}</span>
+                            <span
+                                class="text-sm font-bold hidden md:inline">{{ $t('tournament_details.back_to_league') }}</span>
                         </button>
                     </div>
 
@@ -51,11 +52,11 @@
                 </div>
 
                 <!-- Profile Info -->
-                <div class="px-8 pb-8">
-                    <div class="relative flex flex-col md:flex-row items-start md:items-end gap-6 -mt-16">
+                <div class="px-4 md:px-8 pb-4 md:pb-6">
+                    <div class="relative flex flex-col md:flex-row items-start md:items-end gap-4 -mt-12">
                         <!-- Icon/Logo -->
                         <div
-                            class="w-32 h-32 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center overflow-hidden">
+                            class="w-24 h-24 rounded-2xl bg-surface-light dark:bg-surface-dark p-1 shadow-2xl flex items-center justify-center overflow-hidden mx-auto md:mx-0">
                             <img v-if="tournament.logo" :src="tournament.logo"
                                 class="w-full h-full object-cover rounded-xl bg-white">
                             <div v-else
@@ -95,7 +96,7 @@
 
                         <!-- Quick Stats -->
                         <div
-                            class="hidden md:flex gap-8 px-6 py-3 bg-background-light dark:bg-surface-dark-alt rounded-2xl border border-border-light dark:border-border-dark">
+                            class="flex w-full md:w-auto mt-4 md:mt-0 gap-8 px-6 py-3 bg-background-light dark:bg-surface-dark-alt rounded-2xl border border-border-light dark:border-border-dark justify-around md:justify-start">
                             <div class="text-center">
                                 <div class="text-2xl font-black text-text-primary-light dark:text-white">
                                     {{ matches?.length || 0 }}
@@ -126,13 +127,13 @@
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Custom Tabs -->
                     <div
-                        class="flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-fit overflow-x-auto max-w-full">
+                        class="grid grid-cols-2 md:flex items-center gap-2 p-1 bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark w-full md:w-fit overflow-x-hidden max-w-full">
                         <button v-for="tab in tabs" :key="tab.value" @click="activeTab = tab.value"
-                            class="px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap flex items-center gap-2"
+                            class="px-4 md:px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 md:whitespace-nowrap flex items-center justify-center gap-2 text-center"
                             :class="activeTab === tab.value
                                 ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
                                 : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-100 dark:hover:bg-white/5'">
-                            <span class="material-symbols-outlined text-lg">{{ tab.icon }}</span>
+                            <span class="material-symbols-outlined text-lg hidden md:inline">{{ tab.icon }}</span>
                             {{ tab.label }}
                         </button>
                     </div>
@@ -147,30 +148,32 @@
                                     {{ $t('tournament_details.bracket') || 'Bracket' }}
                                 </h3>
                             </div>
-                            <div class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6 overflow-x-auto">
+                            <div
+                                class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark p-6 overflow-x-auto">
                                 <TournamentBracket :matches="playoffMatches" />
                             </div>
                         </div>
 
                         <!-- Matches Tab -->
                         <div v-if="activeTab === 'matches'" class="space-y-8">
-                            <div class="flex justify-between items-center">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
                                     {{ $t('tournament_details.calendar') }}
                                 </h3>
-                                <div v-if="canManage" class="flex gap-2">
-                                    <button v-if="hasPlayoffSetting && !playoffMatches.length" @click="showGeneratePlayoffsModal = true"
-                                        class="px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-500/20 transition-all">
+                                <div v-if="canManage" class="flex flex-wrap gap-2 w-full md:w-auto">
+                                    <button v-if="hasPlayoffSetting && !playoffMatches.length"
+                                        @click="showGeneratePlayoffsModal = true"
+                                        class="flex-1 md:flex-none justify-center px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white shadow-lg shadow-purple-500/20 transition-all whitespace-nowrap">
                                         <span class="material-symbols-outlined text-lg">emoji_events</span>
                                         {{ $t('tournament_details.generate_playoffs') }}
                                     </button>
                                     <button @click="showGenerateFixtureModal = true"
-                                        class="btn-secondary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300">
+                                        class="flex-1 md:flex-none justify-center btn-secondary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 whitespace-nowrap">
                                         <span class="material-symbols-outlined text-lg">calendar_month</span>
                                         {{ $t('tournament_details.generate_calendar') }}
                                     </button>
                                     <button @click="showCreateMatchModal = true"
-                                        class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                                        class="flex-1 md:flex-none justify-center btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 whitespace-nowrap">
                                         <span class="material-symbols-outlined text-lg">add</span>
                                         {{ $t('tournament_details.new_match') }}
                                     </button>
@@ -237,12 +240,12 @@
 
                         <!-- Standings Tab -->
                         <div v-if="activeTab === 'standings'" class="space-y-6">
-                            <div class="flex justify-between items-center">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
                                     {{ $t('tournament_details.standings') }}
                                 </h3>
                                 <button v-if="canManage && !standings?.length" @click="initializeStandings"
-                                    class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2"
+                                    class="w-full md:w-auto justify-center btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2"
                                     :disabled="initializingStandings">
                                     <span v-if="initializingStandings"
                                         class="material-symbols-outlined animate-spin">progress_activity</span>
@@ -252,7 +255,7 @@
                             </div>
 
                             <div v-if="standings?.length"
-                                class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark overflow-hidden">
+                                class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-lg border border-border-light dark:border-border-dark overflow-hidden overflow-x-auto">
                                 <StandingsTable :standings="standings" />
                             </div>
 
@@ -303,12 +306,12 @@
 
                         <!-- Teams Tab -->
                         <div v-if="activeTab === 'teams'" class="space-y-6">
-                            <div class="flex justify-between items-center">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <h3 class="text-xl font-bold text-text-primary-light dark:text-white">
                                     {{ $t('tournament_details.participating_teams') }}
                                 </h3>
                                 <button v-if="canManage" @click="showAddTeamModal = true"
-                                    class="btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+                                    class="w-full md:w-auto justify-center btn-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                                     <span class="material-symbols-outlined">group_add</span>
                                     {{ $t('tournament_details.manage_teams') }}
                                 </button>
@@ -398,7 +401,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import UpdateScoreModal from '@/components/modals/UpdateScoreModal.vue'
 import GenerateFixtureModal from '@/components/modals/GenerateFixtureModal.vue'
@@ -410,6 +413,7 @@ import TournamentBracket from '@/components/TournamentBracket.vue'
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 const authStore = useAuthStore()
 const { $api } = useNuxtApp()
 const { getStatusColor, getStatusText } = useSports()
@@ -503,8 +507,8 @@ const playoffMatches = computed(() => {
 
 const hasPlayoffSetting = computed(() => {
     if (!tournament.value?.settings) return false
-    const settings = typeof tournament.value.settings === 'string' 
-        ? JSON.parse(tournament.value.settings) 
+    const settings = typeof tournament.value.settings === 'string'
+        ? JSON.parse(tournament.value.settings)
         : tournament.value.settings
     return !!settings.has_playoff
 })
@@ -560,6 +564,14 @@ const initializeStandings = async () => {
         console.error('Error initializing standings:', error)
     } finally {
         initializingStandings.value = false
+    }
+}
+
+const goBack = () => {
+    if (tournament.value?.league_id) {
+        router.push(localePath(`/leagues/${tournament.value.league_id}`))
+    } else {
+        router.push(localePath('/leagues'))
     }
 }
 

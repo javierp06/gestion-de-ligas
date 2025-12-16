@@ -11,6 +11,7 @@ interface League {
   location: string;
   status: string;
   logo?: string;
+  cover_photo?: string;
   created_at: string;
 }
 

@@ -554,10 +554,13 @@
       "stats": "Stats"
     },
     "stats": {
+      "lineup": "Lineup",
       "goals": "Goals",
+      "goals_short": "G",
       "yellow_cards": "Yellow Cards",
       "red_cards": "Red Cards",
-      "assists": "Assists"
+      "assists": "Assists",
+      "assists_short": "A"
     },
     "events": {
       "goal": "Goal",
@@ -567,9 +570,24 @@
     "status": {
       "scheduled": "Scheduled",
       "live": "Live",
+      "half_time": "Half Time",
       "finished": "Finished",
       "postponed": "Postponed",
       "cancelled": "Cancelled"
+    },
+    "live_controls": {
+      "title": "Live Control",
+      "half_time": "Half Time",
+      "suspend": "Suspend",
+      "resume": "Resume",
+      "start": "Start Match",
+      "finish": "Finish",
+      "pause": "Pause",
+      "cancel": "Cancel",
+      "reopen": "Resume Match",
+      "confirm_finish": "Are you sure you want to finish the match?",
+      "score_updated": "Score updated",
+      "status_updated": "Status changed to {status}"
     },
     "modals": {
       "edit_match": {
@@ -650,5 +668,13 @@
     "delete_confirm": "Are you sure you want to delete this team? This action cannot be undone.",
     "delete_success": "Team deleted successfully",
     "delete_error": "Error deleting team"
+  },
+  "search": {
+    "title": "Results for \"{query}\"",
+    "subtitle": "Found {count} results",
+    "teams": "Teams",
+    "tournaments": "Tournaments",
+    "no_results_title": "No results found",
+    "no_results_subtitle": "We couldn't find any results for \"{query}\". Try a different term."
   }
 }

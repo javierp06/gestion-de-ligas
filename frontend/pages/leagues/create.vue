@@ -15,7 +15,7 @@
             <div class="lg:col-span-2 space-y-6 animate-slide-up">
                 <div
                     class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden">
-                    <form @submit.prevent="handleSubmit" class="p-8 space-y-6">
+                    <form @submit.prevent="handleSubmit" class="p-5 md:p-8 space-y-5 md:space-y-6">
 
                         <!-- Name -->
                         <div>
@@ -81,42 +81,20 @@
                         </div>
 
                         <!-- Logo & Cover Selection -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
                             <!-- Logo -->
                             <div>
-                                <ImageUpload
-                                    ref="logoUpload"
-                                    v-model="formData.logo"
-                                    :label="$t('create_league.form.logo_label')"
-                                    circle
-                                    @preview="url => previewLogo = url"
-                                />
-                                
-                                <!-- Default Logos Grid -->
-                                <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-4 mb-3">{{ $t('create_league.form.select_default_logo') }}</p>
-                                <div class="grid grid-cols-4 gap-2">
-                                    <button v-for="logo in defaultLogos" :key="logo" type="button"
-                                        @click="formData.logo = logo"
-                                        class="relative aspect-square rounded-xl overflow-hidden border-2 transition-all duration-300 group"
-                                        :class="formData.logo === logo ? 'border-primary-500 shadow-neon scale-105' : 'border-transparent hover:border-primary-300 hover:scale-105'">
-                                        <img :src="logo" class="w-full h-full object-cover" />
-                                        <div v-if="formData.logo === logo"
-                                            class="absolute inset-0 bg-primary-500/20 flex items-center justify-center">
-                                            <span
-                                                class="material-symbols-outlined text-white font-bold drop-shadow-md">check</span>
-                                        </div>
-                                    </button>
-                                </div>
+                                <ImageUpload ref="logoUpload" v-model="formData.logo"
+                                    :label="$t('create_league.form.logo_label')" circle
+                                    @preview="url => previewLogo = url" />
+
                             </div>
 
                             <!-- Cover Photo -->
                             <div>
-                                <ImageUpload
-                                    ref="coverUpload"
-                                    v-model="formData.cover_photo"
+                                <ImageUpload ref="coverUpload" v-model="formData.cover_photo"
                                     :label="$t('create_league.form.cover_label')"
-                                    @preview="url => previewCover = url"
-                                />
+                                    @preview="url => previewCover = url" />
                             </div>
                         </div>
 
@@ -150,7 +128,8 @@
                             </div>
 
                             <!-- Soccer / Points Based -->
-                            <div v-if="!selectedSportName || selectedSportName.match(/fútbol|soccer|fussball|futebol/i)" class="mt-4">
+                            <div v-if="!selectedSportName || selectedSportName.match(/fútbol|soccer|fussball|futebol/i)"
+                                class="mt-4">
                                 <label
                                     class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
                                     {{ $t('create_league.form.points_table_label') }}
@@ -286,8 +265,10 @@
                     <div
                         class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark overflow-hidden group hover:border-primary-500/50 transition-all duration-300">
                         <!-- Cover/Header -->
-                        <div class="h-32 bg-gradient-to-br from-primary-600 to-primary-900 relative overflow-hidden">
-                            <img v-if="previewCover || formData.cover_photo" :src="previewCover || formData.cover_photo" class="absolute inset-0 w-full h-full object-cover" />
+                        <div
+                            class="h-24 md:h-32 bg-gradient-to-br from-primary-600 to-primary-900 relative overflow-hidden">
+                            <img v-if="previewCover || formData.cover_photo" :src="previewCover || formData.cover_photo"
+                                class="absolute inset-0 w-full h-full object-cover" />
                             <div class="absolute inset-0 bg-black/20"></div>
                             <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
 
@@ -300,7 +281,7 @@
                             </div>
                         </div>
 
-                        <div class="pt-12 px-6 pb-6">
+                        <div class="pt-8 md:pt-12 px-5 pb-5 md:px-6 md:pb-6">
                             <div class="mb-4">
                                 <h3
                                     class="text-xl font-display font-bold text-text-primary-light dark:text-white leading-tight mb-1">
@@ -349,7 +330,9 @@
                         <div class="flex gap-3">
                             <span class="material-symbols-outlined text-blue-500">lightbulb</span>
                             <div>
-                                <h4 class="font-bold text-blue-600 dark:text-blue-400 text-sm mb-1">{{ $t('create_league.tips.title') }}</h4>
+                                <h4 class="font-bold text-blue-600 dark:text-blue-400 text-sm mb-1">
+                                    {{ $t('create_league.tips.title') }}
+                                </h4>
                                 <p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">
                                     {{ $t('create_league.tips.message') }}
                                 </p>
@@ -462,14 +445,7 @@ watch(() => formData.value.sport_id, (newId) => {
     }
 })
 
-const defaultLogos = [
-    'https://cdn-icons-png.flaticon.com/512/33/33736.png', // Soccer
-    'https://cdn-icons-png.flaticon.com/512/29/29587.png', // Basketball
-    'https://cdn-icons-png.flaticon.com/512/1099/1099672.png', // Trophy
-    'https://cdn-icons-png.flaticon.com/512/2528/2528023.png', // Shield
-    'https://cdn-icons-png.flaticon.com/512/1165/1165187.png', // Badge
-    'https://cdn-icons-png.flaticon.com/512/1656/1656850.png'  // Star
-]
+
 
 // Fetch sports on mount
 onMounted(async () => {
@@ -507,7 +483,7 @@ const handleSubmit = async () => {
             const logoUrl = await logoUpload.value.upload()
             if (logoUrl) formData.value.logo = logoUrl
         }
-        
+
         if (coverUpload.value) {
             const coverUrl = await coverUpload.value.upload()
             if (coverUrl) formData.value.cover_photo = coverUrl

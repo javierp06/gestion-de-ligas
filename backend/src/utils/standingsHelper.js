@@ -33,16 +33,16 @@ async function calculateStandings(tournamentId) {
     let pointsLoss = 0;
 
     if (settingsResult.length > 0) {
-        const tSettings = settingsResult[0].tournament_settings || {};
-        const lSettings = settingsResult[0].league_settings || {};
-        
-        // Prioridad: Torneo > Liga
-        // Si el torneo tiene settings vacíos, usa los de la liga
-        const effectiveSettings = { ...lSettings, ...tSettings };
-        
-        if (effectiveSettings.points_win !== undefined) pointsWin = Number(effectiveSettings.points_win);
-        if (effectiveSettings.points_draw !== undefined) pointsDraw = Number(effectiveSettings.points_draw);
-        if (effectiveSettings.points_loss !== undefined) pointsLoss = Number(effectiveSettings.points_loss);
+      const tSettings = settingsResult[0].tournament_settings || {};
+      const lSettings = settingsResult[0].league_settings || {};
+
+      // Prioridad: Torneo > Liga
+      // Si el torneo tiene settings vacíos, usa los de la liga
+      const effectiveSettings = { ...lSettings, ...tSettings };
+
+      if (effectiveSettings.points_win !== undefined) pointsWin = Number(effectiveSettings.points_win);
+      if (effectiveSettings.points_draw !== undefined) pointsDraw = Number(effectiveSettings.points_draw);
+      if (effectiveSettings.points_loss !== undefined) pointsLoss = Number(effectiveSettings.points_loss);
     }
 
     // 1. Obtener todos los matches finalizados del torneo (Solo Regular Season)
@@ -117,11 +117,9 @@ async function calculateStandings(tournamentId) {
         teamStats[homeId].points += pointsLoss;
       } else {
         // Empate
-        teamStats[homeId].draws++;
         teamStats[homeId].points += pointsDraw;
         teamStats[awayId].draws++;
         teamStats[awayId].points += pointsDraw;
-        teamStats[awayId].points += 1;
       }
 
       // Calcular diferencia de goles

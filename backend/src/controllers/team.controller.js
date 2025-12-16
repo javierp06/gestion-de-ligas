@@ -80,9 +80,11 @@ const getTeamById = async (req, res) => {
 
     // Obtener lista de jugadores del equipo
     const [players] = await pool.query(`
-      SELECT p.*, u.name as player_name, u.email as player_email
+      SELECT p.*, 
+             COALESCE(u.name, p.name) as player_name, 
+             u.email as player_email
       FROM players p
-      INNER JOIN users u ON p.user_id = u.id
+      LEFT JOIN users u ON p.user_id = u.id
       WHERE p.team_id = ?
       ORDER BY p.created_at ASC
     `, [id]);

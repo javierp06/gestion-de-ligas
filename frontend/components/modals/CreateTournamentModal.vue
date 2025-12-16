@@ -301,12 +301,6 @@ const formats = computed(() => [
     description: t('create_tournament.formats.league_desc')
   },
   {
-    value: 'group_knockout',
-    label: t('components.tournament_card.formats.group_knockout'),
-    icon: 'grid_view',
-    description: t('create_tournament.formats.group_knockout_desc')
-  },
-  {
     value: 'knockout',
     label: t('components.tournament_card.formats.knockout'),
     icon: 'emoji_events',
@@ -342,16 +336,6 @@ const toastStore = useToastStore()
 const handleSubmit = async () => {
   loading.value = true
   error.value = ''
-
-  // Validation for Group + Knockout format
-  if (formData.value.format === 'group_knockout' && formData.value.max_teams) {
-    const maxGroups = Math.floor(formData.value.max_teams / 2)
-    if (formData.value.settings.groups_count > maxGroups) {
-      error.value = `Para ${formData.value.max_teams} equipos, el máximo de grupos permitidos es ${maxGroups} (mínimo 2 equipos por grupo).`
-      loading.value = false
-      return
-    }
-  }
 
   try {
     const payload: any = {

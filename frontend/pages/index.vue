@@ -7,11 +7,11 @@
 
       <div class="lg:hidden mb-6 overflow-x-auto pb-2 scrollbar-hide">
         <div class="flex gap-3">
-          <button v-for="league in leagues" :key="league.id"
-            class="flex items-center gap-2 px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full border border-border-light dark:border-border-dark whitespace-nowrap">
+          <NuxtLink v-for="league in leagues" :key="league.id" :to="localePath(`/leagues/${league.id}`)"
+            class="flex items-center gap-2 px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full border border-border-light dark:border-border-dark whitespace-nowrap transition-all duration-300 hover:border-primary-500 hover:shadow-neon">
             <span class="material-symbols-outlined text-lg">{{ getSportIcon(league.sport_name) }}</span>
             <span class="text-sm font-bold text-text-primary-light dark:text-white">{{ league.name }}</span>
-          </button>
+          </NuxtLink>
         </div>
       </div>
 
@@ -73,10 +73,10 @@
         </aside>
 
 
-        <main class="lg:col-span-9 xl:col-span-7 space-y-6">
+        <main class="lg:col-span-9 xl:col-span-7 space-y-3">
           <!-- Date Filter -->
           <div
-            class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-2 flex items-center justify-between">
+            class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-1.5 flex items-center justify-between">
             <button @click="handlePrevDate"
               class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 text-text-secondary-light dark:text-text-secondary-dark transition-colors">
               <span class="material-symbols-outlined">chevron_left</span>
@@ -96,8 +96,6 @@
           </div>
 
           <!-- Sports Filter Cards -->
-          <!-- Sports Filter Horizontal Scroll -->
-          <!-- Sports Filter Horizontal Scroll with Arrows -->
           <div class="relative group/scroll">
             <!-- Left Arrow -->
             <button @click="scrollSports('left')"
@@ -108,19 +106,23 @@
 
             <!-- Scroll Container -->
             <div ref="sportsContainer" @scroll="checkScroll"
-              class="flex overflow-x-auto gap-3 pb-2 scrollbar-hide -mx-2 px-2 scroll-smooth">
+              class="flex overflow-x-auto gap-2 pb-0 scrollbar-hide -mx-2 px-2 scroll-smooth">
               <button v-for="sport in sports" :key="sport.id" @click="selectSport(sport.id)"
-                class="flex items-center gap-3 px-6 py-3 rounded-xl border transition-all duration-300 flex-shrink-0 group relative overflow-hidden"
+                class="flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200 flex-shrink-0 group relative overflow-hidden hover:scale-105 active:scale-95"
                 :class="selectedSport === sport.id
-                  ? 'bg-primary-500 border-primary-500 shadow-neon'
-                  : 'bg-surface-light dark:bg-surface-dark border-border-light dark:border-border-dark hover:border-primary-500'">
+                  ? 'bg-primary-500 border-primary-500 shadow-neon scale-105'
+                  : 'bg-surface-light dark:bg-surface-dark border-border-light dark:border-border-dark hover:border-primary-500 hover:shadow-neon'">
 
                 <!-- Background Glow for Active -->
                 <div v-if="selectedSport === sport.id" class="absolute inset-0 bg-white/20"></div>
 
-                <div class="flex flex-col items-center justify-center w-full">
-                  <span class="text-xs font-bold uppercase tracking-wider text-center"
-                    :class="selectedSport === sport.id ? 'text-black' : 'text-text-primary-light dark:text-white'">
+                <!-- Hover Glow for Inactive -->
+                <div v-else class="absolute inset-0 bg-primary-500/0 group-hover:bg-primary-500/5 transition-colors">
+                </div>
+
+                <div class="flex flex-col items-center justify-center w-full relative z-10">
+                  <span class="text-xs font-bold uppercase tracking-wider text-center transition-colors"
+                    :class="selectedSport === sport.id ? 'text-black' : 'text-text-primary-light dark:text-white group-hover:text-primary-500'">
                     {{ getSportName(sport.name) }}
                   </span>
                 </div>
@@ -151,103 +153,68 @@
               </p>
             </div>
 
-            <!-- Live Matches -->
-            <div v-if="liveMatches.length > 0"
-              class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
-              <div
-                class="px-4 py-3 bg-red-500/10 border-b border-border-light dark:border-border-dark flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                <h3 class="font-bold text-red-500 text-sm uppercase tracking-wider">{{ $t('home.live') }}</h3>
+            <!-- Live Matches Section (Grouped) -->
+            <div v-if="liveMatches.length > 0" class="space-y-4">
+              <div class="flex items-center gap-2 px-1">
+                <span class="relative flex h-3 w-3">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+                </span>
+                <h2 class="text-sm font-black text-red-500 uppercase tracking-widest">{{ $t('home.live_matches') }}</h2>
               </div>
-              <div class="divide-y divide-border-light dark:divide-border-dark">
-                <div v-for="match in liveMatches" :key="match.id"
-                  class="p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group"
-                  @click="$router.push(localePath(`/matches/${match.id}`))">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4 flex-1">
-                      <div class="flex flex-col items-center min-w-[60px]">
-                        <span class="text-red-500 font-bold text-xs animate-pulse">LIVE</span>
-                      </div>
-                      <div class="flex-1 space-y-2">
-                        <div class="flex items-center justify-between">
-                          <div class="flex items-center gap-3">
-                            <img v-if="match.home_team_logo" :src="match.home_team_logo"
-                              class="w-6 h-6 object-contain" />
-                            <div v-else class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                            <span
-                              class="font-medium text-text-primary-light dark:text-white">{{ match.home_team_name }}</span>
-                          </div>
-                          <span
-                            class="font-bold text-lg text-text-primary-light dark:text-white">{{ match.home_score }}</span>
-                        </div>
-                        <div class="flex items-center justify-between">
-                          <div class="flex items-center gap-3">
-                            <img v-if="match.away_team_logo" :src="match.away_team_logo"
-                              class="w-6 h-6 object-contain" />
-                            <div v-else class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                            <span
-                              class="font-medium text-text-primary-light dark:text-white">{{ match.away_team_name }}</span>
-                          </div>
-                          <span
-                            class="font-bold text-lg text-text-primary-light dark:text-white">{{ match.away_score }}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="pl-4 border-l border-border-light dark:border-border-dark ml-4">
+
+              <div v-for="group in groupMatches(liveMatches)" :key="group.id"
+                class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden shadow-sm">
+                <!-- Group Header -->
+                <div @click="toggleGroup(group.id)"
+                  class="px-4 py-2.5 bg-gray-50 dark:bg-white/5 border-b border-border-light dark:border-border-dark flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                  <div class="flex items-center gap-2.5">
+                    <span class="material-symbols-outlined text-gray-500 text-lg">emoji_events</span>
+                    <div class="flex flex-col leading-none">
+                      <span class="font-bold text-sm text-gray-900 dark:text-gray-100">{{ group.league_name }}</span>
                       <span
-                        class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark group-hover:text-primary-500 transition-colors">chevron_right</span>
+                        class="text-[10px] font-medium text-gray-500 uppercase tracking-wider mt-0.5">{{ group.tournament_name }}</span>
                     </div>
                   </div>
+                  <span class="material-symbols-outlined text-gray-400 text-sm transition-transform duration-300"
+                    :class="{ '-rotate-90': isGroupCollapsed(group.id) }">expand_more</span>
+                </div>
+                <!-- Matches List -->
+                <div v-show="!isGroupCollapsed(group.id)" class="p-2 space-y-1 transition-all">
+                  <MatchCard v-for="match in group.matches" :key="match.id" :match="match" />
                 </div>
               </div>
             </div>
 
-            <!-- Upcoming Matches -->
-            <div v-if="upcomingMatches.length > 0"
-              class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden">
-              <div
-                class="px-4 py-3 bg-surface-light dark:bg-surface-dark-alt border-b border-border-light dark:border-border-dark">
-                <h3 class="font-bold text-text-primary-light dark:text-white text-sm uppercase tracking-wider">
+            <!-- Upcoming Matches Section (Grouped) -->
+            <div v-if="upcomingMatches.length > 0" class="space-y-4">
+              <div class="flex items-center gap-2 px-1 pt-4">
+                <span class="material-symbols-outlined text-primary-500">calendar_month</span>
+                <h2 class="text-sm font-black text-text-primary-light dark:text-white uppercase tracking-widest">
                   {{ $t('home.upcoming_matches') }}
-                </h3>
+                </h2>
               </div>
-              <div class="divide-y divide-border-light dark:divide-border-dark">
-                <div v-for="match in upcomingMatches" :key="match.id"
-                  class="p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer group"
-                  @click="$router.push(localePath(`/matches/${match.id}`))">
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-4 flex-1">
-                      <div class="flex flex-col items-center min-w-[60px]">
-                        <span class="text-text-secondary-light dark:text-text-secondary-dark font-medium text-xs">
-                          {{ new Date(match.match_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
-                        </span>
-                      </div>
-                      <div class="flex-1 space-y-2">
-                        <div class="flex items-center justify-between">
-                          <div class="flex items-center gap-3">
-                            <img v-if="match.home_team_logo" :src="match.home_team_logo"
-                              class="w-6 h-6 object-contain" />
-                            <div v-else class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                            <span
-                              class="font-medium text-text-primary-light dark:text-white">{{ match.home_team_name }}</span>
-                          </div>
-                        </div>
-                        <div class="flex items-center justify-between">
-                          <div class="flex items-center gap-3">
-                            <img v-if="match.away_team_logo" :src="match.away_team_logo"
-                              class="w-6 h-6 object-contain" />
-                            <div v-else class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700"></div>
-                            <span
-                              class="font-medium text-text-primary-light dark:text-white">{{ match.away_team_name }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="pl-4 border-l border-border-light dark:border-border-dark ml-4">
+
+              <div v-for="group in groupMatches(upcomingMatches)" :key="group.id"
+                class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark overflow-hidden shadow-sm">
+                <!-- Group Header -->
+                <div @click="toggleGroup(group.id)"
+                  class="px-4 py-2.5 bg-gray-50 dark:bg-white/5 border-b border-border-light dark:border-border-dark flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                  <div class="flex items-center gap-2.5">
+                    <span class="material-symbols-outlined text-gray-500 text-lg">emoji_events</span>
+                    <div class="flex flex-col leading-none">
+                      <span class="font-bold text-sm text-gray-900 dark:text-gray-100">{{ group.league_name }}</span>
                       <span
-                        class="material-symbols-outlined text-text-secondary-light dark:text-text-secondary-dark group-hover:text-primary-500 transition-colors">chevron_right</span>
+                        class="text-[10px] font-medium text-gray-500 uppercase tracking-wider mt-0.5">{{ group.tournament_name }}</span>
                     </div>
                   </div>
+                  <span class="material-symbols-outlined text-gray-400 text-sm transition-transform duration-300"
+                    :class="{ '-rotate-90': isGroupCollapsed(group.id) }">expand_more</span>
+                </div>
+                <!-- Matches List -->
+                <div v-show="!isGroupCollapsed(group.id)" class="p-2 space-y-1 transition-all">
+                  <MatchCard v-for="match in group.matches" :key="match.id" :match="match" />
                 </div>
               </div>
             </div>
@@ -533,6 +500,44 @@ const scrollSports = (direction: 'left' | 'right') => {
     sportsContainer.value.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   }
 };
+
+const collapsedGroups = ref<Set<string>>(new Set())
+
+const toggleGroup = (groupId: string) => {
+  if (collapsedGroups.value.has(groupId)) {
+    collapsedGroups.value.delete(groupId)
+  } else {
+    collapsedGroups.value.add(groupId)
+  }
+}
+
+const isGroupCollapsed = (groupId: string) => {
+  return collapsedGroups.value.has(groupId)
+}
+
+const groupMatches = (matches: any[]) => {
+  const groups: Record<string, any> = {}
+
+  matches.forEach(match => {
+    // Falls back to empty string if missing, no "Tournament" text
+    const league = match.league_name || ''
+    const tournament = match.tournament_name || ''
+    // Create a predictable ID for grouping
+    const key = `${league}-${tournament}`.replace(/\s+/g, '-').toLowerCase()
+
+    if (!groups[key]) {
+      groups[key] = {
+        id: key,
+        league_name: league,
+        tournament_name: tournament,
+        matches: []
+      }
+    }
+    groups[key].matches.push(match)
+  })
+
+  return Object.values(groups)
+}
 
 onMounted(() => {
   loadData();

@@ -3,44 +3,46 @@
     <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
       <!-- Header -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-6 md:mb-8">
         <div>
-          <h1 class="text-3xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight">
+          <h1
+            class="text-2xl md:text-3xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight">
             {{ $t('leagues_page.title') }} <span class="text-primary-500">{{ $t('leagues_page.title_highlight')
             }}</span>
           </h1>
-          <p class="text-text-secondary-light dark:text-text-secondary-dark mt-1">
+          <p class="text-sm md:text-base text-text-secondary-light dark:text-text-secondary-dark mt-1">
             {{ $t('leagues_page.subtitle') }}
           </p>
         </div>
 
         <NuxtLink v-if="authStore.isOrganizer" :to="localePath('/leagues/create')"
-          class="btn-primary self-start md:self-auto flex items-center gap-2">
-          <span class="material-symbols-outlined">add</span>
+          class="btn-primary self-start md:self-auto flex items-center gap-2 px-4 py-2 text-sm md:text-base">
+          <span class="material-symbols-outlined text-lg">add</span>
           {{ $t('leagues_page.create') }}
         </NuxtLink>
       </div>
 
       <!-- Filters Bar -->
       <div
-        class="bg-surface-light dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark p-2 mb-8 flex flex-col md:flex-row gap-4 overflow-x-auto">
-        <div class="flex items-center gap-2 p-1 bg-gray-100 dark:bg-white/5 rounded-xl">
+        class="bg-surface-light dark:bg-surface-dark rounded-2xl border border-border-light dark:border-border-dark p-2 mb-6 md:mb-8 flex flex-col md:flex-row gap-4 overflow-x-auto">
+        <div class="flex items-center gap-2 p-1 bg-gray-100 dark:bg-white/5 rounded-xl overflow-x-auto scrollbar-hide">
           <button v-for="status in ['active', 'inactive', 'finished']" :key="status"
             @click="filters.status = filters.status === status ? '' : status"
-            class="px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300"
+            class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-bold transition-all duration-300 whitespace-nowrap"
             :class="filters.status === status ? 'bg-white dark:bg-surface-dark-alt text-black dark:text-white shadow-sm' : 'text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
             {{ getStatusText(status) }}
           </button>
         </div>
 
-        <div class="h-px md:h-auto md:w-px bg-border-light dark:bg-border-dark"></div>
+        <div class="h-px md:h-auto md:w-px bg-border-light dark:bg-border-dark hidden md:block"></div>
 
         <div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
           <button v-for="sport in sports" :key="sport.id"
             @click="filters.sport_id = filters.sport_id === sport.id ? '' : sport.id"
-            class="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-light dark:border-border-dark hover:border-primary-500 transition-colors whitespace-nowrap"
+            class="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg border border-border-light dark:border-border-dark hover:border-primary-500 transition-colors whitespace-nowrap"
             :class="filters.sport_id === sport.id ? 'bg-primary-500/10 border-primary-500 text-primary-600 dark:text-primary-500' : 'bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark'">
-            <span class="text-sm font-bold">{{ sport.name }}</span>
+            <span class="text-xs md:text-sm font-bold">{{ sport.name }}</span>
           </button>
         </div>
       </div>
@@ -79,11 +81,21 @@
 
           <!-- Card Header/Image Placeholder -->
           <div
-            class="h-32 bg-surface-light dark:bg-surface-dark-alt flex items-center justify-center relative overflow-hidden">
-            <div
-              class="absolute inset-0 bg-gradient-to-b from-transparent to-surface-light dark:to-surface-dark opacity-50">
+            class="h-28 md:h-32 bg-surface-light dark:bg-surface-dark-alt flex items-center justify-center relative overflow-hidden">
+            <!-- League Image -->
+            <img v-if="league.cover_photo" :src="league.cover_photo"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-0">
+            <div v-else-if="league.logo" class="absolute inset-0 w-full h-full z-0">
+              <img :src="league.logo" class="w-full h-full object-cover opacity-60 blur-md scale-150">
             </div>
-            <div class="text-5xl transform group-hover:scale-110 transition-transform duration-500 text-primary-500">
+
+            <div
+              class="absolute inset-0 bg-gradient-to-b from-transparent to-surface-light dark:to-surface-dark opacity-50 z-10">
+            </div>
+
+            <!-- Default Icon if no images matches -->
+            <div v-if="!league.cover_photo && !league.logo"
+              class="text-5xl transform group-hover:scale-110 transition-transform duration-500 text-primary-500 relative z-20">
               <span class="material-symbols-outlined" style="font-size: 48px">emoji_events</span>
             </div>
           </div>

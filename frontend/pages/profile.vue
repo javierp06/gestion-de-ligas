@@ -1,83 +1,87 @@
 <template>
-    <div class="min-h-screen bg-background-light dark:bg-background-dark py-12">
+    <div class="min-h-screen bg-background-light dark:bg-background-dark py-6 md:py-12">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Header Profile Card -->
             <div
-                class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-600 to-primary-900 p-8 mb-8 shadow-xl animate-fade-in">
+                class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-600 to-primary-900 p-6 md:p-8 mb-6 md:mb-8 shadow-xl animate-fade-in">
                 <!-- Background Pattern -->
                 <div
                     class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2">
                 </div>
 
-                <div class="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                <div class="relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-8">
                     <div class="relative group">
                         <div
-                            class="w-32 h-32 rounded-full bg-white/10 backdrop-blur-md border-4 border-white/20 flex items-center justify-center text-4xl font-bold text-white shadow-2xl overflow-hidden">
+                            class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white/10 backdrop-blur-md border-4 border-white/20 flex items-center justify-center text-3xl md:text-4xl font-bold text-white shadow-2xl overflow-hidden transition-all duration-300">
                             <img v-if="authStore.user?.avatar" :src="authStore.user.avatar" alt="Profile"
                                 class="w-full h-full object-cover" />
                             <span v-else>{{ authStore.user?.name?.charAt(0).toUpperCase() }}</span>
                         </div>
                         <div
-                            class="absolute bottom-0 right-0 w-8 h-8 bg-green-500 rounded-full border-4 border-primary-800">
+                            class="absolute bottom-0 right-0 w-6 h-6 md:w-8 md:h-8 bg-green-500 rounded-full border-4 border-primary-800">
                         </div>
                     </div>
 
-                    <div class="text-center md:text-left flex-1">
-                        <h1 class="text-3xl font-display font-black text-white mb-2 tracking-tight">
-                            {{ authStore.user?.name }}
-                        </h1>
-                        <p class="text-primary-100 text-lg mb-4 font-medium">
-                            {{ authStore.user?.email }}
-                        </p>
-                        <div class="flex flex-wrap justify-center md:justify-start gap-3">
-                            <span
-                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-bold uppercase tracking-wide">
-                                <span class="material-symbols-outlined text-lg">badge</span>
-                                {{ getRoleText(authStore.user?.role || 'user') }}
-                            </span>
-                            <span v-if="authStore.user?.phone"
-                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium">
-                                <span class="material-symbols-outlined text-lg">phone</span>
-                                {{ authStore.user?.phone }}
-                            </span>
-                            <span v-if="authStore.user?.created_at"
-                                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium">
-                                <span class="material-symbols-outlined text-lg">calendar_month</span>
-                                {{ $t('profile_page.member_since', {
-                                    year: new
-                                        Date(authStore.user.created_at).getFullYear()
-                                }) }}
-                            </span>
+                    <ClientOnly>
+                        <div class="text-center md:text-left flex-1">
+                            <h1 class="text-2xl md:text-3xl font-display font-black text-white mb-2 tracking-tight">
+                                {{ authStore.user?.name }}
+                            </h1>
+                            <p class="text-primary-100 text-lg mb-4 font-medium">
+                                {{ authStore.user?.email }}
+                            </p>
+                            <div class="flex flex-wrap justify-center md:justify-start gap-3">
+                                <span
+                                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-bold uppercase tracking-wide">
+                                    <span class="material-symbols-outlined text-lg">badge</span>
+                                    {{ getRoleText(authStore.user?.role || 'user') }}
+                                </span>
+                                <span v-if="authStore.user?.phone"
+                                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium">
+                                    <span class="material-symbols-outlined text-lg">phone</span>
+                                    {{ authStore.user?.phone }}
+                                </span>
+                                <span v-if="authStore.user?.created_at"
+                                    class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium">
+                                    <span class="material-symbols-outlined text-lg">calendar_month</span>
+                                    {{ $t('profile_page.member_since', {
+                                        year: new
+                                            Date(authStore.user.created_at).getFullYear()
+                                    }) }}
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    </ClientOnly>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                 <!-- Sidebar Navigation -->
-                <div class="lg:col-span-1 space-y-6">
+                <div class="lg:col-span-1">
                     <div
-                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-6 animate-slide-up">
-                        <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-4 px-2">
+                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-4 md:p-6 animate-slide-up sticky top-24">
+                        <h3 class="text-lg font-bold text-text-primary-light dark:text-white mb-4 px-2 hidden lg:block">
                             {{ $t('profile_page.settings') }}
                         </h3>
-                        <nav class="space-y-2">
+
+                        <!-- Mobile: Horizontal Scroll / Desktop: Vertical Stack -->
+                        <nav class="flex lg:flex-col overflow-x-auto pb-2 lg:pb-0 gap-2 scrollbar-hide">
                             <button @click="activeTab = 'general'"
-                                :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-left',
-                                    activeTab === 'general' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5']">
-                                <span class="material-symbols-outlined">person</span>
+                                :class="['flex-shrink-0 lg:w-full flex items-center gap-3 px-4 py-2.5 md:py-3 rounded-xl transition-all duration-300 font-medium whitespace-nowrap',
+                                    activeTab === 'general' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5 border border-transparent']">
+                                <span class="material-symbols-outlined text-xl">person</span>
                                 {{ $t('profile_page.nav.personal_info') }}
                             </button>
                             <button @click="activeTab = 'security'"
-                                :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-left',
-                                    activeTab === 'security' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5']">
-                                <span class="material-symbols-outlined">lock</span>
+                                :class="['flex-shrink-0 lg:w-full flex items-center gap-3 px-4 py-2.5 md:py-3 rounded-xl transition-all duration-300 font-medium whitespace-nowrap',
+                                    activeTab === 'security' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5 border border-transparent']">
+                                <span class="material-symbols-outlined text-xl">lock</span>
                                 {{ $t('profile_page.nav.security') }}
                             </button>
                             <button @click="activeTab = 'activity'"
-                                :class="['w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium text-left',
-                                    activeTab === 'activity' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5']">
-                                <span class="material-symbols-outlined">history</span>
+                                :class="['flex-shrink-0 lg:w-full flex items-center gap-3 px-4 py-2.5 md:py-3 rounded-xl transition-all duration-300 font-medium whitespace-nowrap',
+                                    activeTab === 'activity' ? 'bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-500/20' : 'text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-white/5 border border-transparent']">
+                                <span class="material-symbols-outlined text-xl">history</span>
                                 {{ $t('profile_page.nav.activity') }}
                             </button>
                         </nav>
@@ -88,7 +92,7 @@
                 <div class="lg:col-span-2">
                     <!-- General Info Tab -->
                     <div v-if="activeTab === 'general'"
-                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-8 animate-fade-in">
+                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-5 md:p-8 animate-fade-in">
                         <h2
                             class="text-2xl font-display font-bold text-text-primary-light dark:text-white mb-6 flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary-500">manage_accounts</span>
@@ -115,91 +119,93 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        {{ $t('profile_page.personal.full_name') }}
-                                    </label>
-                                    <div class="relative group">
-                                        <span
-                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">person</span>
-                                        <input v-model="formData.name" type="text" required
-                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium" />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label
-                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        {{ $t('profile_page.personal.location') }}
-                                    </label>
-                                    <div class="relative group">
-                                        <span
-                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">location_on</span>
-                                        <input v-model="formData.location" type="text"
-                                            :placeholder="$t('profile_page.personal.location_placeholder')"
-                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium" />
-                                    </div>
-                                </div>
-
-                                <div class="md:col-span-2">
-                                    <label
-                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        {{ $t('profile_page.personal.phone') }}
-                                    </label>
-                                    <div class="flex gap-2">
-                                        <div class="relative w-32">
-                                            <select v-model="formData.countryCode"
-                                                class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium appearance-none">
-                                                <option v-for="country in countryCodes" :key="country.code"
-                                                    :value="country.code">
-                                                    {{ country.flag }} {{ country.code }}
-                                                </option>
-                                            </select>
+                            <ClientOnly>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                            {{ $t('profile_page.personal.full_name') }}
+                                        </label>
+                                        <div class="relative group">
                                             <span
-                                                class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark pointer-events-none text-sm">expand_more</span>
-                                        </div>
-                                        <div class="relative group flex-1">
-                                            <span
-                                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">phone</span>
-                                            <input v-model="formData.phone" type="tel" placeholder="9999-9999"
+                                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">person</span>
+                                            <input v-model="formData.name" type="text" required
                                                 class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium" />
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="md:col-span-2">
-                                    <label
-                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        {{ $t('profile_page.personal.bio') }}
-                                    </label>
-                                    <div class="relative group">
-                                        <span
-                                            class="material-symbols-outlined absolute left-4 top-4 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">edit_note</span>
-                                        <textarea v-model="formData.bio" rows="3"
-                                            :placeholder="$t('profile_page.personal.bio_placeholder')"
-                                            class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium resize-none"></textarea>
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                            {{ $t('profile_page.personal.location') }}
+                                        </label>
+                                        <div class="relative group">
+                                            <span
+                                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">location_on</span>
+                                            <input v-model="formData.location" type="text"
+                                                :placeholder="$t('profile_page.personal.location_placeholder')"
+                                                class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium" />
+                                        </div>
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label
+                                            class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                            {{ $t('profile_page.personal.phone') }}
+                                        </label>
+                                        <div class="flex gap-2">
+                                            <div class="relative w-32">
+                                                <select v-model="formData.countryCode"
+                                                    class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 px-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium appearance-none">
+                                                    <option v-for="country in countryCodes" :key="country.code"
+                                                        :value="country.code">
+                                                        {{ country.flag }} {{ country.code }}
+                                                    </option>
+                                                </select>
+                                                <span
+                                                    class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark pointer-events-none text-sm">expand_more</span>
+                                            </div>
+                                            <div class="relative group flex-1">
+                                                <span
+                                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">phone</span>
+                                                <input v-model="formData.phone" type="tel" placeholder="9999-9999"
+                                                    class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label
+                                            class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                            {{ $t('profile_page.personal.bio') }}
+                                        </label>
+                                        <div class="relative group">
+                                            <span
+                                                class="material-symbols-outlined absolute left-4 top-4 text-text-secondary-light dark:text-text-secondary-dark group-focus-within:text-primary-500 transition-colors">edit_note</span>
+                                            <textarea v-model="formData.bio" rows="3"
+                                                :placeholder="$t('profile_page.personal.bio_placeholder')"
+                                                class="w-full bg-background-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark text-text-primary-light dark:text-white rounded-xl py-3 pl-12 pr-4 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all font-medium resize-none"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="md:col-span-2">
+                                        <label
+                                            class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
+                                            {{ $t('profile_page.personal.email') }}
+                                        </label>
+                                        <div class="relative">
+                                            <span
+                                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">email</span>
+                                            <input :value="authStore.user?.email" type="email" disabled
+                                                class="w-full bg-background-light/50 dark:bg-surface-dark-alt/50 border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark rounded-xl py-3 pl-12 pr-4 outline-none cursor-not-allowed font-medium" />
+                                            <span
+                                                class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark bg-background-light dark:bg-surface-dark px-2 py-1 rounded-md border border-border-light dark:border-border-dark">
+                                                {{ $t('profile_page.personal.not_editable') }}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div class="md:col-span-2">
-                                    <label
-                                        class="block text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider mb-2">
-                                        {{ $t('profile_page.personal.email') }}
-                                    </label>
-                                    <div class="relative">
-                                        <span
-                                            class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">email</span>
-                                        <input :value="authStore.user?.email" type="email" disabled
-                                            class="w-full bg-background-light/50 dark:bg-surface-dark-alt/50 border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark rounded-xl py-3 pl-12 pr-4 outline-none cursor-not-allowed font-medium" />
-                                        <span
-                                            class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-text-secondary-light dark:text-text-secondary-dark bg-background-light dark:bg-surface-dark px-2 py-1 rounded-md border border-border-light dark:border-border-dark">
-                                            {{ $t('profile_page.personal.not_editable') }}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                            </ClientOnly>
 
                             <div class="flex justify-end pt-4">
                                 <button type="submit" :disabled="loading"
@@ -216,7 +222,7 @@
 
                     <!-- Security Tab -->
                     <div v-if="activeTab === 'security'"
-                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-8 animate-fade-in">
+                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-5 md:p-8 animate-fade-in">
                         <h2
                             class="text-2xl font-display font-bold text-text-primary-light dark:text-white mb-6 flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary-500">lock_reset</span>
@@ -281,7 +287,7 @@
 
                     <!-- Activity Tab -->
                     <div v-if="activeTab === 'activity'"
-                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-8 animate-fade-in">
+                        class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-5 md:p-8 animate-fade-in">
                         <h2
                             class="text-2xl font-display font-bold text-text-primary-light dark:text-white mb-6 flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary-500">history</span>

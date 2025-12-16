@@ -1,13 +1,13 @@
 <template>
     <div class="min-h-screen bg-background-light dark:bg-background-dark">
         <ClientOnly>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
                 <!-- Welcome Header -->
                 <div
-                    class="mb-8 animate-fade-in flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    class="mb-6 md:mb-8 animate-fade-in flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h1
-                            class="text-3xl font-display font-black text-text-primary-light dark:text-white uppercase tracking-tight">
+                            class="text-2xl md:text-3xl font-display font-black text-text-primary-light dark:text-white uppercase tracking-tight">
                             {{ $t('dashboard.welcome', { name: authStore.user?.name || 'Usuario' }) }}
                         </h1>
                         <p
@@ -23,36 +23,47 @@
                     </div>
 
                     <button @click="navigateTo(localePath('/leagues/create'))"
-                        class="hidden md:flex px-6 py-3 bg-primary-500 text-black font-bold rounded-xl shadow-neon hover:scale-105 transition-transform items-center gap-2 uppercase tracking-wide text-sm">
-                        <span class="material-symbols-outlined">add_circle</span>
-                        {{ $t('dashboard.organizer.create_first_league') }}
+                        class="px-4 md:px-6 py-2 md:py-3 bg-primary-500 text-black font-bold rounded-xl shadow-neon hover:scale-105 transition-transform flex items-center gap-2 uppercase tracking-wide text-xs md:text-sm">
+                        <span class="material-symbols-outlined text-lg md:text-xl">add_circle</span>
+                        <span class="hidden md:inline">{{ $t('dashboard.organizer.create_first_league') }}</span>
+                        <span class="md:hidden">Crear Liga</span>
                     </button>
                 </div>
 
-                <!-- 1. Stats Grid (Universal) -->
+                <!-- 1. Stats Grid (Navigation Shortcuts) -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
-                    <!-- Show different stats based on what data is available -->
-                    <div class="animate-slide-up stagger-1">
+                    <!-- My Leagues Shortcut -->
+                    <div class="animate-slide-up stagger-1 cursor-pointer hover:scale-105 transition-transform"
+                        @click="scrollToSection('my-leagues')">
                         <StatsCard :title="$t('dashboard.organizer.my_leagues')" :value="myLeagues?.length || 0"
                             icon="emoji_events" color="blue" />
                     </div>
-                    <div class="animate-slide-up stagger-2">
+                    <!-- Active Tournaments Shortcut -->
+                    <div class="animate-slide-up stagger-2 cursor-pointer hover:scale-105 transition-transform"
+                        @click="navigateTo(localePath('/tournaments'))">
                         <StatsCard :title="$t('dashboard.stats.active_tournaments')" :value="myTournaments?.length || 0"
                             icon="sports" color="green" />
                     </div>
-                    <div class="animate-slide-up stagger-3">
-                        <StatsCard :title="'Favoritos'" :value="favoritesStore.teams.length" icon="favorite"
+                    <!-- Favorites Shortcut -->
+                    <div class="animate-slide-up stagger-3 cursor-pointer hover:scale-105 transition-transform"
+                        @click="scrollToSection('favorites')">
+                        <StatsCard :title="'Favoritos'"
+                            :value="favoritesStore.teams.length + favoritesStore.leagues.length" icon="favorite"
                             color="red" />
                     </div>
-                    <div class="animate-slide-up stagger-4">
+                    <!-- Today Shortcut -->
+                    <div class="animate-slide-up stagger-4 cursor-pointer hover:scale-105 transition-transform"
+                        @click="scrollToSection('matches')">
                         <StatsCard :title="$t('dashboard.stats.today_matches')" :value="stats.todayMatches || 0"
                             icon="today" color="orange" />
                     </div>
                 </div>
 
+
+
                 <!-- 2. My Leagues (If Any) -->
-                <div v-if="myLeagues && myLeagues.length > 0"
-                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-4 md:p-8 mb-6 md:mb-8 animate-slide-up">
+                <div id="my-leagues" v-if="myLeagues && myLeagues.length > 0"
+                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-5 md:p-8 mb-6 md:mb-8 animate-slide-up">
                     <div class="flex items-center justify-between mb-4 md:mb-6">
                         <h2
                             class="text-xl md:text-2xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight flex items-center gap-2 md:gap-3">
@@ -77,8 +88,8 @@
                 </div>
 
                 <!-- 3. Favorites Section (New) -->
-                <div v-if="favoritesStore.leagues.length > 0 || favoritesStore.teams.length > 0"
-                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-4 md:p-8 mb-6 md:mb-8 animate-slide-up">
+                <div id="favorites" v-if="favoritesStore.leagues.length > 0 || favoritesStore.teams.length > 0"
+                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-5 md:p-8 mb-6 md:mb-8 animate-slide-up">
                     <h2
                         class="text-xl md:text-2xl font-display font-bold text-text-primary-light dark:text-white mb-4 md:mb-6 uppercase tracking-tight flex items-center gap-2 md:gap-3">
                         <span class="material-symbols-outlined text-red-500">favorite</span>
@@ -206,8 +217,8 @@
                 </div>
 
                 <!-- 5. Upcoming Matches (Universal) -->
-                <div v-if="upcomingMatches?.length"
-                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-4 md:p-8 animate-slide-up">
+                <div id="matches" v-if="upcomingMatches?.length"
+                    class="bg-surface-light dark:bg-surface-dark rounded-3xl shadow-xl border border-border-light dark:border-border-dark p-5 md:p-8 animate-slide-up">
                     <h2
                         class="text-xl md:text-2xl font-display font-bold text-text-primary-light dark:text-white mb-4 md:mb-6 uppercase tracking-tight">
                         {{ $t('dashboard.upcoming_matches') }}
@@ -295,6 +306,15 @@ const stats = computed(() => ({
     activeTournaments: myTournaments.value?.filter((t: any) => t.status === 'in_progress').length || 0,
     todayMatches: upcomingMatches.value?.filter((m: any) => new Date(m.match_date).toDateString() === new Date().toDateString()).length || 0,
 }))
+
+const scrollToSection = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+}
+
+
 
 const getRoleBadgeClass = (role: string) => {
     const classes: Record<string, string> = {

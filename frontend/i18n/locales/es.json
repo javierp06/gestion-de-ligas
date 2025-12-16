@@ -207,7 +207,7 @@
       "formats": {
         "league": "Liga",
         "knockout": "Eliminación Directa",
-        "group_knockout": "Grupos + Eliminación"
+        "group_knockout": "Liga + Eliminatoria"
       }
     }
   },
@@ -301,7 +301,7 @@
     "info_msg": "Podrás ajustar los cruces y calendario específico una vez creado el torneo.",
     "formats": {
       "league_desc": "Todos contra todos. El que tenga más puntos gana.",
-      "group_knockout_desc": "Fase de grupos seguida de llaves de eliminación (Mundial, Champions).",
+      "group_knockout_desc": "Fase regular (Liga) seguida de llaves de eliminación (Playoffs/Liguilla).",
       "knockout_desc": "Llaves de eliminación desde el inicio (Copa del Rey)."
     },
     "buttons": {
@@ -555,10 +555,13 @@
       "stats": "Estadísticas"
     },
     "stats": {
+      "lineup": "Alineación",
       "goals": "Goles",
+      "goals_short": "G",
       "yellow_cards": "Tarjetas Amarillas",
       "red_cards": "Tarjetas Rojas",
-      "assists": "Asistencias"
+      "assists": "Asistencias",
+      "assists_short": "A"
     },
     "events": {
       "goal": "Gol",
@@ -568,9 +571,24 @@
     "status": {
       "scheduled": "Programado",
       "live": "En Vivo",
+      "half_time": "Medio Tiempo",
       "finished": "Finalizado",
       "postponed": "Postergado",
       "cancelled": "Cancelado"
+    },
+    "live_controls": {
+      "title": "Control en Vivo",
+      "half_time": "Medio Tiempo",
+      "suspend": "Suspender",
+      "resume": "Reanudar",
+      "start": "Iniciar Partido",
+      "finish": "Finalizar",
+      "pause": "Pausar",
+      "cancel": "Cancelar",
+      "reopen": "Reanudar Partido",
+      "confirm_finish": "¿Estás seguro de finalizar el partido?",
+      "score_updated": "Marcador actualizado",
+      "status_updated": "Estado cambiado a {status}"
     },
     "modals": {
       "edit_match": {
@@ -651,5 +669,13 @@
     "delete_confirm": "¿Estás seguro de eliminar este equipo? Esta acción no se puede deshacer.",
     "delete_success": "Equipo eliminado exitosamente",
     "delete_error": "Error al eliminar el equipo"
+  },
+  "search": {
+    "title": "Resultados para \"{query}\"",
+    "subtitle": "Encontramos {count} resultados",
+    "teams": "Equipos",
+    "tournaments": "Torneos",
+    "no_results_title": "No encontramos nada",
+    "no_results_subtitle": "No pudimos encontrar resultados para \"{query}\". Intenta con otro término."
   }
 }

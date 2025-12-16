@@ -94,31 +94,32 @@
                 </div>
 
 
-                <div class="flex-1 w-full grid grid-cols-3 items-center gap-4">
-                  <div class="flex items-center justify-end gap-4 text-right">
+                <div class="flex-1 w-full grid grid-cols-[1fr,auto,1fr] items-center gap-2 md:gap-4">
+                  <div class="flex items-center justify-end gap-2 md:gap-4 text-right min-w-0">
                     <span
-                      class="font-bold text-text-primary-light dark:text-white md:text-lg">{{ match.home_team }}</span>
+                      class="font-bold text-text-primary-light dark:text-white text-sm md:text-lg truncate leading-tight">{{ match.home_team }}</span>
                     <div
-                      class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                      class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center overflow-hidden">
                       <img v-if="match.home_team_logo" :src="match.home_team_logo" class="w-full h-full object-cover">
                     </div>
                   </div>
 
-                  <div class="flex items-center justify-center gap-3">
+                  <div class="flex items-center justify-center gap-2 md:gap-3 px-2">
                     <span
-                      class="text-2xl md:text-3xl font-black text-text-primary-light dark:text-white">{{ match.home_score }}</span>
-                    <span class="text-text-secondary-light dark:text-text-secondary-dark font-bold">-</span>
+                      class="text-xl md:text-3xl font-black text-text-primary-light dark:text-white">{{ match.home_score }}</span>
                     <span
-                      class="text-2xl md:text-3xl font-black text-text-primary-light dark:text-white">{{ match.away_score }}</span>
+                      class="text-text-secondary-light dark:text-text-secondary-dark font-bold text-sm md:text-base">-</span>
+                    <span
+                      class="text-xl md:text-3xl font-black text-text-primary-light dark:text-white">{{ match.away_score }}</span>
                   </div>
 
-                  <div class="flex items-center justify-start gap-4 text-left">
+                  <div class="flex items-center justify-start gap-2 md:gap-4 text-left min-w-0">
                     <div
-                      class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                      class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 flex items-center justify-center overflow-hidden">
                       <img v-if="match.away_team_logo" :src="match.away_team_logo" class="w-full h-full object-cover">
                     </div>
                     <span
-                      class="font-bold text-text-primary-light dark:text-white md:text-lg">{{ match.away_team }}</span>
+                      class="font-bold text-text-primary-light dark:text-white text-sm md:text-lg truncate leading-tight">{{ match.away_team }}</span>
                   </div>
                 </div>
 

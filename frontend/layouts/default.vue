@@ -32,8 +32,10 @@
           <!-- Search Bar -->
           <div class="hidden lg:flex items-center relative mx-4">
             <span
-              class="material-symbols-outlined absolute left-3 text-text-secondary-light dark:text-text-secondary-dark">search</span>
-            <input type="text" :placeholder="$t('nav.search_placeholder')"
+              class="material-symbols-outlined absolute left-3 text-text-secondary-light dark:text-text-secondary-dark cursor-pointer"
+              @click="handleSearch">search</span>
+            <input type="text" :placeholder="$t('nav.search_placeholder')" v-model="searchQuery"
+              @keyup.enter="handleSearch"
               class="bg-surface-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all w-48 focus:w-64 text-text-primary-light dark:text-white" />
           </div>
 
@@ -67,69 +69,78 @@
             </button>
 
             <!-- Auth Buttons -->
-            <template v-if="authStore.isAuthenticated">
-              <div class="relative">
-                <button @click="showDropdown = !showDropdown"
-                  class="flex items-center gap-3 pl-3 pr-1 py-1 rounded-full border border-border-light dark:border-border-dark hover:border-primary-500 transition-colors bg-surface-light dark:bg-surface-dark-alt">
-                  <span class="text-sm font-bold text-text-primary-light dark:text-white hidden sm:block">
-                    {{ authStore.user?.name }}
-                  </span>
-                  <div
-                    class="w-8 h-8 rounded-full bg-primary-500 text-black flex items-center justify-center font-bold text-sm">
-                    {{ authStore.user?.name?.charAt(0).toUpperCase() }}
+            <ClientOnly>
+              <template v-if="authStore.isAuthenticated">
+                <div class="relative">
+                  <button @click="showDropdown = !showDropdown"
+                    class="flex items-center gap-3 pl-3 pr-1 py-1 rounded-full border border-border-light dark:border-border-dark hover:border-primary-500 transition-colors bg-surface-light dark:bg-surface-dark-alt">
+                    <span class="text-sm font-bold text-text-primary-light dark:text-white hidden sm:block">
+                      {{ authStore.user?.name }}
+                    </span>
+                    <div
+                      class="w-8 h-8 rounded-full bg-primary-500 text-black flex items-center justify-center font-bold text-sm">
+                      {{ authStore.user?.name?.charAt(0).toUpperCase() }}
+                    </div>
+                  </button>
+
+                  <!-- Dropdown Menu -->
+                  <div v-if="showDropdown"
+                    class="absolute right-0 mt-2 w-56 bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-border-light dark:border-border-dark py-2 z-50 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-border-light dark:border-border-dark mb-2">
+                      <p
+                        class="text-xs text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider font-bold">
+                        {{ $t('user_menu.account') }}
+                      </p>
+                      <p class="text-sm font-bold text-text-primary-light dark:text-white truncate">
+                        {{ authStore.user?.email }}
+                      </p>
+                    </div>
+                    <button @click="navigateAndClose('/dashboard')"
+                      class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
+                      <span class="material-symbols-outlined text-xl">dashboard</span>
+                      <span>{{ $t('user_menu.dashboard') }}</span>
+                    </button>
+
+                    <button @click="navigateAndClose('/profile')"
+                      class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
+                      <span class="material-symbols-outlined text-xl">person</span>
+                      <span>{{ $t('user_menu.profile') }}</span>
+                    </button>
+
+                    <div class="border-t border-border-light dark:border-border-dark my-2"></div>
+
+                    <button @click="handleLogout"
+                      class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                      <span class="material-symbols-outlined text-xl">logout</span>
+                      <span>{{ $t('user_menu.logout') }}</span>
+                    </button>
                   </div>
-                </button>
-
-                <!-- Dropdown Menu -->
-                <div v-if="showDropdown"
-                  class="absolute right-0 mt-2 w-56 bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-border-light dark:border-border-dark py-2 z-50 overflow-hidden">
-                  <div class="px-4 py-3 border-b border-border-light dark:border-border-dark mb-2">
-                    <p
-                      class="text-xs text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider font-bold">
-                      {{ $t('user_menu.account') }}
-                    </p>
-                    <p class="text-sm font-bold text-text-primary-light dark:text-white truncate">
-                      {{ authStore.user?.email }}
-                    </p>
-                  </div>
-                  <button @click="navigateAndClose('/dashboard')"
-                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
-                    <span class="material-symbols-outlined text-xl">dashboard</span>
-                    <span>{{ $t('user_menu.dashboard') }}</span>
-                  </button>
-
-                  <button @click="navigateAndClose('/profile')"
-                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:text-primary-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-left">
-                    <span class="material-symbols-outlined text-xl">person</span>
-                    <span>{{ $t('user_menu.profile') }}</span>
-                  </button>
-
-                  <div class="border-t border-border-light dark:border-border-dark my-2"></div>
-
-                  <button @click="handleLogout"
-                    class="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                    <span class="material-symbols-outlined text-xl">logout</span>
-                    <span>{{ $t('user_menu.logout') }}</span>
-                  </button>
                 </div>
-              </div>
-            </template>
-            <template v-else>
-              <NuxtLink :to="localePath('/login')"
-                class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white transition-colors">
-                {{ $t('nav.login').toUpperCase() }}
-              </NuxtLink>
-              <NuxtLink :to="localePath('/register')"
-                class="btn-primary px-6 py-2 rounded-lg text-sm font-bold tracking-wide shadow-neon hover:scale-105 transition-transform">
-                {{ $t('nav.register').toUpperCase() }}
-              </NuxtLink>
-            </template>
+              </template>
+              <template v-else>
+                <NuxtLink :to="localePath('/login')"
+                  class="text-sm font-bold text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white transition-colors">
+                  {{ $t('nav.login').toUpperCase() }}
+                </NuxtLink>
+                <NuxtLink :to="localePath('/register')"
+                  class="btn-primary px-6 py-2 rounded-lg text-sm font-bold tracking-wide shadow-neon hover:scale-105 transition-transform">
+                  {{ $t('nav.register').toUpperCase() }}
+                </NuxtLink>
+              </template>
+            </ClientOnly>
           </div>
-          <!-- Mobile Menu Toggle -->
-          <button @click="showMobileMenu = !showMobileMenu"
-            class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark">
-            <span class="material-symbols-outlined">{{ showMobileMenu ? 'close' : 'menu' }}</span>
-          </button>
+          <!-- Mobile Header Actions -->
+          <div class="flex items-center gap-2 md:hidden">
+            <button @click="toggleMobileSearch"
+              class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark"
+              :class="{ 'bg-primary-50 text-primary-600 dark:bg-primary-900/20 dark:text-primary-400': showMobileSearch }">
+              <span class="material-symbols-outlined">{{ showMobileSearch ? 'search_off' : 'search' }}</span>
+            </button>
+            <button @click="showMobileMenu = !showMobileMenu"
+              class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors text-text-secondary-light dark:text-text-secondary-dark">
+              <span class="material-symbols-outlined">{{ showMobileMenu ? 'close' : 'menu' }}</span>
+            </button>
+          </div>
         </div>
       </div>
       <!-- Mobile Menu -->
@@ -159,62 +170,66 @@
         <div class="h-px bg-border-light dark:border-border-dark my-2"></div>
 
         <!-- Mobile Auth/Account Links -->
-        <template v-if="authStore.isAuthenticated">
-          <div class="flex flex-col gap-2">
-            <div class="px-3 py-2 flex items-center gap-3">
-              <div
-                class="w-8 h-8 rounded-full bg-primary-500 text-black flex items-center justify-center font-bold text-sm">
-                {{ authStore.user?.name?.charAt(0).toUpperCase() }}
+        <ClientOnly>
+          <template v-if="authStore.isAuthenticated">
+            <div class="flex flex-col gap-2">
+              <div class="px-3 py-2 flex items-center gap-3">
+                <div
+                  class="w-8 h-8 rounded-full bg-primary-500 text-black flex items-center justify-center font-bold text-sm">
+                  {{ authStore.user?.name?.charAt(0).toUpperCase() }}
+                </div>
+                <div class="flex flex-col">
+                  <span
+                    class="text-sm font-bold text-text-primary-light dark:text-white">{{ authStore.user?.name }}</span>
+                  <span
+                    class="text-xs text-text-secondary-light dark:text-text-secondary-dark truncate max-w-[150px]">{{ authStore.user?.email }}</span>
+                </div>
               </div>
-              <div class="flex flex-col">
-                <span
-                  class="text-sm font-bold text-text-primary-light dark:text-white">{{ authStore.user?.name }}</span>
-                <span
-                  class="text-xs text-text-secondary-light dark:text-text-secondary-dark truncate max-w-[150px]">{{ authStore.user?.email }}</span>
-              </div>
+
+              <button @click="navigateAndClose('/dashboard')"
+                class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>{{ $t('user_menu.dashboard') }}</span>
+              </button>
+
+              <button @click="navigateAndClose('/profile')"
+                class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
+                <span class="material-symbols-outlined">person</span>
+                <span>{{ $t('user_menu.profile') }}</span>
+              </button>
+
+              <button @click="handleLogout"
+                class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                <span class="material-symbols-outlined">logout</span>
+                <span>{{ $t('user_menu.logout') }}</span>
+              </button>
             </div>
-
-            <button @click="navigateAndClose('/dashboard')"
-              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
-              <span class="material-symbols-outlined">dashboard</span>
-              <span>{{ $t('user_menu.dashboard') }}</span>
-            </button>
-
-            <button @click="navigateAndClose('/profile')"
-              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
-              <span class="material-symbols-outlined">person</span>
-              <span>{{ $t('user_menu.profile') }}</span>
-            </button>
-
-            <button @click="handleLogout"
-              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
-              <span class="material-symbols-outlined">logout</span>
-              <span>{{ $t('user_menu.logout') }}</span>
-            </button>
-          </div>
-        </template>
-        <template v-else>
-          <div class="flex flex-col gap-2">
-            <NuxtLink :to="localePath('/login')" @click="showMobileMenu = false"
-              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
-              <span class="material-symbols-outlined">login</span>
-              <span>{{ $t('nav.login') }}</span>
-            </NuxtLink>
-            <NuxtLink :to="localePath('/register')" @click="showMobileMenu = false"
-              class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-primary-600 dark:text-primary-500 bg-primary-500/10">
-              <span class="material-symbols-outlined">person_add</span>
-              <span>{{ $t('nav.register') }}</span>
-            </NuxtLink>
-          </div>
-        </template>
+          </template>
+          <template v-else>
+            <div class="flex flex-col gap-2">
+              <NuxtLink :to="localePath('/login')" @click="showMobileMenu = false"
+                class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-text-secondary-light dark:text-text-secondary-dark hover:bg-gray-50 dark:hover:bg-white/5">
+                <span class="material-symbols-outlined">login</span>
+                <span>{{ $t('nav.login') }}</span>
+              </NuxtLink>
+              <NuxtLink :to="localePath('/register')" @click="showMobileMenu = false"
+                class="p-3 rounded-xl text-base font-bold transition-colors flex items-center gap-3 text-primary-600 dark:text-primary-500 bg-primary-500/10">
+                <span class="material-symbols-outlined">person_add</span>
+                <span>{{ $t('nav.register') }}</span>
+              </NuxtLink>
+            </div>
+          </template>
+        </ClientOnly>
 
         <div class="h-px bg-border-light dark:border-border-dark my-2"></div>
 
         <!-- Mobile Search -->
         <div class="relative">
           <span
-            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark">search</span>
-          <input type="text" :placeholder="$t('nav.search_placeholder')"
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary-light dark:text-text-secondary-dark cursor-pointer"
+            @click="handleSearch">search</span>
+          <input type="text" :placeholder="$t('nav.search_placeholder')" v-model="searchQuery"
+            @keyup.enter="handleSearch"
             class="w-full bg-surface-light dark:bg-surface-dark-alt border border-border-light dark:border-border-dark rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all text-text-primary-light dark:text-white" />
         </div>
 
@@ -253,14 +268,33 @@
 
     <!-- Mobile Quick Navigation (Secondary Header) -->
     <div
-      class="md:hidden sticky top-16 z-40 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-b border-border-light dark:border-border-dark overflow-x-auto scrollbar-hide">
-      <div class="flex items-center gap-2 px-4 py-2 min-w-max">
+      class="md:hidden sticky top-16 z-40 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-b border-border-light dark:border-border-dark overflow-hidden mobile-search-bar"
+      style="height: 57px;">
+
+      <!-- Search Mode -->
+      <div v-if="showMobileSearch" class="h-full px-4 flex items-center justify-between gap-3 animate-fade-in">
+        <div class="relative flex-1">
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary-500">search</span>
+          <input ref="mobileSearchInput" type="text" v-model="searchQuery" @keyup.enter="handleSearch"
+            :placeholder="$t('nav.search_placeholder')"
+            class="w-full bg-background-light dark:bg-black/20 border border-transparent focus:border-primary-500 rounded-xl py-2 pl-10 pr-4 text-sm outline-none transition-all"
+            autofocus />
+        </div>
+        <button @click="toggleMobileSearch"
+          class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <!-- Navigation Mode -->
+      <div v-else class="h-full flex items-center gap-2 px-4 overflow-x-auto scrollbar-hide animate-fade-in">
         <NuxtLink v-for="item in [
           { key: 'nav.leagues', path: '/leagues', icon: 'emoji_events' },
           { key: 'nav.tournaments', path: '/tournaments', icon: 'trophy' },
           { key: 'nav.matches', path: '/matches', icon: 'sports_soccer' }
         ]" :key="item.key" :to="localePath(item.path)"
-          class="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border"
+          class="flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border shrink-0"
           :class="route.path === localePath(item.path)
             ? 'bg-primary-500 text-black border-primary-500 shadow-neon'
             : 'bg-background-light dark:bg-background-dark text-text-secondary-light dark:text-text-secondary-dark border-border-light dark:border-border-dark hover:border-primary-500 hover:text-primary-500'">
@@ -388,11 +422,31 @@ watch(() => route.fullPath, () => {
   showMobileMenu.value = false;
 });
 
+const showMobileSearch = ref(false);
+const searchQuery = ref('');
+
+const toggleMobileSearch = () => {
+  showMobileSearch.value = !showMobileSearch.value;
+  if (showMobileSearch.value) {
+    showMobileMenu.value = false;
+    // Focus logic could optionally go here with a ref
+  }
+};
+
+const handleSearch = () => {
+  if (searchQuery.value.trim()) {
+    navigateTo(localePath({ path: '/search', query: { q: searchQuery.value } }));
+    showMobileMenu.value = false;
+    showMobileSearch.value = false;
+    searchQuery.value = '';
+  }
+};
+
 onMounted(() => {
   if (typeof window !== 'undefined') {
     document.addEventListener('click', (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (!target.closest('.relative')) {
+      if (!target.closest('.relative') && !target.closest('.mobile-search-bar')) {
         showDropdown.value = false;
         showLangDropdown.value = false;
       }

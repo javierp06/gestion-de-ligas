@@ -3,38 +3,40 @@
     <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
 
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-6 md:mb-8">
         <div>
-          <h1 class="text-3xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight">
+          <h1
+            class="text-2xl md:text-3xl font-display font-bold text-text-primary-light dark:text-white uppercase tracking-tight">
             {{ $t('tournaments_page.title') }} <span class="text-primary-500">{{ $t('tournaments_page.title_highlight')
             }}</span>
           </h1>
-          <p class="text-text-secondary-light dark:text-text-secondary-dark mt-1">
+          <p class="text-sm md:text-base text-text-secondary-light dark:text-text-secondary-dark mt-1">
             {{ $t('tournaments_page.subtitle') }}
           </p>
         </div>
 
-        <button class="btn-primary self-start md:self-auto flex items-center gap-2">
-          <span class="material-symbols-outlined">add</span>
-          {{ $t('tournaments_page.create') }}
-        </button>
+
       </div>
 
 
-      <div class="flex items-center gap-4 mb-8 overflow-x-auto pb-2 scrollbar-hide">
-        <button @click="filter = 'all'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
+      <div class="flex items-center gap-2 md:gap-4 mb-6 md:mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        <button @click="filter = 'all'"
+          class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg font-bold text-xs md:text-sm transition-all duration-300 whitespace-nowrap"
           :class="filter === 'all' ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
           {{ $t('tournaments_page.filters.all') }}
         </button>
-        <button @click="filter = 'open'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
+        <button @click="filter = 'open'"
+          class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg font-bold text-xs md:text-sm transition-all duration-300 whitespace-nowrap"
           :class="filter === 'open' ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
           {{ $t('tournaments_page.filters.open') }}
         </button>
-        <button @click="filter = 'active'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
+        <button @click="filter = 'active'"
+          class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg font-bold text-xs md:text-sm transition-all duration-300 whitespace-nowrap"
           :class="filter === 'active' ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
           {{ $t('tournaments_page.filters.active') }}
         </button>
-        <button @click="filter = 'finished'" class="px-4 py-2 rounded-lg font-bold text-sm transition-all duration-300"
+        <button @click="filter = 'finished'"
+          class="px-3 md:px-4 py-1.5 md:py-2 rounded-lg font-bold text-xs md:text-sm transition-all duration-300 whitespace-nowrap"
           :class="filter === 'finished' ? 'bg-primary-500 text-black shadow-neon' : 'bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-white'">
           {{ $t('tournaments_page.filters.finished') }}
         </button>
@@ -46,15 +48,21 @@
           @click="navigateTo(localePath(`/tournaments/${tournament.id}`))"
           class="group bg-surface-light dark:bg-surface-dark rounded-2xl overflow-hidden border border-border-light dark:border-border-dark hover:border-primary-500/50 transition-all duration-300 hover:shadow-neon cursor-pointer">
 
-          <div class="h-40 bg-surface-light dark:bg-surface-dark-alt relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+          <div class="h-36 md:h-40 bg-surface-light dark:bg-surface-dark-alt relative overflow-hidden">
+            <!-- Tournament Image -->
+            <img v-if="tournament.cover_photo" :src="tournament.cover_photo"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <div v-else-if="tournament.logo" class="absolute inset-0 w-full h-full">
+              <img :src="tournament.logo" class="w-full h-full object-cover opacity-60 blur-md scale-150">
+            </div>
 
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
 
             <div class="absolute bottom-4 left-4 z-20">
               <span
-                class="text-xs font-bold text-primary-500 uppercase tracking-wider mb-1 block">{{ getSportName(tournament.sport_name) }}</span>
-              <h3 class="text-xl font-bold text-white leading-tight">{{ tournament.name }}</h3>
+                class="text-[10px] md:text-xs font-bold text-primary-500 uppercase tracking-wider mb-1 block">{{ getSportName(tournament.sport_name) }}</span>
+              <h3 class="text-lg md:text-xl font-bold text-white leading-tight line-clamp-2">{{ tournament.name }}</h3>
             </div>
 
             <div class="absolute top-4 right-4 z-20">
@@ -67,35 +75,36 @@
 
 
           <div class="p-6">
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
               <div>
-                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
+                <span class="text-[10px] md:text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
                   {{ $t('tournaments_page.card.teams') }}
                 </span>
-                <span class="text-lg font-bold text-text-primary-light dark:text-white">{{ tournament.teams_count || 0
+                <span class="text-base md:text-lg font-bold text-text-primary-light dark:text-white">{{ tournament.teams_count || 0
                 }}/{{
                   tournament.max_teams || '∞' }}</span>
               </div>
               <div>
-                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
+                <span class="text-[10px] md:text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
                   {{ $t('tournaments_page.card.start') }}
                 </span>
-                <span class="text-lg font-bold text-text-primary-light dark:text-white">{{
+                <span class="text-base md:text-lg font-bold text-text-primary-light dark:text-white">{{
                   formatDate(tournament.start_date) }}</span>
               </div>
               <div>
-                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
+                <span class="text-[10px] md:text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
                   {{ $t('tournaments_page.card.league') }}
                 </span>
-                <span class="text-lg font-bold text-primary-600 dark:text-primary-500 truncate block">{{
+                <span class="text-base md:text-lg font-bold text-primary-600 dark:text-primary-500 truncate block">{{
                   tournament.league_name }}</span>
               </div>
               <div>
-                <span class="text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
+                <span class="text-[10px] md:text-xs text-text-secondary-light dark:text-text-secondary-dark block mb-1">
                   {{ $t('tournaments_page.card.format') }}
                 </span>
-                <span class="text-lg font-bold text-text-primary-light dark:text-white capitalize">{{ tournament.format
-                }}</span>
+                <span
+                  class="text-base md:text-lg font-bold text-text-primary-light dark:text-white capitalize truncate block">{{ tournament.format
+                  }}</span>
               </div>
             </div>
 
