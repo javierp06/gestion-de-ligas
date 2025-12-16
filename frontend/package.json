@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.5.1",
+    "@vite-pwa/nuxt": "^1.1.0",
     "axios": "^1.7.9",
     "nuxt": "^3.10.0",
     "pinia": "^2.1.7",
