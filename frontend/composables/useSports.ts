@@ -65,11 +65,20 @@ export const useSports = () => {
     })
   }
 
+
+  const calculateMatchTime = (dateString: string): string => {
+    const start = new Date(dateString).getTime()
+    const now = new Date().getTime()
+    const diff = Math.floor((now - start) / 60000) // Difference in minutes
+    return diff >= 0 ? `${diff}'` : "0'"
+  }
+
   return {
     getSportEmoji,
     getStatusColor,
     getStatusText,
     formatMatchDate,
-    formatTime
+    formatTime,
+    calculateMatchTime
   }
 }

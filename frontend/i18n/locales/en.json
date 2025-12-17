@@ -60,6 +60,7 @@
     "success": "Account created successfully! Redirecting to login..."
   },
   "home": {
+    "live_matches": "Live Matches",
     "my_leagues": "My Leagues",
     "join_league": "Join League",
     "sports": "Sports",
@@ -673,7 +674,7 @@
     "title": "Results for \"{query}\"",
     "subtitle": "Found {count} results",
     "teams": "Teams",
-    "tournaments": "Tournaments",
+    "tournaments": "Join Tournaments",
     "no_results_title": "No results found",
     "no_results_subtitle": "We couldn't find any results for \"{query}\". Try a different term."
   }

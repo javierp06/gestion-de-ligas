@@ -1,0 +1,28 @@
+
+> deportes-frontend@1.0.0 generate
+> nuxt generate
+
+[90m[[90mnuxi[90m][39m [32mNuxt [1m3.20.1[22m[39m[90m (with [39m[90mNitro [1m2.12.9[22m[39m[90m, Vite [1m7.2.2[22m[39m[90m and Vue [1m3.5.24[22m[39m[90m)[39m
+[90m[[90mnuxt:tailwindcss[90m][39m [36mΓä╣[39m Using Tailwind CSS from ~/assets/css/tailwind.css
+[90m[[90mnuxi[90m][39m [36mΓä╣[39m Building for Nitro preset: [36mstatic[39m
+[36mΓä╣[39m Building client...
+[36mΓä╣[39m [36mvite v7.2.2 [32mbuilding client environment for production...[36m[39m
+[36mΓä╣[39m transforming...
+[36mΓä╣[39m [32mΓ£ô[39m 96 modules transformed.
+
+ ERROR  Γ£ù Build failed in 3.20s
+
+
+[nuxi]  ERROR  Nuxt Build Error: [vite]: Rollup failed to resolve import "@vueuse/core" from "D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal - Copy/frontend/pages/players/index.vue".
+This is most likely unintended because it can break your application at runtime.
+If you do want to externalize this module explicitly add it to
+build.rollupOptions.external
+
+    at viteLog (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/vite/dist/node/chunks/config.js:34254:57)
+    at onRollupLog (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/vite/dist/node/chunks/config.js:34284:7)
+    at onLog (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/vite/dist/node/chunks/config.js:34086:4)
+    at /D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:20947:32
+    at Object.logger [as onLog] (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:22834:9)
+    at ModuleLoader.handleInvalidResolvedId (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:21578:26)
+    at /D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:21536:26
+

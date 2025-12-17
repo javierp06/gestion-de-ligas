@@ -22,7 +22,7 @@
           Live
         </span>
         <span class="text-sm font-mono font-medium text-gray-900 dark:text-white">
-          {{ match.match_time || '00\'' }}
+          {{ liveTime }}
         </span>
       </template>
 
@@ -80,7 +80,9 @@
 
 <script setup lang="ts">
 import { useSports } from '@/composables/useSports'
-const { getStatusColor, getStatusText, formatMatchDate, formatTime } = useSports()
+import { ref, onMounted, onUnmounted, watch } from 'vue'
+
+const { getStatusColor, getStatusText, formatMatchDate, formatTime, calculateMatchTime } = useSports()
 const localePath = useLocalePath()
 
 interface Match {
@@ -98,7 +100,38 @@ interface Match {
   match_time?: string
 }
 
-defineProps<{
+const props = defineProps<{
   match: Match
 }>()
+
+const liveTime = ref(props.match.match_time || "00'")
+let timerInterval: any = null
+
+const updateTimer = () => {
+  if (props.match.status === 'live') {
+    liveTime.value = calculateMatchTime(props.match.match_date)
+  }
+}
+
+onMounted(() => {
+  updateTimer()
+  if (props.match.status === 'live') {
+    timerInterval = setInterval(updateTimer, 60000) // Update every minute
+  }
+})
+
+onUnmounted(() => {
+  if (timerInterval) clearInterval(timerInterval)
+})
+
+// Watch for status changes (e.g. if match goes live while user is viewing)
+watch(() => props.match.status, (newStatus) => {
+  if (newStatus === 'live') {
+    updateTimer()
+    if (!timerInterval) timerInterval = setInterval(updateTimer, 60000)
+  } else {
+    if (timerInterval) clearInterval(timerInterval)
+    timerInterval = null
+  }
+})
 </script>

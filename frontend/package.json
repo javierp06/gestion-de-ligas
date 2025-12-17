@@ -11,8 +11,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
     "@pinia/nuxt": "^0.5.1",
     "@vite-pwa/nuxt": "^1.1.0",
+    "@vueuse/core": "^14.1.0",
+    "@vueuse/nuxt": "^14.1.0",
     "axios": "^1.7.9",
     "nuxt": "^3.10.0",
     "pinia": "^2.1.7",

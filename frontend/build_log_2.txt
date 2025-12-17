@@ -1,0 +1,42 @@
+
+> deportes-frontend@1.0.0 generate
+> nuxt generate
+
+[90m[[90mnuxi[90m][39m [32mNuxt [1m3.20.1[22m[39m[90m (with [39m[90mNitro [1m2.12.9[22m[39m[90m, Vite [1m7.2.2[22m[39m[90m and Vue [1m3.5.24[22m[39m[90m)[39m
+[90m[[90mnuxt:tailwindcss[90m][39m [36mΓä╣[39m Using Tailwind CSS from ~/assets/css/tailwind.css
+[90m[[90mnuxi[90m][39m [36mΓä╣[39m Building for Nitro preset: [36mstatic[39m
+[36mΓä╣[39m Building client...
+[36mΓä╣[39m [36mvite v7.2.2 [32mbuilding client environment for production...[36m[39m
+[36mΓä╣[39m transforming...
+
+ WARN  node_modules/vue-i18n/dist/vue-i18n.mjs (227:13): "currentInstance" is not exported by "node_modules/vue/dist/vue.runtime.esm-bundler.js", imported by "node_modules/vue-i18n/dist/vue-i18n.mjs".
+
+
+ WARN  pages/players/[id].vue (75:9): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+
+[36mΓä╣[39m [32mΓ£ô[39m 424 modules transformed.
+
+ ERROR  Γ£ù Build failed in 5.80s
+
+
+[nuxi]  ERROR  Nuxt Build Error: pages/players/[id].vue (75:9): "useToast" is not exported by "stores/toast.ts", imported by "pages/players/[id].vue".
+file: D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal - Copy/frontend/pages/players/[id].vue:75:9
+
+73: import { ref, onMounted, computed } from 'vue';
+74: import { useRoute, useRouter } from 'vue-router';
+75: import { useToast } from '@/stores/toast';
+             ^
+76: import { useAuthStore } from '@/stores/auth';
+
+
+    at getRollupError (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:16946:16)
+    at Module.traceVariable (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:17400:29)
+    at ModuleScope.findVariable (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:15067:39)
+    at ChildScope.findVariable (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5641:38)
+    at FunctionScope.findVariable (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5641:38)
+    at FunctionBodyScope.findVariable (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5641:38)
+    at Identifier.bind (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:5415:40)
+    at CallExpression.bind (/D:/Javier/Documents/Ceutec/vanguardia/ProyectoFinal%20-%20Copy/frontend/node_modules/rollup/dist/es/shared/node-entry.js:2806:23)
+

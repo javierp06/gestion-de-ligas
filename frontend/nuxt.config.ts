@@ -1,8 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
   devtools: { enabled: true },
 
-  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxtjs/i18n", "@vite-pwa/nuxt"],
+  devServer: {
+    host: '0.0.0.0',
+    port: 3000
+  },
+
+  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxtjs/i18n", "@vite-pwa/nuxt", "@vueuse/nuxt"],
 
   pwa: {
     registerType: "autoUpdate",

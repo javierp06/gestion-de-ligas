@@ -40,7 +40,7 @@ app.use(morgan('dev'));
 
 // CORS
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: true, // Allow all origins for development/mobile testing
   credentials: true
 }));
 

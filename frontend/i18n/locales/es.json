@@ -60,6 +60,7 @@
     "success": "¡Cuenta creada exitosamente! Redirigiendo al login..."
   },
   "home": {
+    "live_matches": "Partidos en Vivo",
     "my_leagues": "Mis Ligas",
     "join_league": "Unirse a Liga",
     "sports": "Deportes",

@@ -401,17 +401,24 @@ const selectSport = (sportId: number | null) => {
 const loadMatches = async () => {
   try {
     loadingMatches.value = true;
-    let query = `?status=live`;
-    if (selectedSport.value) query += `&sport_id=${selectedSport.value}`;
 
-    // Load Live Matches
-    const liveMatchesRes = await $api.get(`/matches${query}`);
-    if (liveMatchesRes.data.success) {
-      liveMatches.value = liveMatchesRes.data.data;
+    // Only load live matches if viewing "Today"
+    if (selectedDate.value === getLocalDateString()) {
+      let query = `?status=live`;
+      if (selectedSport.value) query += `&sport_id=${selectedSport.value}`;
+
+      // Load Live Matches
+      const liveMatchesRes = await $api.get(`/matches${query}`);
+      if (liveMatchesRes.data.success) {
+        liveMatches.value = liveMatchesRes.data.data;
+      }
+    } else {
+      liveMatches.value = [];
     }
 
+
     // Load Scheduled Matches for selected date
-    query = `?status=scheduled&date=${selectedDate.value}`;
+    let query = `?status=scheduled&date=${selectedDate.value}`;
     if (selectedSport.value) query += `&sport_id=${selectedSport.value}`;
 
     const upcomingMatchesRes = await $api.get(`/matches${query}`);

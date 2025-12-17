@@ -147,7 +147,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useToast } from '@/stores/toast';
+import { useToastStore as useToast } from '@/stores/toast';
 import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
