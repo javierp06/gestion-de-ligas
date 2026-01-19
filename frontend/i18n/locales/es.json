@@ -248,9 +248,12 @@
       "points_per_set_label": "Puntos por Set",
       "cancel": "Cancelar",
       "submit": "Crear Liga",
+      "promoted_title": "¡Felicidades! Has sido promovido a ORGANIZADOR",
+      "promoted_desc": "Ahora puedes crear y gestionar ligas y torneos.",
       "creating": "Creando...",
-      "error_loading_sports": "Error al cargar los deportes",
-      "error_creating": "Error al crear la liga"
+      "success": "Liga \"{name}\" creada exitosamente",
+      "error": "Error al crear la liga",
+      "error_loading_sports": "Error al cargar los deportes"
     },
     "preview": {
       "title": "Vista Previa",
@@ -267,6 +270,12 @@
   },
   "create_tournament": {
     "title": "Crear Nuevo Torneo",
+    "errors": {
+      "required_fields": "Por favor completa los campos obligatorios.",
+      "select_format": "Por favor selecciona un formato.",
+      "create_failed": "Error al crear el torneo"
+    },
+    "success_created": "Torneo \"{name}\" creado exitosamente 🏆",
     "step": "Paso {current} de {total}",
     "name": "Nombre del Torneo",
     "start_date": "Fecha de Inicio",
@@ -644,6 +653,36 @@
       "saving": "Guardando...",
       "success": "Equipo actualizado exitosamente",
       "error": "Error al actualizar el equipo"
+    },
+    "create_match": {
+      "title": "Crear Nuevo Partido",
+      "home_team": "Equipo Local",
+      "away_team": "Equipo Visitante",
+      "select_team": "Seleccionar",
+      "date_time": "Fecha y Hora",
+      "round": "Jornada",
+      "location": "Lugar/Cancha",
+      "location_placeholder": "Ej. Cancha Principal",
+      "referee": "Árbitro",
+      "referee_placeholder": "Nombre del árbitro",
+      "cancel": "Cancelar",
+      "submit": "Crear Partido",
+      "creating": "Creando...",
+      "same_team_error": "El equipo local y visitante no pueden ser el mismo",
+      "success": "Partido creado exitosamente",
+      "error": "Error al crear el partido"
+    },
+    "generate_playoffs": {
+      "title": "Generar Playoffs",
+      "description": "Genera las llaves de la fase final basándose en la tabla de posiciones actual y la configuración del torneo.",
+      "start_date": "Fecha de Inicio",
+      "interval_days": "Días entre partidos (Ida/Vuelta)",
+      "interval_note": "Si es copa de ida y vuelta, días entre ambos partidos.",
+      "submit": "Generar Playoffs",
+      "generating": "Generando...",
+      "cancel": "Cancelar",
+      "success": "Playoffs generados exitosamente",
+      "error": "Error al generar playoffs"
     }
   },
   "teams": {

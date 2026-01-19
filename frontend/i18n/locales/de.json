@@ -250,9 +250,12 @@
       "points_per_set_label": "Punkte pro Satz",
       "cancel": "Abbrechen",
       "submit": "Liga erstellen",
+      "promoted_title": "Herzlichen Glückwunsch! Du wurdest zum ORGANISATOR befördert",
+      "promoted_desc": "Du kannst jetzt Ligen und Turniere erstellen und verwalten.",
       "creating": "Erstelle...",
-      "error_loading_sports": "Fehler beim Laden der Sportarten",
-      "error_creating": "Fehler beim Erstellen der Liga"
+      "success": "Liga \"{name}\" erfolgreich erstellt",
+      "error": "Fehler beim Erstellen der Liga",
+      "error_loading_sports": "Fehler beim Laden der Sportarten"
     },
     "preview": {
       "title": "Vorschau",
@@ -269,6 +272,12 @@
   },
   "create_tournament": {
     "title": "Neues Turnier erstellen",
+    "errors": {
+      "required_fields": "Bitte füllen Sie alle Pflichtfelder aus.",
+      "select_format": "Bitte wählen Sie ein Format.",
+      "create_failed": "Fehler beim Erstellen des Turniers"
+    },
+    "success_created": "Turnier \"{name}\" erfolgreich erstellt 🏆",
     "step": "Schritt {current} von {total}",
     "name": "Turniername",
     "start_date": "Startdatum",
@@ -629,6 +638,36 @@
       "saving": "Speichern...",
       "success": "Team erfolgreich aktualisiert",
       "error": "Fehler beim Aktualisieren des Teams"
+    },
+    "create_match": {
+      "title": "Neues Spiel erstellen",
+      "home_team": "Heimmannschaft",
+      "away_team": "Auswärtsmannschaft",
+      "select_team": "Auswählen",
+      "date_time": "Datum und Uhrzeit",
+      "round": "Runde",
+      "location": "Ort/Stadion",
+      "location_placeholder": "Bsp. Hauptplatz",
+      "referee": "Schiedsrichter",
+      "referee_placeholder": "Name des Schiedsrichters",
+      "cancel": "Abbrechen",
+      "submit": "Spiel erstellen",
+      "creating": "Erstelle...",
+      "same_team_error": "Heim- und Auswärtsmannschaft können nicht gleich sein",
+      "success": "Spiel erfolgreich erstellt",
+      "error": "Fehler beim Erstellen des Spiels"
+    },
+    "generate_playoffs": {
+      "title": "Playoffs generieren",
+      "description": "Erstellt den Turnierbaum für die Endrunde basierend auf der aktuellen Tabelle und den TurniEinstellungen.",
+      "start_date": "Startdatum",
+      "interval_days": "Tage zwischen Spielen (Hin-/Rückspiel)",
+      "interval_note": "Bei Hin- und Rückspiel: Tage zwischen beiden Spielen.",
+      "submit": "Playoffs generieren",
+      "generating": "Generiere...",
+      "cancel": "Abbrechen",
+      "success": "Playoffs erfolgreich generiert",
+      "error": "Fehler beim Generieren der Playoffs"
     }
   },
   "teams": {

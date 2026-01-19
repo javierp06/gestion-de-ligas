@@ -17,18 +17,17 @@
                         </div>
                         <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">
-                                Generar Playoffs
+                                {{ $t('modals.generate_playoffs.title') }}
                             </h3>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                                    Genera las llaves de la fase final basándose en la tabla de posiciones actual y la
-                                    configuración del torneo.
+                                    {{ $t('modals.generate_playoffs.description') }}
                                 </p>
 
                                 <form @submit.prevent="handleSubmit" class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                            Fecha de Inicio
+                                            {{ $t('modals.generate_playoffs.start_date') }}
                                         </label>
                                         <input type="date" v-model="formData.start_date" required
                                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
@@ -36,12 +35,12 @@
 
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                            Días entre partidos (Ida/Vuelta)
+                                            {{ $t('modals.generate_playoffs.interval_days') }}
                                         </label>
                                         <input type="number" v-model="formData.interval_days" min="1" required
                                             class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white">
-                                        <p class="text-xs text-gray-500 mt-1">Si es copa de ida y vuelta, días entre
-                                            ambos partidos.</p>
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            {{ $t('modals.generate_playoffs.interval_note') }}</p>
                                     </div>
                                 </form>
                             </div>
@@ -53,11 +52,11 @@
                         class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed">
                         <span v-if="loading"
                             class="material-symbols-outlined animate-spin text-sm mr-2">progress_activity</span>
-                        {{ loading ? 'Generando...' : 'Generar Playoffs' }}
+                        {{ loading ? $t('modals.generate_playoffs.generating') : $t('modals.generate_playoffs.submit') }}
                     </button>
                     <button @click="$emit('close')" type="button"
                         class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancelar
+                        {{ $t('modals.generate_playoffs.cancel') }}
                     </button>
                 </div>
             </div>
@@ -68,6 +67,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useToastStore } from '@/stores/toast'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
     tournamentId: number
@@ -76,6 +76,7 @@ const props = defineProps<{
 const emit = defineEmits(['close', 'created'])
 const { $api } = useNuxtApp()
 const toastStore = useToastStore()
+const { t } = useI18n()
 const loading = ref(false)
 
 const formData = reactive({
@@ -95,12 +96,12 @@ const handleSubmit = async () => {
         const response = await $api.post('/matches/generate-playoffs', payload)
 
         if (response.data.success) {
-            toastStore.success(`Playoffs generados exitosamente`)
+            toastStore.success(t('modals.generate_playoffs.success'))
             emit('created')
             emit('close')
         }
     } catch (error: any) {
-        toastStore.error(error.response?.data?.message || 'Error al generar playoffs')
+        toastStore.error(error.response?.data?.message || t('modals.generate_playoffs.error'))
     } finally {
         loading.value = false
     }

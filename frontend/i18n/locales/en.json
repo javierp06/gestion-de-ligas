@@ -247,9 +247,12 @@
       "points_per_set_label": "Points per Set",
       "cancel": "Cancel",
       "submit": "Create League",
+      "promoted_title": "Congratulations! You have been promoted to ORGANIZER",
+      "promoted_desc": "You can now create and manage leagues and tournaments.",
       "creating": "Creating...",
-      "error_loading_sports": "Error loading sports",
-      "error_creating": "Error creating league"
+      "success": "League \"{name}\" created successfully",
+      "error": "Error creating league",
+      "error_loading_sports": "Error loading sports"
     },
     "preview": {
       "title": "Preview",
@@ -266,6 +269,12 @@
   },
   "create_tournament": {
     "title": "Create New Tournament",
+    "errors": {
+      "required_fields": "Please complete all required fields.",
+      "select_format": "Please select a format.",
+      "create_failed": "Error creating tournament"
+    },
+    "success_created": "Tournament \"{name}\" created successfully 🏆",
     "step": "Step {current} of {total}",
     "name": "Tournament Name",
     "start_date": "Start Date",
@@ -643,6 +652,36 @@
       "saving": "Saving...",
       "success": "Team updated successfully",
       "error": "Error updating team"
+    },
+    "create_match": {
+      "title": "Create New Match",
+      "home_team": "Home Team",
+      "away_team": "Away Team",
+      "select_team": "Select",
+      "date_time": "Date and Time",
+      "round": "Round",
+      "location": "Location/Venue",
+      "location_placeholder": "Ex. Main Field",
+      "referee": "Referee",
+      "referee_placeholder": "Referee's name",
+      "cancel": "Cancel",
+      "submit": "Create Match",
+      "creating": "Creating...",
+      "same_team_error": "Home and away team cannot be the same",
+      "success": "Match created successfully",
+      "error": "Error creating match"
+    },
+    "generate_playoffs": {
+      "title": "Generate Playoffs",
+      "description": "Generates the final phase bracket based on current standings and tournament settings.",
+      "start_date": "Start Date",
+      "interval_days": "Days between matches (Home/Away)",
+      "interval_note": "If home and away cup, days between both matches.",
+      "submit": "Generate Playoffs",
+      "generating": "Generating...",
+      "cancel": "Cancel",
+      "success": "Playoffs generated successfully",
+      "error": "Error generating playoffs"
     }
   },
   "teams": {

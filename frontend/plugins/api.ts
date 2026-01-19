@@ -83,6 +83,12 @@ export default defineNuxtPlugin((nuxtApp) => {
       // ========================================
       if (status === 401 && !originalRequest._retry) {
         // Don't retry on auth endpoints to avoid infinite loops
+        // Specific handling for logout to avoid recursion
+        if (originalRequest.url?.includes('/auth/logout')) {
+           return Promise.reject(error)
+        }
+
+        // Don't retry on other auth endpoints
         if (originalRequest.url?.includes('/auth/refresh') || 
             originalRequest.url?.includes('/auth/login') ||
             originalRequest.url?.includes('/auth/register')) {

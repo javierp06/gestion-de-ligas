@@ -246,9 +246,12 @@
       "points_per_set_label": "Pontos por Set",
       "cancel": "Cancelar",
       "submit": "Criar Liga",
+      "promoted_title": "Parabéns! Você foi promovido a ORGANIZADOR",
+      "promoted_desc": "Agora você pode criar e gerenciar ligas e torneios.",
       "creating": "Criando...",
-      "error_loading_sports": "Erro ao carregar esportes",
-      "error_creating": "Erro ao criar a liga"
+      "success": "Liga \"{name}\" criada com sucesso",
+      "error": "Erro ao criar liga",
+      "error_loading_sports": "Erro ao carregar esportes"
     },
     "preview": {
       "title": "Pré-visualização",
@@ -265,6 +268,12 @@
   },
   "create_tournament": {
     "title": "Criar Novo Torneio",
+    "errors": {
+      "required_fields": "Por favor, preencha todos os campos obrigatórios.",
+      "select_format": "Por favor, selecione um formato.",
+      "create_failed": "Erro ao criar torneio"
+    },
+    "success_created": "Torneio \"{name}\" criado com sucesso 🏆",
     "step": "Passo {current} de {total}",
     "name": "Nome do Torneio",
     "start_date": "Data de Início",
@@ -624,6 +633,36 @@
       "saving": "Salvando...",
       "success": "Time atualizado com sucesso",
       "error": "Erro ao atualizar o time"
+    },
+    "create_match": {
+      "title": "Criar Nova Partida",
+      "home_team": "Equipe de Casa",
+      "away_team": "Equipe Visitante",
+      "select_team": "Selecionar",
+      "date_time": "Data e Hora",
+      "round": "Rodada",
+      "location": "Local",
+      "location_placeholder": "Ex. Campo Principal",
+      "referee": "Árbitro",
+      "referee_placeholder": "Nome do árbitro",
+      "cancel": "Cancelar",
+      "submit": "Criar Partida",
+      "creating": "Criando...",
+      "same_team_error": "Times de casa e visitante não podem ser o mesmo",
+      "success": "Partida criada com sucesso",
+      "error": "Erro ao criar partida"
+    },
+    "generate_playoffs": {
+      "title": "Gerar Playoffs",
+      "description": "Gera a chave da fase final com base na classificação atual e nas configurações do torneio.",
+      "start_date": "Data de Início",
+      "interval_days": "Dias entre jogos (Ida/Volta)",
+      "interval_note": "Se for copa ida e volta, dias entre os dois jogos.",
+      "submit": "Gerar Playoffs",
+      "generating": "Gerando...",
+      "cancel": "Cancelar",
+      "success": "Playoffs gerados com sucesso",
+      "error": "Erro ao gerar playoffs"
     }
   },
   "teams": {

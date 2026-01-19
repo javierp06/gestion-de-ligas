@@ -246,9 +246,12 @@
       "points_per_set_label": "Points par Set",
       "cancel": "Annuler",
       "submit": "Créer la Ligue",
+      "promoted_title": "Félicitations ! Vous avez été promu ORGANISATEUR",
+      "promoted_desc": "Vous pouvez maintenant créer et gérer des ligues et des tournois.",
       "creating": "Création...",
-      "error_loading_sports": "Erreur lors du chargement des sports",
-      "error_creating": "Erreur lors de la création de la ligue"
+      "success": "Ligue \"{name}\" créée avec succès",
+      "error": "Erreur lors de la création de la ligue",
+      "error_loading_sports": "Erreur lors du chargement des sports"
     },
     "preview": {
       "title": "Aperçu",
@@ -265,6 +268,12 @@
   },
   "create_tournament": {
     "title": "Créer un nouveau tournoi",
+    "errors": {
+      "required_fields": "Veuillez remplir tous les champs obligatoires.",
+      "select_format": "Veuillez sélectionner un format.",
+      "create_failed": "Erreur lors de la création du tournoi"
+    },
+    "success_created": "Tournoi \"{name}\" créé avec succès 🏆",
     "step": "Étape {current} sur {total}",
     "name": "Nom du tournoi",
     "start_date": "Date de début",
@@ -624,6 +633,36 @@
       "saving": "Enregistrement...",
       "success": "Équipe mise à jour avec succès",
       "error": "Erreur lors de la mise à jour de l'équipe"
+    },
+    "create_match": {
+      "title": "Créer un nouveau match",
+      "home_team": "Équipe locale",
+      "away_team": "Équipe visiteuse",
+      "select_team": "Sélectionner",
+      "date_time": "Date et heure",
+      "round": "Journée",
+      "location": "Lieu/Stade",
+      "location_placeholder": "Ex. Terrain principal",
+      "referee": "Arbitre",
+      "referee_placeholder": "Nom de l'arbitre",
+      "cancel": "Annuler",
+      "submit": "Créer le match",
+      "creating": "Création...",
+      "same_team_error": "L'équipe locale et visiteuse ne peuvent pas être la même",
+      "success": "Match créé avec succès",
+      "error": "Erreur lors de la création du match"
+    },
+    "generate_playoffs": {
+      "title": "Générer Playoffs",
+      "description": "Génère l'arbre de la phase finale en fonction du classement actuel et des paramètres du tournoi.",
+      "start_date": "Date de début",
+      "interval_days": "Jours entre matchs (Aller/Retour)",
+      "interval_note": "Si coupe aller-retour, jours entre les deux matchs.",
+      "submit": "Générer Playoffs",
+      "generating": "Génération...",
+      "cancel": "Annuler",
+      "success": "Playoffs générés avec succès",
+      "error": "Erreur lors de la génération des playoffs"
     }
   },
   "teams": {

@@ -315,12 +315,12 @@ const getFormatLabel = (value: string) => {
 const nextStep = () => {
   if (currentStep.value === 1) {
     if (!formData.value.name || !formData.value.start_date) {
-      error.value = 'Por favor completa los campos obligatorios.'
+      error.value = t('create_tournament.errors.required_fields')
       return
     }
   } else if (currentStep.value === 2) {
     if (!formData.value.format) {
-      error.value = 'Por favor selecciona un formato.'
+      error.value = t('create_tournament.errors.select_format')
       return
     }
   }
@@ -358,11 +358,11 @@ const handleSubmit = async () => {
     const response = await $api.post('/tournaments', payload)
 
     if (response.data.success) {
-      toastStore.success(`Torneo "${formData.value.name}" creado exitosamente 🏆`)
+      toastStore.success(t('create_tournament.success_created', { name: formData.value.name }))
       emit('created', response.data.data.id)
     }
   } catch (err: any) {
-    error.value = err.response?.data?.message || 'Error al crear el torneo'
+    error.value = err.response?.data?.message || t('create_tournament.errors.create_failed')
     toastStore.error(error.value)
   } finally {
     loading.value = false
