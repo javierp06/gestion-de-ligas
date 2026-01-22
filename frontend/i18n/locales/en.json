@@ -16,7 +16,17 @@
     "email": "Email",
     "password": "Password",
     "submit": "Login",
-    "register_link": "Don't have an account? Register"
+    "register_link": "Register",
+    "subtitle": "Manage your leagues at the highest level",
+    "remember_me": "Remember me",
+    "forgot_password": "Forgot your password?",
+    "logging_in": "Logging in...",
+    "continue_with": "Or continue with",
+    "no_account": "Don't have an account?",
+    "welcome_user": "Welcome, {name}! 👋",
+    "error_generic": "Login failed",
+    "error_google": "Google login failed",
+    "error_unexpected": "Unexpected error"
   },
   "nav": {
     "home": "Home",

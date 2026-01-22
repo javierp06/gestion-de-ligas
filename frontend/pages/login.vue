@@ -19,7 +19,7 @@
           PRO<span class="text-primary-500">LEAGUE</span>
         </h1>
         <p class="text-text-secondary-light dark:text-text-secondary-dark font-medium">
-          Gestiona tus ligas al máximo nivel
+          {{ $t('login.subtitle') }}
         </p>
       </div>
 
@@ -79,18 +79,17 @@
               <input type="checkbox" v-model="rememberMe"
                 class="rounded border-border-light dark:border-border-dark text-primary-500 focus:ring-primary-500 bg-background-light dark:bg-surface-dark-alt">
               <span
-                class="ml-2 text-text-secondary-light dark:text-text-secondary-dark font-medium group-hover:text-text-primary-light dark:group-hover:text-white transition-colors">Recordarme</span>
+                class="ml-2 text-text-secondary-light dark:text-text-secondary-dark font-medium group-hover:text-text-primary-light dark:group-hover:text-white transition-colors">{{ $t('login.remember_me') }}</span>
             </label>
             <a href="#"
-              class="text-primary-500 hover:text-primary-400 font-bold hover:underline transition-colors">¿Olvidaste tu
-              contraseña?</a>
+              class="text-primary-500 hover:text-primary-400 font-bold hover:underline transition-colors">{{ $t('login.forgot_password') }}</a>
           </div>
 
 
           <button type="submit" :disabled="loading"
             class="w-full bg-primary-500 text-black font-black py-4 rounded-xl shadow-neon hover:shadow-neon-strong hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none transition-all duration-300 uppercase tracking-wide flex items-center justify-center gap-2">
             <span v-if="loading" class="material-symbols-outlined animate-spin">progress_activity</span>
-            <span>{{ loading ? 'Iniciando...' : $t('login.submit').toUpperCase() }}</span>
+            <span>{{ loading ? $t('login.logging_in') : $t('login.submit').toUpperCase() }}</span>
           </button>
 
 
@@ -100,8 +99,7 @@
             </div>
             <div class="relative flex justify-center text-xs uppercase tracking-widest font-bold">
               <span
-                class="px-4 bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark">O
-                continúa con</span>
+                class="px-4 bg-surface-light dark:bg-surface-dark text-text-secondary-light dark:text-text-secondary-dark">{{ $t('login.continue_with') }}</span>
             </div>
           </div>
 
@@ -112,7 +110,8 @@
           </div>
 
           <div class="text-center">
-            <p class="text-text-secondary-light dark:text-text-secondary-dark font-medium mb-3">¿Aún no tienes cuenta?
+            <p class="text-text-secondary-light dark:text-text-secondary-dark font-medium mb-3">
+              {{ $t('login.no_account') }}
             </p>
             <NuxtLink to="/register"
               class="block w-full py-3 rounded-xl border-2 border-border-light dark:border-border-dark text-text-primary-light dark:text-white font-bold hover:border-primary-500 hover:text-primary-500 dark:hover:border-primary-500 dark:hover:text-primary-500 transition-all duration-300 uppercase tracking-wide">
@@ -124,7 +123,7 @@
 
 
       <p class="text-center text-text-secondary-light dark:text-text-secondary-dark text-sm mt-8 font-medium">
-        © 2024 Pro League. Todos los derechos reservados.
+        {{ $t('footer.copyright') }}
       </p>
     </div>
   </div>
@@ -140,6 +139,7 @@ import { GoogleLogin } from 'vue3-google-login'
 const router = useRouter()
 const authStore = useAuthStore()
 const toastStore = useToastStore()
+const { t } = useI18n()
 
 const formData = ref({
   email: '',
@@ -158,10 +158,10 @@ const handleLogin = async () => {
   const result = await authStore.login(formData.value.email, formData.value.password)
 
   if (result?.success) {
-    toastStore.success(`¡Bienvenido, ${result.user?.name}! 👋`)
+    toastStore.success(t('login.welcome_user', { name: result.user?.name }))
     await navigateTo('/dashboard')
   } else {
-    error.value = result?.message || 'Error al iniciar sesión'
+    error.value = result?.message || t('login.error_generic')
     toastStore.error(error.value)
   }
 
@@ -175,14 +175,14 @@ const handleGoogleLogin = async (response: any) => {
   try {
     const result = await authStore.googleLogin(response.credential)
     if (result?.success) {
-      toastStore.success(`¡Bienvenido, ${result.user?.name}! 👋`)
+      toastStore.success(t('login.welcome_user', { name: result.user?.name }))
       await navigateTo('/dashboard')
     } else {
-      error.value = result?.message || 'Error al iniciar sesión con Google'
+      error.value = result?.message || t('login.error_google')
       toastStore.error(error.value)
     }
   } catch (e) {
-    error.value = 'Error inesperado'
+    error.value = t('login.error_unexpected')
     toastStore.error(error.value)
   } finally {
     loading.value = false

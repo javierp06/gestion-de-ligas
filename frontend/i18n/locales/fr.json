@@ -16,7 +16,17 @@
     "email": "Email",
     "password": "Mot de passe",
     "submit": "Se connecter",
-    "register_link": "Pas de compte ? S'inscrire"
+    "register_link": "S'inscrire",
+    "subtitle": "Gérez vos ligues au plus haut niveau",
+    "remember_me": "Se souvenir de moi",
+    "forgot_password": "Mot de passe oublié ?",
+    "logging_in": "Connexion...",
+    "continue_with": "Ou continuer avec",
+    "no_account": "Pas encore de compte ?",
+    "welcome_user": "Bienvenue, {name} ! 👋",
+    "error_generic": "Échec de la connexion",
+    "error_google": "Échec de la connexion Google",
+    "error_unexpected": "Erreur inattendue"
   },
   "nav": {
     "home": "Accueil",

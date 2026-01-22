@@ -16,7 +16,17 @@
     "email": "E-Mail",
     "password": "Passwort",
     "submit": "Anmelden",
-    "register_link": "Kein Konto? Registrieren"
+    "register_link": "Registrieren",
+    "subtitle": "Verwalten Sie Ihre Ligen auf höchstem Niveau",
+    "remember_me": "Angemeldet bleiben",
+    "forgot_password": "Passwort vergessen?",
+    "logging_in": "Anmelden...",
+    "continue_with": "Oder weiter mit",
+    "no_account": "Noch kein Konto?",
+    "welcome_user": "Willkommen, {name}! 👋",
+    "error_generic": "Anmeldung fehlgeschlagen",
+    "error_google": "Google-Anmeldung fehlgeschlagen",
+    "error_unexpected": "Unerwarteter Fehler"
   },
   "nav": {
     "home": "Startseite",

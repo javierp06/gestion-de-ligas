@@ -16,7 +16,17 @@
     "email": "Correo Electrónico",
     "password": "Contraseña",
     "submit": "Ingresar",
-    "register_link": "¿No tienes cuenta? Regístrate"
+    "register_link": "Regístrate",
+    "subtitle": "Gestiona tus ligas al máximo nivel",
+    "remember_me": "Recordarme",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "logging_in": "Iniciando...",
+    "continue_with": "O continúa con",
+    "no_account": "¿Aún no tienes cuenta?",
+    "welcome_user": "¡Bienvenido, {name}! 👋",
+    "error_generic": "Error al iniciar sesión",
+    "error_google": "Error al iniciar sesión con Google",
+    "error_unexpected": "Error inesperado"
   },
   "nav": {
     "home": "Inicio",

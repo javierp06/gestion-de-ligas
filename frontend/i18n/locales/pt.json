@@ -16,7 +16,17 @@
     "email": "Email",
     "password": "Senha",
     "submit": "Entrar",
-    "register_link": "Não tem conta? Registre-se"
+    "register_link": "Registrar",
+    "subtitle": "Gerencie suas ligas no mais alto nível",
+    "remember_me": "Lembrar-me",
+    "forgot_password": "Esqueceu sua senha?",
+    "logging_in": "Entrando...",
+    "continue_with": "Ou continue com",
+    "no_account": "Ainda não tem conta?",
+    "welcome_user": "Bem-vindo, {name}! 👋",
+    "error_generic": "Falha no login",
+    "error_google": "Falha no login com Google",
+    "error_unexpected": "Erro inesperado"
   },
   "nav": {
     "home": "Início",
